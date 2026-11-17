@@ -9,7 +9,7 @@
 <style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{-webkit-text-size-adjust:100%}body{margin:0;font:14px system-ui,-apple-system,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
 </head><body>
 <noscript><p style="padding:40px 16px;text-align:center;font:16px/1.6 system-ui,sans-serif">이 게임은 JavaScript가 필요해요. 브라우저 설정에서 JavaScript를 켜 주세요.</p></noscript>
-<div id="a2hs" hidden style="display:flex;gap:10px;align-items:center;justify-content:space-between;background:#E4E9F7;color:#1B2340;padding:10px 14px;font:14px/1.5 system-ui,sans-serif"><span id="a2t"></span><button id="a2x" type="button" style="font:inherit;font-weight:700;border:0;background:none;color:#2F47B8;padding:6px 4px;cursor:pointer">닫기</button></div>
+<div id="a2hs" hidden style="display:flex;gap:10px;align-items:center;justify-content:space-between;background:#E4E9F7;color:#1B2340;padding:10px 14px;font:14px/1.5 system-ui,sans-serif"><span id="a2t" style="min-width:0"></span><button id="a2x" type="button" style="flex:none;white-space:nowrap;font:inherit;font-weight:700;border:0;background:none;color:#2F47B8;padding:6px 4px;cursor:pointer">닫기</button></div>
 <script>(function(){try{var d=document,b=d.getElementById('a2hs');b.hidden=true;if((window.matchMedia&&matchMedia('(display-mode: standalone)').matches)||navigator.standalone)return;try{if(localStorage.getItem('cq-a2hs')==='1')return}catch(e){}
 var ua=navigator.userAgent,ios=/iPhone|iPad|iPod/.test(ua),an=/Android/.test(ua);if(!ios&&!an)return;
 d.getElementById('a2t').textContent=ios?'홈 화면에 추가하면 앱처럼 열려요. 아래쪽 공유 버튼을 누르고 "홈 화면에 추가"를 고르세요.':'홈 화면에 추가하면 앱처럼 열려요. 오른쪽 위 메뉴(⋮)에서 "홈 화면에 추가"를 고르세요.';
@@ -157,6 +157,9 @@ h1,h2,h3{font-family:var(--f-display);font-weight:400;margin:0;text-wrap:balance
 .field label{font-size:13px;color:var(--muted)}
 .inp{width:100%;background:var(--surface);border:2px solid var(--line);border-radius:12px;padding:10px 12px;color:var(--ink)}
 .inp:focus{border-color:var(--blue);outline:none}
+input,textarea,select{font-size:16px;font-family:inherit}
+button,[data-a],label{touch-action:manipulation}
+html{-webkit-text-size-adjust:100%;overscroll-behavior-y:none}
 .panel{background:var(--surface);border:2px solid var(--line);border-bottom-width:5px;border-radius:16px;padding:14px}
 .note{font-size:13px;color:var(--muted);background:var(--soft);border-radius:12px;padding:8px 12px}
 .err{color:var(--coral);font-size:13px;min-height:1.3em}
@@ -232,7 +235,12 @@ nav.tabs .badge{position:absolute;top:2px;right:calc(50% - 22px);background:var(
 .wcard .wi{font-size:14px;color:var(--muted)}
 .wcard .wa{font-size:14px}
 .whint{align-self:center;background:rgba(27,35,64,.82);color:#fff;border-radius:999px;padding:6px 14px;font-size:13px}
-.wsay{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.wsay{display:flex;gap:6px;flex-wrap:nowrap;justify-content:center;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.wsay::-webkit-scrollbar{display:none}
+.wsay .btn{flex:none;white-space:nowrap;padding:7px 11px;font-size:13px}
+@keyframes whf{to{opacity:0;visibility:hidden}}
+.whint{animation:whf .5s 7s forwards}
+html.wopen,html.wopen body{overflow:hidden;height:100%}
 .wnote{align-self:center;font-size:11px;color:#3a4766;background:rgba(255,255,255,.7);border-radius:8px;padding:2px 8px}
 </style>
 
@@ -1229,7 +1237,16 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
     const nq = S.today ? S.today.qs.filter((q) => !q.done).length : 0;
     return `<nav class="tabs" aria-label="\uBA54\uB274"><div>${T.map((t) => `<button data-a="tab" data-t="${t[0]}" ${ui.tab === t[0] ? 'aria-current="page"' : ""}>${t[2]}<span>${t[1]}</span>${t[0] === "today" && nq ? `<span class="badge num">${nq}</span>` : ""}</button>`).join("")}</div></nav>`;
   }
+  let viewKey = "";
   function render() {
+    const vk = S.job ? "g:" + ui.tab : "s:" + (ui.setup || 1);
+    if (vk !== viewKey) {
+      viewKey = vk;
+      try {
+        window.scrollTo(0, 0);
+      } catch (e) {
+      }
+    }
     const app = $("#app");
     const keep = document.activeElement && document.activeElement.id, st = document.activeElement && document.activeElement.selectionStart;
     if (!S.job) {
@@ -1878,6 +1895,7 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
   let WX = null;
   async function openWorld() {
     if (WX) return;
+    document.documentElement.classList.add("wopen");
     const el = document.createElement("div");
     el.className = "world";
     el.setAttribute("role", "dialog");
@@ -2238,6 +2256,7 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
     if (cb) cb.focus();
   }
   function closeWorld() {
+    document.documentElement.classList.remove("wopen");
     if (!WX) return;
     const w = WX;
     WX = null;
