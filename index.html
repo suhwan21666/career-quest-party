@@ -235,6 +235,16 @@ nav.tabs .badge{position:absolute;top:2px;right:calc(50% - 22px);background:var(
 .wcard .wi{font-size:14px;color:var(--muted)}
 .wcard .wa{font-size:14px}
 .whint{align-self:center;background:rgba(27,35,64,.82);color:#fff;border-radius:999px;padding:6px 14px;font-size:13px}
+.wcard{max-height:44vh;overflow:auto}.wcard .hrow+.hrow{margin-top:5px}
+.hrow{display:flex;gap:8px;align-items:center;width:100%;text-align:left;background:var(--soft);border:2px solid var(--line);border-radius:12px;padding:5px 9px;font-size:14px;color:var(--ink);font:inherit}
+.hrow .ck{flex:none;width:22px;height:22px;border-radius:50%;border:2px solid var(--blue);display:grid;place-items:center;color:#fff;font-size:14px}
+.hrow.on{opacity:.8}.hrow.on .ck{background:var(--mint-deep);border-color:var(--mint-deep)}
+.hrow .ht{flex:1;min-width:0;display:grid}.hrow small{color:var(--muted);font-size:11.5px}.hrow .hx{color:var(--gold-deep);font-weight:700;font-size:13px}
+.alrow2{display:flex;gap:8px;align-items:center;font-size:13px;width:100%}.alrow2 .inp{width:auto;padding:4px 6px;margin-left:auto}
+.alrow{margin-bottom:12px}
+.chipbtn{border:2px solid var(--line);background:var(--surface);color:var(--ink);border-radius:99px;padding:6px 12px;font:inherit;font-size:13px}.chipbtn[aria-pressed=true]{background:var(--blue);border-color:var(--blue);color:#fff}
+.plgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px}
+.plbtn{display:grid;gap:2px;text-align:left;background:var(--soft);border:2px solid var(--line);border-radius:14px;padding:10px;color:var(--ink);font:inherit}.plbtn span{font-size:12px;color:var(--muted)}.plbtn i{font-style:normal;font-size:13px;color:var(--mint-deep);font-weight:700}
 .wsay{display:flex;gap:6px;flex-wrap:nowrap;justify-content:center;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
 .wsay::-webkit-scrollbar{display:none}
 .wsay .btn{flex:none;white-space:nowrap;padding:7px 11px;font-size:13px}
@@ -441,7 +451,7 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
   if (S.hab && !habInfo(S.hab)) S.hab = null;
   if (!S.look || typeof S.look !== "object") S.look = blank().look;
   function blank() {
-    return { blocked: {}, rest: 1, week: null, hab: null, habs: {}, v: 2, story: [], title: "", line: null, nick: "", job: null, look: { hair: 0, hc: 0, top: 1, skin: 0 }, totalXp: 0, stats: {}, streak: 0, lastDay: null, today: null, cnt: {}, done: 0, party: null, chestDay: null, claimed: {}, cheered: {}, npcSay: {}, stamps: null, stampBook: {}, testOpt: false, testNotes: [], testFirst: 0 };
+    return { blocked: {}, rest: 1, week: null, hab: null, habs: {}, v: 2, story: [], title: "", line: null, nick: "", job: null, look: { hair: 0, hc: 0, top: 1, skin: 0 }, totalXp: 0, stats: {}, streak: 0, lastDay: null, today: null, cnt: {}, done: 0, party: null, chestDay: null, claimed: {}, cheered: {}, npcSay: {}, stamps: null, stampBook: {}, pl: null, al: {}, alT: {}, alF: null, startPlaza: true, testOpt: false, testNotes: [], testFirst: 0 };
   }
   function load() {
     try {
@@ -1047,7 +1057,7 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
     const t = S.today, n = t.qs.filter((q) => q.done).length, L = partyList(), sum = L.reduce((a, m) => a + m.done, 0), goal = goalOf(L.length);
     return hud() + `<section class="sec"><div class="hd"><h2>\uC624\uB298\uC758 \uD018\uC2A4\uD2B8</h2><span class="sub num">${n} / ${t.qs.length} \uC644\uB8CC${S.streak > 0 ? ` \xB7 \uACBD\uD5D8\uCE58 +${Math.round((mult() - 1) * 100)}%` : ""}</span></div><div class="note" style="margin-bottom:12px">\uC624\uB298\uC740 1\uAC1C\uB9CC \uD574\uB3C4 \uC5F0\uC18D \uAE30\uB85D\uC774 \uC774\uC5B4\uC838\uC694. \uD558\uACE0 \uC2F6\uC740 \uAC83\uBD80\uD130, \uD558\uB8E8\uB97C \uC26C\uC5B4\uB3C4 \uD734\uC2DD\uAD8C\uC774 \uC9C0\uCF1C\uC918\uC694.</div>${t.qs.map(questCard).join("")}
   ${n === t.qs.length ? `<div class="allclear"><div><h3>\uC624\uB298 \uD018\uC2A4\uD2B8 \uC62C\uD074\uB9AC\uC5B4!</h3><div style="font-size:14px;opacity:.9">\uB0B4\uC77C \uC544\uCE68 \uC0C8 \uD018\uC2A4\uD2B8\uAC00 \uC5F4\uB824\uC694. \uD30C\uD2F0 \uBCF4\uBB3C\uC0C1\uC790\uB3C4 \uD655\uC778\uD574\uBCF4\uC138\uC694.</div></div></div>` : ""}</section>
-  ${snackSec()}${weekSec()}${plazaSec()}<section class="sec"><div class="hd"><h2>\uD30C\uD2F0 \uC0C1\uD669</h2><button class="link" data-a="tab" data-t="party">\uD30C\uD2F0 \uBCF4\uAE30</button></div>
+  ${snackSec()}${weekSec()}${placeSec()}${plazaSec()}<section class="sec"><div class="hd"><h2>\uD30C\uD2F0 \uC0C1\uD669</h2><button class="link" data-a="tab" data-t="party">\uD30C\uD2F0 \uBCF4\uAE30</button></div>
   <div class="chest">${ICON.chest}<div class="t">${esc(S.party ? S.party.name : "\uBAA8\uD5D8 \uB3D9\uB8CC \uD30C\uD2F0")}</div><div><div class="bar mint"><i style="width:${Math.min(100, sum / goal * 100)}%"></i></div><div class="xpt num"><span>\uD30C\uD2F0 \uD018\uC2A4\uD2B8 ${Math.min(sum, goal)} / ${goal}</span><span>${S.chestDay === KST() ? "\uC624\uB298 \uC218\uB839 \uC644\uB8CC" : sum >= goal ? "\uC0C1\uC790 \uC5F4 \uC218 \uC788\uC5B4\uC694" : ""}</span></div></div></div></section>`;
   }
   function vParty() {
@@ -1160,7 +1170,7 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
     return hud() + `<section class="sec"><div class="hero"><div class="stage">${av(S.job, L.l, lk, { label: "\uB0B4 \uCE90\uB9AD\uD130" })}</div><h2 style="margin-top:6px">${esc(S.nick)}</h2><div class="muted" style="font-size:14px">${esc(j.name)} \xB7 ${tierOf(L.l)}${L.l >= 6 ? " \xB7 \uC219\uB828\uC758 \uBE5B" : ""}</div><div class="tier">${slots.map((s) => `<span class="slot ${L.l >= s[1] ? "on" : ""}"><b>${s[0]}</b>${L.l >= s[1] ? s[2] : "Lv." + s[1] + "\uC5D0 \uD68D\uB4DD"}</span>`).join("")}${L.l < 6 ? `<span class="slot"><b>\uBE5B</b>Lv.6 \uC219\uB828</span>` : ""}${L.l < 10 ? `<span class="slot"><b>\uBCC4</b>Lv.10 \uBA85\uC778</span>` : `<span class="slot on"><b>\uBCC4</b>\uBA85\uC778\uC758 \uBCC4</span>`}</div></div></section>
   <section class="sec"><div class="hd"><h2>\uB098\uC758 \uC5ED\uB7C9</h2><span class="sub">\uD018\uC2A4\uD2B8\uB97C \uD560\uC218\uB85D \uC790\uB77C\uC694</span></div><div class="panel">${radar()}<div class="muted" style="font-size:13px;margin-top:6px">${esc(j.name)}\uC5D0\uAC8C \uD2B9\uD788 \uC911\uC694\uD55C \uC5ED\uB7C9: ${j.dna.map((s) => SN[s]).join(" \xB7 ")}</div></div></section>
   <section class="sec"><div class="hd"><h2>\uAFB8\uBBF8\uAE30</h2></div><div class="panel"><div class="field"><label>\uC774\uB984</label><input class="inp" id="nk" maxlength="10" value="${esc(S.nick)}"></div><div class="field"><label>\uBA38\uB9AC \uBAA8\uC591</label><div class="seg">${["\uC9E7\uC740 \uBA38\uB9AC", "\uAE34 \uBA38\uB9AC", "\uACF1\uC2AC"].map((n, i) => `<button data-a="look" data-f="hair" data-v="${i}" aria-pressed="${lk.hair === i}">${n}</button>`).join("")}</div></div><div class="field"><label>\uBA38\uB9AC\uC0C9</label>${sw(HAIRC, lk.hc, "\uBA38\uB9AC\uC0C9")}</div><div class="field"><label>\uC0C1\uC758 (\uC720\uB2C8\uD3FC \uC804)</label>${sw(TOPC, lk.top, "\uC0C1\uC758")}</div><div class="field" style="margin-bottom:0"><label>\uD53C\uBD80\uC0C9</label>${sw(SKIN, lk.skin, "\uD53C\uBD80\uC0C9")}</div></div></section>
-  <section class="sec"><div class="note">\uCD1D ${S.done || 0}\uAC1C\uC758 \uD018\uC2A4\uD2B8\uB97C \uC644\uB8CC\uD588\uC5B4\uC694. \uB370\uC774\uD130\uB294 \uC774 \uAE30\uAE30\uC758 \uBE0C\uB77C\uC6B0\uC800\uC5D0\uB9CC \uC800\uC7A5\uB3FC\uC694. \uBE0C\uB77C\uC6B0\uC800 \uB370\uC774\uD130\uB97C \uC9C0\uC6B0\uBA74 \uAE30\uB85D\uB3C4 \uC0AC\uB77C\uC838\uC694.</div></section>${reminderSec()}${testSec()}<section class="sec" style="display:flex;gap:18px;justify-content:center"><button class="link" data-a="privacy">\uAC1C\uC778\uC815\uBCF4 \uC548\uB0B4</button><button class="link" data-a="delAsk">\uB0B4 \uB370\uC774\uD130 \uC0AD\uC81C</button></section>`;
+  <section class="sec"><div class="note">\uCD1D ${S.done || 0}\uAC1C\uC758 \uD018\uC2A4\uD2B8\uB97C \uC644\uB8CC\uD588\uC5B4\uC694. \uB370\uC774\uD130\uB294 \uC774 \uAE30\uAE30\uC758 \uBE0C\uB77C\uC6B0\uC800\uC5D0\uB9CC \uC800\uC7A5\uB3FC\uC694. \uBE0C\uB77C\uC6B0\uC800 \uB370\uC774\uD130\uB97C \uC9C0\uC6B0\uBA74 \uAE30\uB85D\uB3C4 \uC0AC\uB77C\uC838\uC694.</div></section>${alarmSec()}${reminderSec()}${testSec()}<section class="sec" style="display:flex;gap:18px;justify-content:center"><button class="link" data-a="privacy">\uAC1C\uC778\uC815\uBCF4 \uC548\uB0B4</button><button class="link" data-a="delAsk">\uB0B4 \uB370\uC774\uD130 \uC0AD\uC81C</button></section>`;
   }
   function habitPanel() {
     const hi = habInfo(S.hab);
@@ -1393,6 +1403,7 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
         makeDay();
         persist();
         render();
+        if (S.startPlaza !== false && !window.__cqNoPlaza) setTimeout(openWorld, 250);
       },
       job() {
         ui.modal = { type: "job", id: d.j };
@@ -1500,6 +1511,17 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
         completeHabit(i, d.m === "1");
       },
       world: openWorld,
+      plc() {
+        openPlace(d.p);
+      },
+      altog() {
+        setAl(d.p, d.s, !alOn(d.p, d.s));
+        render();
+      },
+      alics: makeAlIcs,
+      alperm() {
+        askNotif().then(render);
+      },
       snack: doSnack,
       week: claimWeek,
       chest: claimChest,
@@ -1561,7 +1583,7 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
       render();
     }
   }, 6e4);
-  const WORLD = { W: 800, H: 1500, K: 1.5, SPEED: 150, X0: 14, X1: 786, Y0: 428, Y1: 1480 };
+  const WORLD = { W: 800, H: 1800, K: 1.5, SPEED: 150, X0: 14, X1: 786, Y0: 428, Y1: 1780 };
   const OBS = [
     [0, 0, 800, 425],
     [0, 425, 40, 1075],
@@ -1623,7 +1645,7 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
       id: String(p.peer),
       by: p.by || null,
       x: ci(x.x, 20, 780, 400),
-      y: ci(x.y, 430, 1475, 640),
+      y: ci(x.y, 430, 1775, 640),
       f: x.f === -1 ? -1 : 1,
       n: !nm || dirty(nm) ? "\uBAA8\uD5D8\uAC00" : nm,
       j: hasJob(x.j) ? x.j : "developer",
@@ -1890,20 +1912,22 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
     });
     T("\uC138\uC885\uB300\uB85C", 80, 1e3, 11, "#EEF0F6");
     T("\uC138\uC885\uB300\uB85C", 720, 1e3, 11, "#EEF0F6");
+    drawStreet(g, leaf);
     return c;
   }
   let WX = null;
-  async function openWorld() {
+  async function openWorld(sp) {
     if (WX) return;
+    if (PX) closePlace();
     document.documentElement.classList.add("wopen");
     const el = document.createElement("div");
     el.className = "world";
     el.setAttribute("role", "dialog");
     el.setAttribute("aria-label", "\uAD11\uD654\uBB38 \uAD11\uC7A5");
-    el.innerHTML = '<canvas id="wc" aria-label="\uAD11\uD654\uBB38 \uAD11\uC7A5 \uC9C0\uB3C4. \uD654\uBA74\uC744 \uB204\uB974\uAC70\uB098 \uBC29\uD5A5\uD0A4\uB85C \uAC78\uC5B4\uC694."></canvas><div class="wtop"><div class="wchip"><b>\uAD11\uD654\uBB38 \uAD11\uC7A5</b><span id="wcnt"></span></div><button class="btn sm ghost" data-w="close" aria-label="\uAD11\uC7A5\uC5D0\uC11C \uB098\uAC00\uAE30">\uB098\uAC00\uAE30</button></div><div class="wbot"><div class="wcard" id="wcard" hidden></div><div class="whint" id="whint">\uD654\uBA74\uC744 \uB204\uB974\uAC70\uB098 \uB04C\uC5B4\uC11C \uAC78\uC5B4\uC694 \xB7 \uBC29\uD5A5\uD0A4\uB3C4 \uB3FC\uC694</div><div class="wsay">' + SAYS.map((s, i) => '<button class="btn sm ghost" data-w="say" data-i="' + i + '">' + s + "</button>").join("") + '</div><div class="wnote">\uC0C1\uC0C1\uC73C\uB85C \uADF8\uB9B0 \uC77C\uB7EC\uC2A4\uD2B8 \uC9C0\uB3C4\uC608\uC694. \uC2E4\uC81C \uBAA8\uC2B5\uACFC \uB2EC\uB77C\uC694.</div></div>';
+    el.innerHTML = '<canvas id="wc" aria-label="\uAD11\uD654\uBB38 \uAD11\uC7A5 \uC9C0\uB3C4. \uD654\uBA74\uC744 \uB204\uB974\uAC70\uB098 \uBC29\uD5A5\uD0A4\uB85C \uAC78\uC5B4\uC694."></canvas><div class="wtop"><div class="wchip"><b>\uAD11\uD654\uBB38 \uAD11\uC7A5</b><span id="wcnt"></span></div><button class="btn sm ghost" data-w="close" aria-label="\uBA54\uB274\uB85C \uB3CC\uC544\uAC00\uAE30">\uBA54\uB274</button></div><div class="wbot"><div class="wcard" id="wcard" hidden></div><div class="whint" id="whint">\uD654\uBA74\uC744 \uB204\uB974\uAC70\uB098 \uB04C\uC5B4\uC11C \uAC78\uC5B4\uC694 \xB7 \uBC29\uD5A5\uD0A4\uB3C4 \uB3FC\uC694</div><div class="wsay">' + SAYS.map((s, i) => '<button class="btn sm ghost" data-w="say" data-i="' + i + '">' + s + "</button>").join("") + '</div><div class="wnote">\uC0C1\uC0C1\uC73C\uB85C \uADF8\uB9B0 \uC77C\uB7EC\uC2A4\uD2B8 \uC9C0\uB3C4\uC608\uC694. \uC2E4\uC81C \uBAA8\uC2B5\uACFC \uB2EC\uB77C\uC694.</div></div>';
     document.body.appendChild(el);
     const cv = el.querySelector("#wc"), cx = cv.getContext("2d"), map = buildMap();
-    const me0 = { x: WORLD.W / 2, y: 640, f: 1, say: "", sayAt: 0, s: 0, i: 0 }, keys = {};
+    const me0 = { x: sp && typeof sp.x === "number" ? sp.x : WORLD.W / 2, y: sp && typeof sp.y === "number" ? sp.y : 640, f: 1, say: "", sayAt: 0, s: 0, i: 0 }, keys = {};
     let target = null, down = false, raf = 0, last = performance.now(), room = null, unsubP = null, peers = [], lastSend = 0, lastSent = "", cam = { x: 0, y: 0 }, view = { w: 0, h: 0, sc: 1, dpr: 1 }, curLm = null, hintT = Date.now();
     const imgs = /* @__PURE__ */ new Map(), seen = /* @__PURE__ */ new Map(), sm = /* @__PURE__ */ new Map();
     const npcs = NPCS.map((n, i) => ({ id: n.id, name: n.name, job: n.job, look: n.look, l: Math.max(1, lvInfo(S.totalXp).l + n.off), x: [250, 550, 300][i % 3], y: [640, 660, 900][i % 3], f: 1, tx: null, ty: null, wait: 0, say: "", sayAt: 0, stuck: 0 }));
@@ -2124,7 +2148,7 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
       cam.y = Math.max(0, Math.min(WORLD.H - vh, me0.y - vh * 0.58));
       if (vw >= WORLD.W) cam.x = (WORLD.W - vw) / 2;
       let near = null, nd = 1e9;
-      LM.forEach((l) => l.pts.forEach((p) => {
+      LM.concat(PORTALS).forEach((l) => l.pts.forEach((p) => {
         const d = Math.hypot(p[0] - me0.x, p[1] - me0.y);
         if (d < l.r && d < nd) {
           nd = d;
@@ -2182,6 +2206,12 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
         c.innerHTML = "";
         return;
       }
+      if (l.portal) {
+        const p = l.portal;
+        c.hidden = false;
+        c.innerHTML = '<div class="wt">' + PLACES[p].n + " (" + PLACES[p].sub + ')</div><div class="wi">\uC624\uB298 ' + plCount(p) + " / 9 \xB7 \uC544\uCE68, \uC810\uC2EC, \uC800\uB141 \uC2B5\uAD00\uC774 \uC788\uC5B4\uC694" + (myPlace() === p ? " \xB7 \uB0B4 \uC77C\uD130" : "") + '</div><button class="btn sm blue" data-w="enter" data-p="' + p + '">\uB4E4\uC5B4\uAC00\uAE30</button>';
+        return;
+      }
       const done = stampsToday().ids.includes(l.id);
       c.hidden = false;
       c.innerHTML = '<div class="wt">' + l.name + '</div><div class="wi">' + l.info + '</div><div class="wa">' + l.act + '</div><button class="btn sm ' + (done ? "ghost" : "mint") + '" data-w="stamp" ' + (done ? "disabled" : "") + ">" + (done ? "\uC624\uB298 \uC2A4\uD0EC\uD504\uB97C \uCC0D\uC5C8\uC5B4\uC694" : "\uC2A4\uD0EC\uD504 \uCC0D\uAE30") + "</button>";
@@ -2208,6 +2238,7 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
       const a = t.dataset.w;
       if (a === "close") closeWorld();
       else if (a === "stamp") stamp();
+      else if (a === "enter") openPlace(t.dataset.p);
       else if (a === "say") {
         const i = ci(t.dataset.i, 0, 3, 0);
         me0.s++;
@@ -2263,7 +2294,790 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
     w.destroy();
     render();
   }
+  const SL = [{ k: "m", n: "\uC544\uCE68", t: "08:00", h: [5, 11] }, { k: "n", n: "\uC810\uC2EC", t: "12:30", h: [11, 16] }, { k: "e", n: "\uC800\uB141", t: "19:00", h: [16, 29] }];
+  const PLACES = {
+    office: {
+      n: "\uD68C\uC0AC",
+      sub: "\uBE4C\uB529",
+      jobs: ["developer", "accountant", "marketer", "lawyer", "designer"],
+      st: { m: "\uCD9C\uADFC \uB85C\uBE44", n: "\uD734\uAC8C \uB77C\uC6B4\uC9C0", e: "\uD1F4\uADFC \uAC8C\uC774\uD2B8" },
+      hb: {
+        m: [["\uC624\uB298 \uD560 \uC77C 3\uAC1C \uC801\uAE30", "\uAC00\uC7A5 \uC911\uC694\uD55C \uC77C \uD55C \uAC00\uC9C0\uB9CC \uC801\uAE30", "execution"], ["\uCC45\uC0C1 1\uBD84 \uC815\uB9AC", "\uBB3C\uAC74 \uD558\uB098\uB9CC \uC81C\uC790\uB9AC\uC5D0 \uB450\uAE30", "execution"], ["\uB3D9\uB8CC\uC5D0\uAC8C \uC544\uCE68 \uC778\uC0AC", '"\uC88B\uC740 \uC544\uCE68" \uD55C\uB9C8\uB514 \uAC74\uB124\uAE30', "collaboration"]],
+        n: [["\uC790\uB9AC\uC5D0\uC11C \uC77C\uC5B4\uB098\uAE30", "\uC77C\uC5B4\uB098\uC11C \uC5B4\uAE68 \uD55C \uBC88 \uB3CC\uB9AC\uAE30", "execution"], ["\uBB3C \uD55C \uCEF5", "\uD55C \uBAA8\uAE08\uC774\uB77C\uB3C4 \uB9C8\uC2DC\uAE30", "execution"], ["\uCC9C\uCC9C\uD788 \uBA39\uAE30", "\uCCAB \uC138 \uC785\uB9CC \uCC9C\uCC9C\uD788 \uC539\uAE30", "problemSolving"]],
+        e: [["\uB0B4\uC77C \uCCAB \uD560 \uC77C \uC801\uAE30", "\uD55C \uC904\uB9CC \uC801\uC5B4 \uB450\uAE30", "problemSolving"], ["\uC624\uB298 \uC798\uD55C \uC77C \uD55C \uC904", "\uC791\uC740 \uC77C\uC774\uC5B4\uB3C4 \uD558\uB098 \uC801\uAE30", "analytical"], ["\uC228 \uACE0\uB974\uAE30", "\uAE4A\uAC8C \uC228 \uC138 \uBC88 \uC26C\uACE0 \uD1F4\uADFC\uD558\uAE30", "execution"]]
+      }
+    },
+    home: {
+      n: "\uC9D1",
+      sub: "\uC544\uD30C\uD2B8",
+      jobs: ["chef", "creator"],
+      st: { m: "\uCE68\uC2E4", n: "\uC8FC\uBC29", e: "\uAC70\uC2E4" },
+      hb: {
+        m: [["\uC774\uBD88 \uC815\uB9AC", "\uBCA0\uAC1C\uB9CC \uAC00\uC9C0\uB7F0\uD788 \uB193\uC544\uB3C4 \uC88B\uC544\uC694", "execution"], ["\uCC3D\uBB38 \uC5F4\uAE30", "1\uBD84\uB9CC \uD658\uAE30\uD558\uAE30", "execution"], ["\uBB3C \uD55C \uCEF5", "\uC77C\uC5B4\uB098\uC11C \uD55C \uBAA8\uAE08 \uB9C8\uC2DC\uAE30", "execution"]],
+        n: [["\uC9C1\uC811 \uCC59\uAE34 \uD55C \uB07C", "\uACFC\uC77C \uD55C \uC870\uAC01\uC774\uC5B4\uB3C4 \uC88B\uC544\uC694", "creativity"], ["\uC2DD\uC0AC \uD6C4 \uBC14\uB85C \uD5F9\uAD6C\uAE30", "\uADF8\uB987 \uD558\uB098\uB9CC \uD5F9\uAD6C\uAE30", "execution"], ["\uD654\uBA74 \uB0B4\uB824\uB193\uACE0 \uBA39\uAE30", "\uCCAB \uB2E4\uC12F \uC785\uB9CC \uD654\uBA74 \uC5C6\uC774", "empathy"]],
+        e: [["\uC624\uB298 \uAC10\uC0AC \uD55C \uC904", "\uACE0\uB9C8\uC6E0\uB358 \uC77C \uD558\uB098 \uC801\uAE30", "empathy"], ["\uB0B4\uC77C \uC785\uC744 \uC637 \uAEBC\uB0B4\uB450\uAE30", "\uC591\uB9D0 \uD558\uB098\uB9CC\uC774\uB77C\uB3C4", "execution"], ["\uC7A0\uB4E4\uAE30 \uC804 \uD654\uBA74 \uB0B4\uB824\uB193\uAE30", "\uCC45 \uD55C \uCABD \uC77D\uACE0 \uB215\uAE30", "creativity"]]
+      }
+    },
+    field: {
+      n: "\uC6B4\uB3D9\uC7A5",
+      sub: "\uCDE8\uBBF8 \uD65C\uB3D9",
+      jobs: ["athlete", "firefighter", "police", "soldier"],
+      st: { m: "\uD2B8\uB799", n: "\uBCA4\uCE58", e: "\uC2A4\uD0E0\uB4DC" },
+      hb: {
+        m: [["\uC2A4\uD2B8\uB808\uCE6D 1\uBD84", "\uBAA9\xB7\uC5B4\uAE68\uB9CC \uAC00\uBCCD\uAC8C \uD480\uAE30", "execution"], ["\uC9D1 \uC55E \uD55C \uBC14\uD034", "5\uBD84\uB9CC \uAC77\uAE30", "challenge"], ["\uC624\uB298 \uBAB8 \uC0C1\uD0DC \uD55C \uB2E8\uC5B4", "\uB290\uB08C\uC744 \uD55C \uB2E8\uC5B4\uB85C \uC801\uAE30", "analytical"]],
+        n: [["\uBC14\uAE65 \uACF5\uAE30 3\uBD84", "\uBC16\uC5D0 \uB098\uAC00 \uC7A0\uAE50 \uC11C \uC788\uAE30", "execution"], ["\uACC4\uB2E8 \uD55C \uCE35", "\uC5D8\uB9AC\uBCA0\uC774\uD130 \uB300\uC2E0 \uD55C \uCE35\uB9CC", "challenge"], ["\uCDE8\uBBF8 5\uBD84", "\uD558\uACE0 \uC2F6\uC740 \uCDE8\uBBF8\uB97C 5\uBD84\uB9CC", "creativity"]],
+        e: [["\uCDE8\uBBF8 10\uBD84", "\uADF8\uB9AC\uAE30\xB7\uC545\uAE30\xB7\uAE00\uC4F0\uAE30 \uBB34\uC5C7\uC774\uB4E0", "creativity"], ["\uC6B4\uB3D9 \uAE30\uB85D \uD55C \uC904", "\uC2DC\uAC04\uC774\uB098 \uAC70\uB9AC \uC22B\uC790 \uD558\uB098", "analytical"], ["\uAC00\uBCCD\uAC8C 10\uBD84 \uAC77\uAE30", "\uC800\uB141 \uBC14\uB78C \uC42C\uBA70 \uAC77\uAE30", "execution"]]
+      }
+    },
+    school: {
+      n: "\uD559\uAD50",
+      sub: "\uBC30\uC6C0\uD130",
+      jobs: ["teacher", "researcher"],
+      st: { m: "\uAD50\uBB38", n: "\uAE09\uC2DD\uC2E4", e: "\uB3C4\uC11C\uAD00" },
+      hb: {
+        m: [["\uC624\uB298 \uBC30\uC6B8 \uAC83 \uD558\uB098 \uC815\uD558\uAE30", "\uAD81\uAE08\uD55C \uAC83 \uD55C \uAC00\uC9C0\uB9CC", "analytical"], ["\uC778\uC0AC \uBA3C\uC800 \uAC74\uB124\uAE30", "\uB208 \uB9C8\uC8FC\uCE58\uACE0 \uC778\uC0AC \uD55C\uB9C8\uB514", "collaboration"], ["\uCC45 \uD55C \uCABD \uC77D\uAE30", "\uD55C \uCABD\uB9CC \uC77D\uAE30", "creativity"]],
+        n: [["\uC2DD\uC0AC \uC804 \uAC10\uC0AC \uD55C\uB9C8\uB514", '"\uC798 \uBA39\uACA0\uC2B5\uB2C8\uB2E4" \uC18C\uB9AC \uB0B4\uAE30', "empathy"], ["\uBA39\uC744 \uB9CC\uD07C\uB9CC \uB2F4\uAE30", "\uB0A8\uAE30\uC9C0 \uC54A\uAC8C \uC870\uAE08\uC529", "execution"], ["\uC606 \uC0AC\uB78C\uACFC \uD55C\uB9C8\uB514", "\uAC00\uBCBC\uC6B4 \uC548\uBD80 \uD55C \uC904", "collaboration"]],
+        e: [["\uC624\uB298 \uBC30\uC6B4 \uAC83 \uD55C \uC904", "\uC26C\uC6B4 \uB9D0\uB85C \uC801\uC5B4 \uBCF4\uAE30", "leadership"], ["\uBAA8\uB974\uB294 \uAC83 \uD558\uB098 \uCC3E\uC544\uBCF4\uAE30", "\uAC80\uC0C9\uC774\uB098 \uCC45\uC73C\uB85C \uD55C \uAC00\uC9C0", "challenge"], ["\uCC45 \uB450 \uCABD \uC77D\uAE30", "\uD55C \uCABD\uC774\uC5B4\uB3C4 \uC88B\uC544\uC694", "creativity"]]
+      }
+    },
+    hospital: {
+      n: "\uBCD1\uC6D0",
+      sub: "\uB3CC\uBD04",
+      jobs: ["nurse", "doctor", "social-worker"],
+      st: { m: "\uB85C\uBE44", n: "\uD734\uAC8C\uC2E4", e: "\uD68C\uBCF5\uC2E4" },
+      hb: {
+        m: [["\uC190 \uC53B\uAE30 20\uCD08", "\uBE44\uB204\uB85C \uCC9C\uCC9C\uD788 \uC53B\uAE30", "execution"], ["\uBB3C \uD55C \uCEF5", "\uD55C \uBAA8\uAE08\uC774\uB77C\uB3C4 \uB9C8\uC2DC\uAE30", "execution"], ["\uC624\uB298\uC758 \uB2E4\uC9D0 \uD55C \uC904", "\uCE5C\uC808\uD558\uAC8C \uB300\uD558\uAE30 \uD55C \uC904", "empathy"]],
+        n: [["5\uBD84 \uAC77\uAE30", "\uBCF5\uB3C4\uB098 \uBC16\uC744 \uAC00\uBCCD\uAC8C", "execution"], ["\uB208 \uC26C\uAE30 1\uBD84", "\uBA3C \uACF3 \uBC14\uB77C\uBCF4\uAE30", "execution"], ["\uCC9C\uCC9C\uD788 \uC2DD\uC0AC", "\uCCAB \uC138 \uC785\uB9CC \uCC9C\uCC9C\uD788", "problemSolving"]],
+        e: [["\uACE0\uB9C8\uC6B4 \uC0AC\uB78C \uB5A0\uC62C\uB9AC\uAE30", "\uD55C \uBA85 \uC774\uB984 \uC801\uAE30", "empathy"], ["\uC5B4\uAE68 \uC2A4\uD2B8\uB808\uCE6D 1\uBD84", "\uBAA9\uACFC \uC5B4\uAE68\uB97C \uCC9C\uCC9C\uD788", "execution"], ["\uB0B4\uC77C \uC900\uBE44\uBB3C \uD655\uC778", "\uD55C \uAC00\uC9C0\uB9CC \uCC59\uACA8 \uB450\uAE30", "problemSolving"]]
+      }
+    }
+  };
+  const PLIDS = Object.keys(PLACES);
+  const PLX = { office: 100, home: 250, field: 400, school: 550, hospital: 700 };
+  const habOf = (p, s, i) => {
+    const a = (((PLACES[p] || {}).hb || {})[s] || [])[i];
+    return a ? { id: p + "." + s + i, p, s, i, t: a[0], mini: a[1], stat: a[2] } : null;
+  };
+  const PL_XP = 4, PL_MAX = 6;
+  const nowMin = () => {
+    const d = /* @__PURE__ */ new Date();
+    return d.getHours() * 60 + d.getMinutes();
+  };
+  function slotNow() {
+    const h = kstHour();
+    return h >= 5 && h < 11 ? "m" : h >= 11 && h < 16 ? "n" : "e";
+  }
+  function plState() {
+    if (!S.pl || S.pl.day !== KST()) S.pl = { day: KST(), ids: [], xp: 0 };
+    return S.pl;
+  }
+  const plDone = (id) => plState().ids.includes(id);
+  const plCount = (p) => plState().ids.filter((x) => x.startsWith(p + ".")).length;
+  const myPlace = () => PLIDS.find((p) => PLACES[p].jobs.includes(S.job)) || null;
+  function doPlaceHabit(id) {
+    const m = /^(\w+)\.([mne])(\d)$/.exec(id || "");
+    if (!m) return false;
+    const h = habOf(m[1], m[2], +m[3]);
+    if (!h) return false;
+    const st = plState();
+    if (st.ids.includes(id)) return false;
+    st.ids.push(id);
+    let g = 0;
+    if (st.xp < PL_MAX) {
+      st.xp++;
+      g = gain(PL_XP * mult());
+    }
+    S.stats[h.stat] = (S.stats[h.stat] || 0) + 1;
+    S.done = (S.done || 0) + 1;
+    toast(g ? "+" + g + " XP \xB7 " + h.t : "\uAE30\uB85D\uD588\uC5B4\uC694 \xB7 " + h.t + " (\uC624\uB298 \uACBD\uD5D8\uCE58\uB294 \uB2E4 \uCC44\uC6E0\uC5B4\uC694)");
+    logLine(PLACES[h.p].n + '\uC5D0\uC11C "' + h.t + '"');
+    persist();
+    return true;
+  }
+  const alKey = (p, s) => p + "." + s;
+  const alOn = (p, s) => !!(S.al && S.al[alKey(p, s)]);
+  const alTime = (s) => {
+    const t = S.alT && S.alT[s] || SL.find((x) => x.k === s).t;
+    return /^([01]\d|2[0-3]):[0-5]\d$/.test(t) ? t : SL.find((x) => x.k === s).t;
+  };
+  const alPlaces = (s) => PLIDS.filter((p) => alOn(p, s));
+  const notifState = () => typeof Notification === "undefined" ? "none" : Notification.permission;
+  async function askNotif() {
+    if (typeof Notification === "undefined") {
+      toast("\uC774 \uBE0C\uB77C\uC6B0\uC800\uB294 \uC571 \uC54C\uB9BC\uC744 \uC9C0\uC6D0\uD558\uC9C0 \uC54A\uC544\uC694. \uCE98\uB9B0\uB354 \uD30C\uC77C\uC744 \uC368 \uC8FC\uC138\uC694");
+      return;
+    }
+    if (Notification.permission === "default") {
+      try {
+        await Notification.requestPermission();
+      } catch (e) {
+      }
+    }
+    if (Notification.permission === "denied") toast("\uBE0C\uB77C\uC6B0\uC800\uC5D0\uC11C \uC54C\uB9BC\uC774 \uAEBC\uC838 \uC788\uC5B4\uC694. \uC571 \uC548\uC5D0\uC11C\uB9CC \uC54C\uB824\uB4DC\uB824\uC694");
+  }
+  function setAl(p, s, on) {
+    if (!PLACES[p] || !SL.some((x) => x.k === s)) return;
+    S.al = S.al || {};
+    if (on) S.al[alKey(p, s)] = 1;
+    else delete S.al[alKey(p, s)];
+    persist();
+    if (on) askNotif();
+  }
+  function setAlT(s, t) {
+    if (!/^([01]\d|2[0-3]):[0-5]\d$/.test(t || "")) return;
+    S.alT = S.alT || {};
+    S.alT[s] = t;
+    persist();
+  }
+  function alTick() {
+    if (!S.job) return;
+    const d = KST();
+    if (!S.alF || S.alF.day !== d) S.alF = { day: d, k: [] };
+    SL.forEach((sl) => {
+      const ps = alPlaces(sl.k);
+      if (!ps.length || S.alF.k.includes(sl.k)) return;
+      const [hh, mm] = alTime(sl.k).split(":").map(Number), t = hh * 60 + mm, n = nowMin();
+      if (n < t || n >= t + 90) return;
+      S.alF.k.push(sl.k);
+      persist();
+      const left = ps.map((p) => PLACES[p].n + " " + (3 - [0, 1, 2].filter((i) => plDone(p + "." + sl.k + i)).length) + "\uAC1C").join(" \xB7 "), body = sl.n + " \uC2B5\uAD00 \uC2DC\uAC04\uC774\uC5D0\uC694. " + left + " \uB0A8\uC558\uC5B4\uC694";
+      toast(body);
+      try {
+        if (notifState() === "granted") {
+          const nt = new Notification("\uCEE4\uB9AC\uC5B4 \uD018\uC2A4\uD2B8 \uD30C\uD2F0", { body, tag: "cq-" + sl.k });
+          nt.onclick = () => {
+            try {
+              window.focus();
+            } catch (e) {
+            }
+            nt.close();
+          };
+        }
+      } catch (e) {
+      }
+    });
+  }
+  async function makeAlIcs() {
+    const stamp = (/* @__PURE__ */ new Date()).toISOString().replace(/[-:]/g, "").slice(0, 15) + "Z", L = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Career Quest Party//KO", "CALSCALE:GREGORIAN"];
+    let n = 0;
+    SL.forEach((sl) => {
+      const ps = alPlaces(sl.k);
+      if (!ps.length) return;
+      n++;
+      const [hh, mm] = alTime(sl.k).split(":");
+      L.push("BEGIN:VEVENT", "UID:career-quest-" + sl.k + "@party", "DTSTAMP:" + stamp, "DTSTART:" + KST().replace(/-/g, "") + "T" + hh + mm + "00", "DURATION:PT10M", "RRULE:FREQ=DAILY", "SUMMARY:" + sl.n + " \uC88B\uC740 \uC2B5\uAD00 (" + ps.map((p) => PLACES[p].n).join("\xB7") + ")", "DESCRIPTION:\uCEE4\uB9AC\uC5B4 \uD018\uC2A4\uD2B8 \uD30C\uD2F0\\n" + PAGE_URL, "BEGIN:VALARM", "TRIGGER:PT0S", "ACTION:DISPLAY", "DESCRIPTION:" + sl.n + " \uC2B5\uAD00 \uC2DC\uAC04", "END:VALARM", "END:VEVENT");
+    });
+    if (!n) {
+      toast("\uBA3C\uC800 \uC54C\uB9BC\uC744 \uBC1B\uC744 \uC7A5\uC18C\uC640 \uC2DC\uAC04\uB300\uB97C \uACE8\uB77C \uC8FC\uC138\uC694");
+      return;
+    }
+    L.push("END:VCALENDAR");
+    try {
+      await dl.save({ filename: "career-quest-habits.ics", data: new Blob([L.join("\r\n")], { type: "text/calendar" }) });
+      toast("\uC54C\uB9BC \uD30C\uC77C\uC744 \uC800\uC7A5\uD588\uC5B4\uC694");
+    } catch (e) {
+      if (!e || e.code !== "dismissed") toast("\uC800\uC7A5\uD558\uC9C0 \uBABB\uD588\uC5B4\uC694");
+    }
+  }
+  const nsTxt = () => ({ granted: "\uC571 \uC54C\uB9BC: \uD5C8\uC6A9\uB428", denied: "\uC571 \uC54C\uB9BC: \uBE0C\uB77C\uC6B0\uC800\uC5D0\uC11C \uAEBC\uC838 \uC788\uC5B4\uC694", default: "\uC571 \uC54C\uB9BC: \uC544\uC9C1 \uD5C8\uC6A9 \uC804\uC774\uC5D0\uC694", none: "\uC571 \uC54C\uB9BC: \uC774 \uBE0C\uB77C\uC6B0\uC800\uB294 \uC9C0\uC6D0\uD558\uC9C0 \uC54A\uC544\uC694" })[notifState()];
+  function alarmSec() {
+    return `<section class="sec"><div class="hd"><h2>\uC7A5\uC18C \uC2B5\uAD00 \uC54C\uB9BC</h2><span class="sub">\uC6D0\uD558\uB294 \uAC83\uB9CC \uACE8\uB77C\uC694</span></div><div class="panel">
+ <div class="muted" style="font-size:13px;margin-bottom:10px">\uC54C\uB9BC\uC744 \uBC1B\uC744 \uC7A5\uC18C\uC640 \uC2DC\uAC04\uB300\uB97C \uC9C1\uC811 \uACE0\uB974\uC138\uC694. \uACE0\uB974\uC9C0 \uC54A\uC73C\uBA74 \uC54C\uB9BC\uC740 \uC624\uC9C0 \uC54A\uC544\uC694.</div>
+ ${SL.map((sl) => `<div class="alrow"><div class="row" style="justify-content:space-between;align-items:center;margin-bottom:6px"><b>${sl.n}</b><input class="inp" type="time" data-alt="${sl.k}" value="${alTime(sl.k)}" style="max-width:165px;flex:none" aria-label="${sl.n} \uC54C\uB9BC \uC2DC\uAC01"></div><div class="row" style="flex-wrap:wrap;gap:6px">${PLIDS.map((p) => `<button class="chipbtn" data-a="altog" data-p="${p}" data-s="${sl.k}" aria-pressed="${alOn(p, sl.k)}">${PLACES[p].n}</button>`).join("")}</div></div>`).join("")}
+ <div class="muted" style="font-size:13px;margin:10px 0">${nsTxt()}. \uC571\uC744 \uC5F4\uC5B4 \uB454 \uB3D9\uC548\uB9CC \uC54C\uB824\uC918\uC694. \uC571\uC774 \uB2EB\uD600 \uC788\uC5B4\uB3C4 \uBC1B\uC73C\uB824\uBA74 \uC544\uB798 \uCE98\uB9B0\uB354 \uD30C\uC77C\uC744 \uC4F0\uC138\uC694. \uC544\uC774\uD3F0\uC740 \uD648 \uD654\uBA74\uC5D0 \uCD94\uAC00\uD55C \uC571\uC5D0\uC11C\uB9CC \uC571 \uC54C\uB9BC\uC774 \uC640\uC694.</div>
+ <div class="row" style="gap:8px;flex-wrap:wrap">${dl ? `<button class="btn mint" data-a="alics">\uCE98\uB9B0\uB354 \uC54C\uB9BC \uD30C\uC77C \uBC1B\uAE30</button>` : ""}<button class="btn ghost" data-a="alperm">\uC571 \uC54C\uB9BC \uD5C8\uC6A9\uD558\uAE30</button></div></div></section>
+ <section class="sec"><div class="panel"><label class="row" style="align-items:center;gap:10px"><input type="checkbox" id="stpl"${S.startPlaza !== false ? " checked" : ""}><span>\uC811\uC18D\uD558\uBA74 \uAD11\uD654\uBB38 \uAD11\uC7A5\uC5D0\uC11C \uC2DC\uC791\uD558\uAE30</span></label></div></section>`;
+  }
+  function placeSec() {
+    const my = myPlace(), sn = slotNow(), tot = PLIDS.reduce((a, p) => a + plCount(p), 0);
+    return `<section class="sec"><div class="hd"><h2>\uC0DD\uD65C \uC7A5\uC18C \uC2B5\uAD00</h2><span class="sub num">\uC624\uB298 ${tot} / 45</span></div><div class="panel"><div class="muted" style="font-size:14px;margin-bottom:10px">\uD68C\uC0AC\xB7\uC9D1\xB7\uC6B4\uB3D9\uC7A5\xB7\uD559\uAD50\xB7\uBCD1\uC6D0\uC5D0\uC11C \uC544\uCE68, \uC810\uC2EC, \uC800\uB141\uC5D0 \uD560 \uC218 \uC788\uB294 \uC791\uC740 \uC2B5\uAD00\uC774\uC5D0\uC694. \uC9C0\uAE08\uC740 <b>${SL.find((x) => x.k === sn).n}</b> \uC2DC\uAC04\uC774\uC5D0\uC694. \uC624\uB298 \uACBD\uD5D8\uCE58\uB294 ${PL_MAX}\uAC1C\uAE4C\uC9C0 \uBC1B\uC544\uC694.</div>
+ <div class="plgrid">${PLIDS.map((p) => `<button class="plbtn" data-a="plc" data-p="${p}"><b>${PLACES[p].n}</b><span>${PLACES[p].sub}${p === my ? " \xB7 \uB0B4 \uC77C\uD130" : ""}</span><i class="num">${plCount(p)} / 9</i></button>`).join("")}</div></div></section>`;
+  }
+  const PORTALS = PLIDS.map((p) => ({ id: "p_" + p, portal: p, name: PLACES[p].n, pts: [[PLX[p], 1528]], r: 52 }));
+  PLIDS.forEach((p) => OBS.push([PLX[p] - 58, 1545, 116, 150]));
+  function drawStreet(g, leaf) {
+    const R = (x2, y, w, h, f) => {
+      g.fillStyle = f;
+      g.fillRect(x2, y, w, h);
+    }, E = (x2, y, rx, ry, f) => {
+      g.fillStyle = f;
+      g.beginPath();
+      g.ellipse(x2, y, rx, ry, 0, 0, 7);
+      g.fill();
+    };
+    const T = (t, x2, y, sz, col) => {
+      g.font = "700 " + sz + 'px "Noto Sans KR",system-ui,sans-serif';
+      g.textAlign = "center";
+      g.lineWidth = 3;
+      g.strokeStyle = "rgba(255,255,255,.92)";
+      g.strokeText(t, x2, y);
+      g.fillStyle = col || "#1B2340";
+      g.fillText(t, x2, y);
+    };
+    R(0, 1500, 800, 300, "#DDD7CA");
+    R(0, 1500, 800, 14, "#C9C2B2");
+    R(0, 425, 40, 1375, "#9BA6BC");
+    R(760, 425, 40, 1375, "#A8A39A");
+    R(0, 1500, 40, 300, "#9BA6BC");
+    R(760, 1500, 40, 300, "#A8A39A");
+    g.fillStyle = "rgba(255,255,255,.35)";
+    for (let y = 1510; y < 1780; y += 34) {
+      g.fillRect(8, y, 22, 14);
+      g.fillRect(770, y, 22, 14);
+    }
+    R(40, 1500, 80, 300, "#8A91A0");
+    R(680, 1500, 80, 300, "#8A91A0");
+    R(40, 1696, 720, 84, "#CFC8B8");
+    g.fillStyle = "rgba(0,0,0,.08)";
+    for (let x2 = 40; x2 < 760; x2 += 30) g.fillRect(x2, 1738, 16, 3);
+    T("\uC0DD\uD65C \uAC70\uB9AC", 400, 1508, 12, "#5B6788");
+    const bx = PLX;
+    let x = bx.office;
+    R(x - 56, 1556, 112, 138, "#4A5A82");
+    R(x - 56, 1556, 112, 8, "#2E3A5C");
+    for (let r = 0; r < 7; r++) for (let c = 0; c < 5; c++) R(x - 50 + c * 21, 1570 + r * 17, 15, 11, r * c % 4 === 1 ? "#FFE08A" : "#9CC7F0");
+    R(x - 12, 1664, 24, 30, "#2B3550");
+    T("\uD68C\uC0AC", x, 1548, 13, "#2E3A5C");
+    x = bx.home;
+    R(x - 52, 1560, 104, 134, "#E8D8BE");
+    R(x - 52, 1560, 104, 8, "#C7A982");
+    for (let r = 0; r < 6; r++) for (let c = 0; c < 4; c++) {
+      R(x - 44 + c * 23, 1574 + r * 19, 16, 12, (r + c) % 3 === 0 ? "#FFE08A" : "#A8D3EA");
+      R(x - 46 + c * 23, 1587 + r * 19, 20, 3, "#B79A6D");
+    }
+    R(x - 11, 1662, 22, 32, "#8B6A47");
+    T("\uC9D1 (\uC544\uD30C\uD2B8)", x, 1548, 13, "#7A5A33");
+    x = bx.field;
+    R(x - 58, 1576, 116, 118, "#8CC477");
+    g.strokeStyle = "#C4694A";
+    g.lineWidth = 9;
+    g.beginPath();
+    g.ellipse(x, 1636, 46, 46, 0, 0, 7);
+    g.stroke();
+    g.strokeStyle = "#fff";
+    g.lineWidth = 2;
+    g.strokeRect(x - 26, 1612, 52, 48);
+    g.beginPath();
+    g.moveTo(x, 1612);
+    g.lineTo(x, 1660);
+    g.stroke();
+    R(x - 58, 1572, 116, 6, "#6E9F5C");
+    R(x - 12, 1688, 24, 8, "#B9B2A2");
+    T("\uC6B4\uB3D9\uC7A5", x, 1558, 13, "#2F6E3C");
+    x = bx.school;
+    R(x - 56, 1590, 112, 104, "#C9785A");
+    R(x - 56, 1590, 112, 7, "#8E4F38");
+    R(x - 18, 1556, 36, 40, "#D7886A");
+    g.fillStyle = "#8E4F38";
+    g.beginPath();
+    g.moveTo(x - 22, 1556);
+    g.lineTo(x, 1536);
+    g.lineTo(x + 22, 1556);
+    g.closePath();
+    g.fill();
+    E(x, 1572, 9, 9, "#FFF7DC");
+    R(x - 1, 1566, 2, 7, "#333");
+    R(x, 1572, 6, 2, "#333");
+    for (let c = 0; c < 4; c++) {
+      R(x - 48 + c * 26, 1608, 18, 16, "#CFE6F5");
+      R(x - 48 + c * 26, 1640, 18, 16, "#CFE6F5");
+    }
+    R(x - 12, 1662, 24, 32, "#6B4A32");
+    R(x + 30, 1520, 2, 40, "#555");
+    R(x + 32, 1520, 16, 10, "#E8554E");
+    T("\uD559\uAD50", x, 1706, 13, "#8E4F38");
+    x = bx.hospital;
+    R(x - 52, 1560, 104, 134, "#F4F8F8");
+    R(x - 52, 1560, 104, 8, "#9CC8C8");
+    R(x - 9, 1575, 18, 52, "#E8554E");
+    R(x - 26, 1592, 52, 18, "#E8554E");
+    for (let c = 0; c < 4; c++) R(x - 44 + c * 23, 1640, 16, 14, "#BFE3F0");
+    R(x - 12, 1662, 24, 32, "#9CC8C8");
+    T("\uBCD1\uC6D0", x, 1548, 13, "#2F6E6E");
+    PLIDS.forEach((p) => {
+      const px = bx[p];
+      R(px - 26, 1534, 52, 5, "#F3E9A8");
+      E(px, 1523, 8, 8, "#FFB800");
+      g.strokeStyle = "#fff";
+      g.lineWidth = 2;
+      g.beginPath();
+      g.arc(px, 1523, 8, 0, 7);
+      g.stroke();
+    });
+    [[26, 1560], [774, 1560]].forEach((a) => {
+      R(a[0] - 3, a[1] + 2, 6, 14, "#6B4A32");
+      E(a[0], a[1] - 6, 16, 14, leaf[1]);
+      E(a[0], a[1] - 9, 14, 11, leaf[0]);
+    });
+  }
+  const PS = { W: 520, H: 700, K: 1.5, X0: 18, X1: 502, Y0: 118, Y1: 690, SPEED: 140 };
+  const PST = { m: { x: 115, y: 252, b: [40, 130, 150, 80] }, n: { x: 405, y: 372, b: [330, 250, 150, 80] }, e: { x: 115, y: 522, b: [40, 400, 150, 80] } };
+  const POBS = [[0, 0, 520, 112], [0, 0, 14, 700], [506, 0, 14, 700], ...SL.map((s) => PST[s.k].b)];
+  const pBlocked = (x, y) => {
+    if (x < PS.X0 || x > PS.X1 || y < PS.Y0 || y > PS.Y1) return true;
+    const f = feet(x, y);
+    for (const b of POBS) if (f.x1 > b[0] && f.x0 < b[0] + b[2] && f.y1 > b[1] && f.y0 < b[1] + b[3]) return true;
+    return false;
+  };
+  function pMove(o, dx, dy) {
+    let m = 0;
+    if (!pBlocked(o.x + dx, o.y)) {
+      o.x += dx;
+      m = 1;
+    }
+    if (!pBlocked(o.x, o.y + dy)) {
+      o.y += dy;
+      m = 1;
+    }
+    return m;
+  }
+  function buildPlace(pid) {
+    const K = PS.K, c = document.createElement("canvas");
+    c.width = PS.W * K;
+    c.height = PS.H * K;
+    const g = c.getContext("2d");
+    g.scale(K, K);
+    const R = (x, y, w, h, f) => {
+      g.fillStyle = f;
+      g.fillRect(x, y, w, h);
+    }, E = (x, y, rx, ry, f) => {
+      g.fillStyle = f;
+      g.beginPath();
+      g.ellipse(x, y, rx, ry, 0, 0, 7);
+      g.fill();
+    };
+    const T = (t, x, y, sz, col) => {
+      g.font = "700 " + sz + 'px "Noto Sans KR",system-ui,sans-serif';
+      g.textAlign = "center";
+      g.lineWidth = 3;
+      g.strokeStyle = "rgba(255,255,255,.92)";
+      g.strokeText(t, x, y);
+      g.fillStyle = col || "#1B2340";
+      g.fillText(t, x, y);
+    };
+    const grid = (col, s) => {
+      g.strokeStyle = col;
+      g.lineWidth = 1;
+      for (let x = 0; x <= 520; x += s) {
+        g.beginPath();
+        g.moveTo(x, 112);
+        g.lineTo(x, 700);
+        g.stroke();
+      }
+      for (let y = 112; y <= 700; y += s) {
+        g.beginPath();
+        g.moveTo(0, y);
+        g.lineTo(520, y);
+        g.stroke();
+      }
+    };
+    const B = (k, fill, edge) => {
+      const b = PST[k].b;
+      R(b[0], b[1], b[2], b[3], fill);
+      R(b[0], b[1], b[2], 6, edge);
+      R(b[0], b[1] + b[3] - 4, b[2], 4, "rgba(0,0,0,.18)");
+      return b;
+    };
+    if (pid === "office") {
+      R(0, 0, 520, 112, "#3D4A66");
+      for (let i = 0; i < 6; i++) {
+        R(14 + i * 82, 16, 64, 70, "#9CC7F0");
+        R(14 + i * 82, 60, 64, 26, "#6E8CC0");
+      }
+      R(0, 0, 520, 10, "#2E3A5C");
+      R(0, 112, 520, 590, "#E4E8EF");
+      grid("rgba(90,100,130,.16)", 40);
+      let b = B("m", "#5B6F9E", "#3D4A66");
+      for (let i = 0; i < 3; i++) {
+        R(b[0] + 20 + i * 44, b[1] + 14, 6, 50, "#E7EAF3");
+        R(b[0] + 14 + i * 44, b[1] + 34, 18, 5, "#C8CFE0");
+      }
+      b = B("n", "#A3593F", "#7A3F2B");
+      R(b[0] + 10, b[1] + 16, 70, 44, "#D9835F");
+      R(b[0] + 90, b[1] + 22, 40, 30, "#F2EFE8");
+      E(b[0] + 110, b[1] + 36, 10, 10, "#6B4A32");
+      b = B("e", "#EDEFF5", "#9AA3BA");
+      R(b[0] + 12, b[1] + 12, 126, 50, "#fff");
+      g.fillStyle = "#4263EB";
+      for (let i = 0; i < 4; i++) R(b[0] + 22, b[1] + 20 + i * 10, 40 + i * 14, 4, "#4263EB");
+      [[380, 160], [440, 160]].forEach((a) => {
+        R(a[0], a[1], 46, 26, "#B8C0D6");
+        R(a[0] + 12, a[1] - 10, 22, 12, "#3D4A66");
+      });
+    } else if (pid === "home") {
+      R(0, 0, 520, 112, "#F1E4D3");
+      R(190, 18, 140, 76, "#BFE3F5");
+      R(256, 18, 8, 76, "#F1E4D3");
+      R(190, 54, 140, 6, "#F1E4D3");
+      R(0, 0, 520, 10, "#CDB594");
+      R(0, 112, 520, 590, "#D9B98B");
+      g.strokeStyle = "rgba(120,84,40,.22)";
+      g.lineWidth = 1;
+      for (let y = 112; y <= 700; y += 28) {
+        g.beginPath();
+        g.moveTo(0, y);
+        g.lineTo(520, y);
+        g.stroke();
+      }
+      let b = B("m", "#9FB7E0", "#6F88BA");
+      R(b[0] + 8, b[1] + 14, 134, 52, "#fff");
+      R(b[0] + 8, b[1] + 14, 44, 52, "#F5E3C8");
+      b = B("n", "#CFC9BC", "#9E978A");
+      R(b[0] + 10, b[1] + 16, 56, 40, "#8B6A47");
+      E(b[0] + 112, b[1] + 36, 22, 16, "#fff");
+      E(b[0] + 112, b[1] + 36, 10, 6, "#D9835F");
+      b = B("e", "#B26A55", "#7E4333");
+      R(b[0] + 10, b[1] + 14, 130, 52, "#D58A74");
+      R(b[0] + 10, b[1] + 14, 130, 14, "#B26A55");
+      R(330, 448, 150, 10, "#2F3744");
+      R(340, 418, 130, 30, "#242B3A");
+      E(400, 640, 70, 28, "#C9A06A");
+    } else if (pid === "field") {
+      R(0, 0, 520, 112, "#BFE3F5");
+      for (let i = 0; i < 8; i++) R(i * 70, 70, 50, 42, "#6E9F5C");
+      R(0, 94, 520, 18, "#8F7E62");
+      R(0, 112, 520, 590, "#8CC477");
+      for (let y = 112; y < 700; y += 40) R(0, y, 520, 20, "rgba(255,255,255,.07)");
+      g.strokeStyle = "#C4694A";
+      g.lineWidth = 28;
+      g.beginPath();
+      g.ellipse(260, 440, 215, 230, 0, 0, 7);
+      g.stroke();
+      g.strokeStyle = "rgba(255,255,255,.7)";
+      g.lineWidth = 2;
+      g.beginPath();
+      g.ellipse(260, 440, 229, 244, 0, 0, 7);
+      g.stroke();
+      g.beginPath();
+      g.ellipse(260, 440, 201, 216, 0, 0, 7);
+      g.stroke();
+      let b = B("m", "#E8554E", "#B23C37");
+      for (let i = 0; i < 5; i++) R(b[0] + 12 + i * 28, b[1] + 12, 12, 56, "#fff");
+      b = B("n", "#8B6A47", "#5A4630");
+      R(b[0] + 8, b[1] + 14, 134, 10, "#C9A06A");
+      R(b[0] + 8, b[1] + 34, 134, 10, "#C9A06A");
+      E(b[0] + 118, b[1] - 10, 26, 24, "#417A36");
+      R(b[0] + 115, b[1] + 10, 6, 14, "#5A4630");
+      b = B("e", "#B7B0A2", "#8F897C");
+      for (let i = 0; i < 4; i++) R(b[0] + 6, b[1] + 10 + i * 14, 138, 8, i % 2 ? "#CFC9BB" : "#E4DFD2");
+      R(370, 150, 6, 50, "#fff");
+      R(430, 150, 6, 50, "#fff");
+      R(370, 150, 66, 6, "#fff");
+    } else if (pid === "school") {
+      R(0, 0, 520, 112, "#7B8FB5");
+      R(60, 18, 400, 70, "#2F5D50");
+      R(60, 18, 400, 5, "#C9A06A");
+      R(60, 83, 400, 5, "#C9A06A");
+      T("\uC624\uB298\uB3C4 \uD55C \uAC78\uC74C", 260, 60, 18, "#E8F3EE");
+      R(0, 0, 520, 10, "#5A6C92");
+      R(0, 112, 520, 590, "#E9DFC8");
+      grid("rgba(120,100,60,.16)", 40);
+      let b = B("m", "#7B8FB5", "#5A6C92");
+      for (let i = 0; i < 5; i++) {
+        R(b[0] + 10 + i * 28, b[1] + 12, 22, 56, "#95A8CC");
+        R(b[0] + 18 + i * 28, b[1] + 38, 6, 4, "#fff");
+      }
+      b = B("n", "#C9A06A", "#9C7840");
+      R(b[0] + 10, b[1] + 14, 130, 22, "#E4DFD2");
+      R(b[0] + 10, b[1] + 44, 130, 22, "#E4DFD2");
+      for (let i = 0; i < 4; i++) {
+        E(b[0] + 28 + i * 32, b[1] + 25, 9, 6, "#D9835F");
+        E(b[0] + 28 + i * 32, b[1] + 55, 9, 6, "#8CC477");
+      }
+      b = B("e", "#8B6A47", "#5A4630");
+      for (let i = 0; i < 6; i++) {
+        R(b[0] + 8 + i * 22, b[1] + 10, 17, 54, ["#E8554E", "#4263EB", "#2CB38F", "#FFB800", "#8B4FA6", "#4A5566"][i]);
+      }
+      [[330, 460], [420, 520], [340, 580]].forEach((a) => {
+        R(a[0], a[1], 46, 28, "#C9A06A");
+        R(a[0] + 6, a[1] + 6, 34, 16, "#E4DFD2");
+      });
+    } else {
+      R(0, 0, 520, 112, "#CFE6E6");
+      R(215, 22, 90, 70, "#fff");
+      R(250, 32, 20, 50, "#E8554E");
+      R(232, 48, 56, 18, "#E8554E");
+      R(0, 0, 520, 10, "#9CC8C8");
+      R(0, 112, 520, 590, "#EAF4F4");
+      grid("rgba(100,150,150,.2)", 40);
+      let b = B("m", "#9CC8C8", "#6BA0A0");
+      R(b[0] + 10, b[1] + 16, 130, 22, "#fff");
+      E(b[0] + 120, b[1] + 54, 10, 10, "#E8554E");
+      b = B("n", "#7B8FB5", "#5A6C92");
+      R(b[0] + 10, b[1] + 14, 58, 52, "#E4DFD2");
+      R(b[0] + 18, b[1] + 22, 42, 16, "#6BC4A0");
+      R(b[0] + 84, b[1] + 14, 56, 52, "#C9A06A");
+      b = B("e", "#fff", "#9AA3BA");
+      R(b[0] + 10, b[1] + 14, 60, 52, "#BFE3F0");
+      R(b[0] + 80, b[1] + 14, 60, 52, "#BFE3F0");
+      R(b[0] + 10, b[1] + 14, 60, 12, "#9CC8C8");
+      R(b[0] + 80, b[1] + 14, 60, 12, "#9CC8C8");
+      [[400, 170], [440, 170]].forEach((a) => {
+        E(a[0], a[1], 12, 12, "#6BC4A0");
+        R(a[0] - 4, a[1] + 8, 8, 12, "#8B6A47");
+      });
+    }
+    R(200, 672, 120, 28, "#8B6A47");
+    R(206, 676, 108, 24, "#C9A06A");
+    T("\uB098\uAC00\uB294 \uBB38", 260, 694, 11, "#5A4630");
+    SL.forEach((s) => {
+      const b = PST[s.k].b;
+      T(s.n + " \xB7 " + PLACES[pid].st[s.k], b[0] + b[2] / 2, b[1] - 8, 12, "#1B2340");
+    });
+    return c;
+  }
+  let PX = null;
+  async function openPlace(pid) {
+    if (PX || !PLACES[pid]) return;
+    if (WX) closeWorld();
+    document.documentElement.classList.add("wopen");
+    const el = document.createElement("div");
+    el.className = "world pworld";
+    el.setAttribute("role", "dialog");
+    el.setAttribute("aria-label", PLACES[pid].n);
+    el.innerHTML = '<canvas id="pc2" aria-label="' + PLACES[pid].n + ' \uC9C0\uB3C4. \uD654\uBA74\uC744 \uB204\uB974\uAC70\uB098 \uBC29\uD5A5\uD0A4\uB85C \uAC78\uC5B4\uC694."></canvas><div class="wtop"><div class="wchip"><b>' + PLACES[pid].n + '</b><span id="pcnt"></span></div><button class="btn sm ghost" data-p="out" aria-label="\uAD11\uC7A5\uC73C\uB85C \uB098\uAC00\uAE30">\uAD11\uC7A5\uC73C\uB85C</button></div><div class="wbot"><div class="wcard" id="pcard" hidden></div><div class="whint" id="phint">\uAD6C\uC5ED\uC73C\uB85C \uAC78\uC5B4\uAC00\uAC70\uB098 \uC544\uB798 \uBC84\uD2BC\uC744 \uB20C\uB7EC\uC694</div><div class="wsay">' + SL.map((s) => '<button class="btn sm ghost" data-p="go" data-s="' + s.k + '">' + s.n + " \xB7 " + PLACES[pid].st[s.k] + "</button>").join("") + "</div></div>";
+    document.body.appendChild(el);
+    const cv = el.querySelector("#pc2"), cx = cv.getContext("2d"), map = buildPlace(pid), K = PS.K;
+    const me2 = { x: 260, y: 610, f: 1 }, keys = {};
+    let target = null, down = false, raf = 0, last = performance.now(), cam = { x: 0, y: 0 }, view = { w: 0, h: 0, sc: 1, dpr: 1 }, cur = null, img = null;
+    const mkImg = () => {
+      const im = new Image();
+      im.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(av(S.job, lvInfo(S.totalXp).l, S.look, { label: "\uCE90\uB9AD\uD130" }).replace("<svg ", '<svg width="120" height="150" '));
+      return im;
+    };
+    img = mkImg();
+    function resize() {
+      view.dpr = Math.min(2, window.devicePixelRatio || 1);
+      view.w = cv.clientWidth || innerWidth;
+      view.h = cv.clientHeight || innerHeight;
+      cv.width = Math.round(view.w * view.dpr);
+      cv.height = Math.round(view.h * view.dpr);
+      view.sc = Math.min(1.6, Math.max(view.w / PS.W, view.h / 820));
+    }
+    function toW(e) {
+      const r = cv.getBoundingClientRect();
+      return [cam.x + (e.clientX - r.left) / view.sc, cam.y + (e.clientY - r.top) / view.sc];
+    }
+    function setT(e) {
+      const p = toW(e);
+      target = { x: Math.max(PS.X0, Math.min(PS.X1, p[0])), y: Math.max(PS.Y0, Math.min(PS.Y1, p[1])) };
+    }
+    const onDown = (e) => {
+      down = true;
+      try {
+        cv.setPointerCapture(e.pointerId);
+      } catch (x) {
+      }
+      setT(e);
+      const h = el.querySelector("#phint");
+      if (h) h.hidden = true;
+    }, onMv = (e) => {
+      if (down) setT(e);
+    }, onUp = () => {
+      down = false;
+    };
+    cv.addEventListener("pointerdown", onDown);
+    cv.addEventListener("pointermove", onMv);
+    cv.addEventListener("pointerup", onUp);
+    cv.addEventListener("pointercancel", onUp);
+    const KM = { ArrowUp: "u", w: "u", W: "u", ArrowDown: "d", s: "d", S: "d", ArrowLeft: "l", a: "l", A: "l", ArrowRight: "r", d: "r", D: "r" };
+    const onKey = (e) => {
+      if (e.key === "Escape") {
+        leave();
+        return;
+      }
+      const k = KM[e.key];
+      if (!k) return;
+      if (e.target && /INPUT|TEXTAREA|SELECT/.test(e.target.tagName)) return;
+      e.preventDefault();
+      keys[k] = e.type === "keydown";
+    };
+    const onKeyUp = (e) => onKey(e);
+    document.addEventListener("keydown", onKey);
+    document.addEventListener("keyup", onKeyUp);
+    window.addEventListener("resize", resize);
+    resize();
+    const stDone = (s) => [0, 1, 2].filter((i) => plDone(pid + "." + s + i)).length;
+    function head() {
+      const c = el.querySelector("#pcnt");
+      if (c) c.textContent = " \xB7 \uC624\uB298 " + plCount(pid) + " / 9";
+    }
+    function card() {
+      const c = el.querySelector("#pcard");
+      if (!c) return;
+      if (!cur) {
+        c.hidden = true;
+        c.innerHTML = "";
+        return;
+      }
+      if (cur === "door") {
+        c.hidden = false;
+        c.innerHTML = '<div class="wt">\uB098\uAC00\uB294 \uBB38</div><div class="wi">\uAD11\uD654\uBB38 \uAD11\uC7A5\uC73C\uB85C \uB3CC\uC544\uAC00\uC694.</div><button class="btn sm mint" data-p="out">\uAD11\uC7A5\uC73C\uB85C \uAC00\uAE30</button>';
+        return;
+      }
+      const s = SL.find((x) => x.k === cur), now = slotNow() === cur;
+      c.hidden = false;
+      c.innerHTML = '<div class="wt">' + s.n + " \xB7 " + PLACES[pid].st[cur] + (now ? ' <span class="chip">\uC9C0\uAE08 \uC2DC\uAC04\uB300</span>' : "") + "</div>" + [0, 1, 2].map((i) => {
+        const h = habOf(pid, cur, i), d = plDone(h.id);
+        return '<button class="hrow' + (d ? " on" : "") + '" data-p="hab" data-id="' + h.id + '"' + (d ? " disabled" : "") + '><span class="ck" aria-hidden="true">' + (d ? "\u2713" : "") + '</span><span class="ht"><b>' + h.t + "</b><small>\uCD5C\uC18C \uBC84\uC804: " + h.mini + '</small></span><span class="hx">+' + PL_XP + "</span></button>";
+      }).join("") + '<label class="alrow2"><input type="checkbox" data-pal="' + cur + '"' + (alOn(pid, cur) ? " checked" : "") + "><span>" + s.n + ' \uC54C\uB9BC \uBC1B\uAE30</span><input class="inp" type="time" data-palt="' + cur + '" value="' + alTime(cur) + '" aria-label="' + s.n + ' \uC54C\uB9BC \uC2DC\uAC01"></label>';
+    }
+    function frame(t) {
+      raf = requestAnimationFrame(frame);
+      const dt = Math.min(0.05, (t - last) / 1e3);
+      last = t;
+      let vx = (keys.r ? 1 : 0) - (keys.l ? 1 : 0), vy = (keys.d ? 1 : 0) - (keys.u ? 1 : 0);
+      if (vx || vy) {
+        target = null;
+        const n = Math.hypot(vx, vy);
+        vx = vx / n * PS.SPEED * dt;
+        vy = vy / n * PS.SPEED * dt;
+        if (pMove(me2, vx, vy) && vx) me2.f = vx > 0 ? 1 : -1;
+      } else if (target) {
+        const dx = target.x - me2.x, dy = target.y - me2.y, d = Math.hypot(dx, dy);
+        if (d < 4) target = null;
+        else {
+          const st = Math.min(d, PS.SPEED * dt), sx = dx / d * st, sy = dy / d * st;
+          if (!pMove(me2, sx, sy)) target = null;
+          else if (Math.abs(sx) > 0.1) me2.f = sx > 0 ? 1 : -1;
+        }
+      }
+      const vw = view.w / view.sc, vh = view.h / view.sc;
+      cam.x = vw >= PS.W ? (PS.W - vw) / 2 : Math.max(0, Math.min(PS.W - vw, me2.x - vw / 2));
+      cam.y = vh >= PS.H ? (PS.H - vh) / 2 : Math.max(0, Math.min(PS.H - vh, me2.y - vh * 0.58));
+      let nr = null, nd = 1e9;
+      SL.forEach((s) => {
+        const d = Math.hypot(PST[s.k].x - me2.x, PST[s.k].y - me2.y);
+        if (d < 62 && d < nd) {
+          nd = d;
+          nr = s.k;
+        }
+      });
+      if (!nr && Math.hypot(260 - me2.x, 650 - me2.y) < 46) nr = "door";
+      if (nr !== cur) {
+        const active = document.activeElement;
+        const typing = active && el.contains(active) && /INPUT/.test(active.tagName);
+        if (!typing || !nr) {
+          cur = nr;
+          card();
+        }
+      }
+      cx.setTransform(view.dpr, 0, 0, view.dpr, 0, 0);
+      cx.fillStyle = "#1B2340";
+      cx.fillRect(0, 0, view.w, view.h);
+      cx.save();
+      cx.scale(view.sc, view.sc);
+      cx.translate(-cam.x, -cam.y);
+      cx.drawImage(map, 0, 0, PS.W * K, PS.H * K, 0, 0, PS.W, PS.H);
+      SL.forEach((s) => {
+        const p = PST[s.k], all = stDone(s.k) === 3;
+        cx.fillStyle = all ? "#17A583" : slotNow() === s.k ? "#FF7A3D" : "#FFB800";
+        cx.beginPath();
+        cx.arc(p.x, p.y - 20 + Math.sin(t / 350 + p.x) * 2, 8, 0, 7);
+        cx.fill();
+        cx.strokeStyle = "#fff";
+        cx.lineWidth = 2;
+        cx.stroke();
+        cx.fillStyle = "#fff";
+        cx.font = "700 10px sans-serif";
+        cx.textAlign = "center";
+        cx.fillText(all ? "\u2713" : String(3 - stDone(s.k)), p.x, p.y - 16 + Math.sin(t / 350 + p.x) * 2);
+      });
+      cx.fillStyle = "rgba(0,0,0,.2)";
+      cx.beginPath();
+      cx.ellipse(me2.x, me2.y, 13, 5, 0, 0, 7);
+      cx.fill();
+      cx.strokeStyle = "#4263EB";
+      cx.lineWidth = 2;
+      cx.beginPath();
+      cx.ellipse(me2.x, me2.y, 16, 7, 0, 0, 7);
+      cx.stroke();
+      if (img.complete && img.naturalWidth) cx.drawImage(img, me2.x - 18, me2.y - 46, 36, 45);
+      else {
+        cx.fillStyle = "#4263EB";
+        cx.fillRect(me2.x - 8, me2.y - 30, 16, 30);
+      }
+      cx.font = '700 11px "Noto Sans KR",system-ui,sans-serif';
+      cx.textAlign = "center";
+      cx.lineWidth = 3;
+      cx.strokeStyle = "rgba(255,255,255,.92)";
+      cx.strokeText(S.nick + " (\uB098)", me2.x, me2.y - 50);
+      cx.fillStyle = "#4263EB";
+      cx.fillText(S.nick + " (\uB098)", me2.x, me2.y - 50);
+      cx.restore();
+    }
+    function leave() {
+      const sp = { x: PLX[pid], y: 1528 };
+      closePlace();
+      openWorld(sp);
+    }
+    el.addEventListener("click", (e) => {
+      const t = e.target.closest("[data-p]");
+      if (!t) return;
+      const a = t.dataset.p;
+      if (a === "out") leave();
+      else if (a === "go") {
+        const s = PST[t.dataset.s];
+        if (s) {
+          me2.x = s.x;
+          me2.y = s.y + 8;
+          target = null;
+          const h = el.querySelector("#phint");
+          if (h) h.hidden = true;
+        }
+      } else if (a === "hab") {
+        if (doPlaceHabit(t.dataset.id)) {
+          card();
+          head();
+        }
+      }
+    });
+    el.addEventListener("change", (e) => {
+      const t = e.target;
+      if (t.dataset && t.dataset.pal) {
+        setAl(pid, t.dataset.pal, t.checked);
+        card();
+      } else if (t.dataset && t.dataset.palt) {
+        setAlT(t.dataset.palt, t.value);
+      }
+    });
+    PX = { destroy() {
+      cancelAnimationFrame(raf);
+      document.removeEventListener("keydown", onKey);
+      document.removeEventListener("keyup", onKeyUp);
+      window.removeEventListener("resize", resize);
+      el.remove();
+    } };
+    head();
+    raf = requestAnimationFrame(frame);
+    persist();
+  }
+  function closePlace() {
+    document.documentElement.classList.remove("wopen");
+    if (!PX) return;
+    const p = PX;
+    PX = null;
+    p.destroy();
+    render();
+  }
+  document.addEventListener("change", (e) => {
+    const t = e.target;
+    if (t && t.id === "stpl") {
+      S.startPlaza = !!t.checked;
+      persist();
+    } else if (t && t.dataset && t.dataset.alt) {
+      setAlT(t.dataset.alt, t.value);
+      toast("\uC54C\uB9BC \uC2DC\uAC01\uC744 \uBC14\uAFE8\uC5B4\uC694");
+    }
+  });
+  setInterval(() => {
+    try {
+      alTick();
+    } catch (e) {
+    }
+  }, 2e4);
   render();
+  if (S.job && S.startPlaza !== false && !window.__cqNoPlaza) setTimeout(openWorld, 0);
   (async () => {
     try {
       const c = window.claude;
