@@ -1,0 +1,12 @@
+const {chromium,devices}=require('playwright');const path=require('path');let f=0;const ok=(c,m,x)=>{console.log((c?'PASS ':'FAIL ')+m+(x?' '+x:''));if(!c)f++};
+(async()=>{const b=await chromium.launch();const c=await b.newContext({...devices['iPhone 13'],timezoneId:'Asia/Seoul'});const p=await c.newPage();const e=[];p.on('pageerror',x=>e.push(x.message));
+await p.addInitScript(()=>{window.__cqNoPlaza=1});await p.goto('file://'+path.resolve('out/career-quest-party.html'));await p.waitForTimeout(400);
+await p.fill('#nk','테스터');await p.click('[data-a=next]');await p.click('[data-a=sel][data-j=developer]');await p.click('[data-a=start]');await p.waitForTimeout(600);
+await p.click('[data-a=tab][data-t=me]');await p.waitForTimeout(200);
+ok(/아직 쓴 문장이 없어요/.test(await p.locator('body').innerText()),'빈 상태 안내');
+await p.evaluate(()=>{const S=CQ_DEV.hab.S;for(let i=1;i<=9;i++)S.story.push({day:'2026-11-'+String(i).padStart(2,'0'),j:'developer',p:'장면 '+i,t:'오늘의 한 문장 '+i});CQ_DEV.hab.save()});await p.waitForTimeout(200);
+let t=await p.locator('.sent').innerText();ok(/오늘의 한 문장 9/.test(t)&&!/한 문장 1\b/.test(t)&&await p.locator('.sent .s').count()===7,'최근 7개, 최신순');
+await p.click('[data-a=sentall]');await p.waitForTimeout(150);ok(await p.locator('.sent .s').count()===9,'전체 보기 9개');
+await p.locator('.sent').scrollIntoViewIfNeeded();await p.screenshot({path:'shots6/sent_me.png'});
+ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),'가로 넘침 없음');ok(!e.length,'오류 없음',e.join('|'));
+await b.close();process.exit(f?1:0)})();
