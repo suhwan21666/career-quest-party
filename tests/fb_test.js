@@ -1,0 +1,13 @@
+const {chromium,devices}=require('playwright');let f=0;const ok=(c,m,x)=>{console.log((c?'PASS ':'FAIL ')+m+(x?' '+x:''));if(!c)f++};
+(async()=>{const b=await chromium.launch();const c=await b.newContext({...devices['iPhone 13'],permissions:['clipboard-read','clipboard-write']});const p=await c.newPage();const errs=[];p.on('pageerror',e=>errs.push(e.message));
+await p.addInitScript(()=>localStorage.setItem('cq-party-v1',JSON.stringify({v:2,nick:'비밀이름',job:'chef',look:{hair:0,hc:0,top:1,skin:0},totalXp:120})));
+await p.goto('file://'+require('path').resolve('out/career-quest-party.html'));await p.waitForTimeout(400);
+await p.locator('[data-a=tab][data-t=me]:not(.link)').click();await p.waitForTimeout(150);
+ok(await p.locator('text=테스트 참여').isVisible(),'캐릭터 탭에 테스트 참여 영역');
+await p.locator('[data-a=fb]').click();await p.waitForTimeout(250);
+const tx=await p.locator('#fbt').inputValue();ok(/빌드: v0.4.0/.test(tx)&&/Lv/.test(tx)&&/최근 오류: 없음/.test(tx),'보고 글 자동 생성',tx.split('\n').slice(0,3).join(' / ').slice(0,80));
+ok(!/비밀이름/.test(tx),'닉네임 등 개인 기록은 포함 안 됨');
+await p.locator('[data-a=fbcopy]').click();await p.waitForTimeout(250);
+const cl=await p.evaluate(()=>navigator.clipboard.readText());ok(/테스트 보고/.test(cl),'클립보드에 복사됨');
+ok(await p.locator('.toast').first().innerText().then(t=>/복사했어요/.test(t)),'복사 안내 토스트');
+ok(errs.length===0,'JS 오류 없음',errs.join('|'));await b.close();console.log('FAIL count:',f)})();
