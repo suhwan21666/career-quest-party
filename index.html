@@ -441,7 +441,7 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
     const n = String(s == null ? "" : s).toLowerCase().replace(/[\s.\-_*~!?,]/g, "");
     return BAD.some((w) => n.includes(w));
   };
-  const APP_BUILD = "v0.3.0";
+  const APP_BUILD = "v0.3.1";
   const PAGE_URL = /^https?:/.test(location.href) ? location.href.split("#")[0].split("?")[0] : "";
   const XP = { act: 15, story: 12, com: 10, habit: 12, habitMini: 8, snack: 3 }, CLEAR = 10, CHEST = 25, CHEER_GET = 2, CHEER_SEND = 1, WEEK_GOAL = 10, WEEK_XP = 30, MASTER = 30, SNACK_MAX = 5;
   const HAIRC = ["#3A2B22", "#7A4A2E", "#D9B36C", "#8B8B8B", "#6E2A3A"], TOPC = ["#F1EFE8", "#185FA5", "#D85A30", "#3B6D11", "#2C2C2A"], SKIN = ["#FFDCC2", "#EBBA92", "#B98363"];
@@ -1645,7 +1645,7 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
       id: String(p.peer),
       by: p.by || null,
       x: ci(x.x, 20, 780, 400),
-      y: ci(x.y, 430, 1775, 640),
+      y: ci(x.y, 430, WORLD.Y1 - 5, 640),
       f: x.f === -1 ? -1 : 1,
       n: !nm || dirty(nm) ? "\uBAA8\uD5D8\uAC00" : nm,
       j: hasJob(x.j) ? x.j : "developer",
@@ -2209,7 +2209,7 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
       if (l.portal) {
         const p = l.portal;
         c.hidden = false;
-        c.innerHTML = '<div class="wt">' + PLACES[p].n + " (" + PLACES[p].sub + ')</div><div class="wi">\uC624\uB298 ' + plCount(p) + " / 9 \xB7 \uC544\uCE68, \uC810\uC2EC, \uC800\uB141 \uC2B5\uAD00\uC774 \uC788\uC5B4\uC694" + (myPlace() === p ? " \xB7 \uB0B4 \uC77C\uD130" : "") + '</div><button class="btn sm blue" data-w="enter" data-p="' + p + '">\uB4E4\uC5B4\uAC00\uAE30</button>';
+        c.innerHTML = '<div class="wt">' + PLACES[p].n + " (" + PLACES[p].sub + ')</div><div class="wi">\uC624\uB298 ' + plCount(p) + " / " + PL_PER + " \xB7 \uC544\uCE68, \uC810\uC2EC, \uC800\uB141 \uC2B5\uAD00\uC774 \uC788\uC5B4\uC694" + (myPlace() === p ? " \xB7 \uB0B4 \uC77C\uD130" : "") + '</div><button class="btn sm blue" data-w="enter" data-p="' + p + '">\uB4E4\uC5B4\uAC00\uAE30</button>';
         return;
       }
       const done = stampsToday().ids.includes(l.id);
@@ -2295,7 +2295,7 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
     render();
   }
   const SL = [{ k: "m", n: "\uC544\uCE68", t: "08:00", h: [5, 11] }, { k: "n", n: "\uC810\uC2EC", t: "12:30", h: [11, 16] }, { k: "e", n: "\uC800\uB141", t: "19:00", h: [16, 29] }];
-  const PLACES = {
+  const PLACE_DEFS = {
     office: {
       n: "\uD68C\uC0AC",
       sub: "\uBE4C\uB529",
@@ -2352,8 +2352,39 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
       }
     }
   };
-  const PLIDS = Object.keys(PLACES);
-  const PLX = { office: 100, home: 250, field: 400, school: 550, hospital: 700 };
+  const PLACES = PLACE_DEFS, PLIDS = Object.keys(PLACES);
+  const PL_COLS = 5, PL_ROW_H = 210, PL_PER = 9;
+  const PL_POS = {};
+  PLIDS.forEach((p, i) => {
+    const row = Math.floor(i / PL_COLS), n = Math.min(PL_COLS, PLIDS.length - row * PL_COLS);
+    PL_POS[p] = { x: 400 - (n - 1) * 75 + i % PL_COLS * 150, row, dy: row * PL_ROW_H };
+  });
+  const PL_ROWS = Math.max(1, Math.ceil(PLIDS.length / PL_COLS));
+  WORLD.H = 1590 + PL_ROWS * PL_ROW_H;
+  WORLD.Y1 = WORLD.H - 20;
+  const placeOfJob = (j) => PLIDS.find((p) => (PLACES[p].jobs || []).includes(j)) || null;
+  function placeProblems() {
+    const o = [], seen = {};
+    PLIDS.forEach((p) => {
+      const d = PLACES[p];
+      if (!/^[a-z][a-z0-9]*$/.test(p)) o.push(p + ": id \uD615\uC2DD");
+      if (!d.n || !d.sub) o.push(p + ": \uC774\uB984");
+      SL.forEach((s) => {
+        if (!d.st || !d.st[s.k]) o.push(p + ": \uAD6C\uC5ED \uC774\uB984 " + s.k);
+        const h = d.hb && d.hb[s.k];
+        if (!h || h.length !== 3) o.push(p + ": \uC2B5\uAD00 3\uAC1C " + s.k);
+        else h.forEach((a, i) => {
+          if (!a[0] || !a[1] || !STATS.some((x) => x[0] === a[2])) o.push(p + "." + s.k + i + ": \uC2B5\uAD00 \uD615\uC2DD");
+        });
+      });
+      (d.jobs || []).forEach((j) => {
+        if (!JB[j]) o.push(p + ": \uC5C6\uB294 \uC9C1\uC5C5 " + j);
+        if (seen[j]) o.push(j + ": \uB450 \uC7A5\uC18C\uC5D0 \uC911\uBCF5");
+        seen[j] = 1;
+      });
+    });
+    return o;
+  }
   const habOf = (p, s, i) => {
     const a = (((PLACES[p] || {}).hb || {})[s] || [])[i];
     return a ? { id: p + "." + s + i, p, s, i, t: a[0], mini: a[1], stat: a[2] } : null;
@@ -2373,7 +2404,7 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
   }
   const plDone = (id) => plState().ids.includes(id);
   const plCount = (p) => plState().ids.filter((x) => x.startsWith(p + ".")).length;
-  const myPlace = () => PLIDS.find((p) => PLACES[p].jobs.includes(S.job)) || null;
+  const myPlace = () => placeOfJob(S.job);
   function doPlaceHabit(id) {
     const m = /^(\w+)\.([mne])(\d)$/.exec(id || "");
     if (!m) return false;
@@ -2490,119 +2521,144 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
   }
   function placeSec() {
     const my = myPlace(), sn = slotNow(), tot = PLIDS.reduce((a, p) => a + plCount(p), 0);
-    return `<section class="sec"><div class="hd"><h2>\uC0DD\uD65C \uC7A5\uC18C \uC2B5\uAD00</h2><span class="sub num">\uC624\uB298 ${tot} / 45</span></div><div class="panel"><div class="muted" style="font-size:14px;margin-bottom:10px">\uD68C\uC0AC\xB7\uC9D1\xB7\uC6B4\uB3D9\uC7A5\xB7\uD559\uAD50\xB7\uBCD1\uC6D0\uC5D0\uC11C \uC544\uCE68, \uC810\uC2EC, \uC800\uB141\uC5D0 \uD560 \uC218 \uC788\uB294 \uC791\uC740 \uC2B5\uAD00\uC774\uC5D0\uC694. \uC9C0\uAE08\uC740 <b>${SL.find((x) => x.k === sn).n}</b> \uC2DC\uAC04\uC774\uC5D0\uC694. \uC624\uB298 \uACBD\uD5D8\uCE58\uB294 ${PL_MAX}\uAC1C\uAE4C\uC9C0 \uBC1B\uC544\uC694.</div>
- <div class="plgrid">${PLIDS.map((p) => `<button class="plbtn" data-a="plc" data-p="${p}"><b>${PLACES[p].n}</b><span>${PLACES[p].sub}${p === my ? " \xB7 \uB0B4 \uC77C\uD130" : ""}</span><i class="num">${plCount(p)} / 9</i></button>`).join("")}</div></div></section>`;
+    return `<section class="sec"><div class="hd"><h2>\uC0DD\uD65C \uC7A5\uC18C \uC2B5\uAD00</h2><span class="sub num">\uC624\uB298 ${tot} / ${PLIDS.length * PL_PER}</span></div><div class="panel"><div class="muted" style="font-size:14px;margin-bottom:10px">\uD68C\uC0AC\xB7\uC9D1\xB7\uC6B4\uB3D9\uC7A5\xB7\uD559\uAD50\xB7\uBCD1\uC6D0\uC5D0\uC11C \uC544\uCE68, \uC810\uC2EC, \uC800\uB141\uC5D0 \uD560 \uC218 \uC788\uB294 \uC791\uC740 \uC2B5\uAD00\uC774\uC5D0\uC694. \uC9C0\uAE08\uC740 <b>${SL.find((x) => x.k === sn).n}</b> \uC2DC\uAC04\uC774\uC5D0\uC694. \uC624\uB298 \uACBD\uD5D8\uCE58\uB294 ${PL_MAX}\uAC1C\uAE4C\uC9C0 \uBC1B\uC544\uC694.</div>
+ <div class="plgrid">${PLIDS.map((p) => `<button class="plbtn" data-a="plc" data-p="${p}"><b>${PLACES[p].n}</b><span>${PLACES[p].sub}${p === my ? " \xB7 \uB0B4 \uC77C\uD130" : ""}</span><i class="num">${plCount(p)} / ${PL_PER}</i></button>`).join("")}</div></div></section>`;
   }
-  const PORTALS = PLIDS.map((p) => ({ id: "p_" + p, portal: p, name: PLACES[p].n, pts: [[PLX[p], 1528]], r: 52 }));
-  PLIDS.forEach((p) => OBS.push([PLX[p] - 58, 1545, 116, 150]));
+  const PORTALS = PLIDS.map((p) => ({ id: "p_" + p, portal: p, name: PLACES[p].n, pts: [[PL_POS[p].x, 1528 + PL_POS[p].dy]], r: 52 }));
+  PLIDS.forEach((p) => OBS.push([PL_POS[p].x - 58, 1545 + PL_POS[p].dy, 116, 150]));
+  const BLD = {
+    office: (g, x, h) => {
+      const { R, E, T } = h;
+      R(x - 56, 1556, 112, 138, "#4A5A82");
+      R(x - 56, 1556, 112, 8, "#2E3A5C");
+      for (let r = 0; r < 7; r++) for (let c = 0; c < 5; c++) R(x - 50 + c * 21, 1570 + r * 17, 15, 11, r * c % 4 === 1 ? "#FFE08A" : "#9CC7F0");
+      R(x - 12, 1664, 24, 30, "#2B3550");
+      T("\uD68C\uC0AC", x, 1548, 13, "#2E3A5C");
+    },
+    home: (g, x, h) => {
+      const { R, E, T } = h;
+      R(x - 52, 1560, 104, 134, "#E8D8BE");
+      R(x - 52, 1560, 104, 8, "#C7A982");
+      for (let r = 0; r < 6; r++) for (let c = 0; c < 4; c++) {
+        R(x - 44 + c * 23, 1574 + r * 19, 16, 12, (r + c) % 3 === 0 ? "#FFE08A" : "#A8D3EA");
+        R(x - 46 + c * 23, 1587 + r * 19, 20, 3, "#B79A6D");
+      }
+      R(x - 11, 1662, 22, 32, "#8B6A47");
+      T("\uC9D1 (\uC544\uD30C\uD2B8)", x, 1548, 13, "#7A5A33");
+    },
+    field: (g, x, h) => {
+      const { R, E, T } = h;
+      R(x - 58, 1576, 116, 118, "#8CC477");
+      g.strokeStyle = "#C4694A";
+      g.lineWidth = 9;
+      g.beginPath();
+      g.ellipse(x, 1636, 46, 46, 0, 0, 7);
+      g.stroke();
+      g.strokeStyle = "#fff";
+      g.lineWidth = 2;
+      g.strokeRect(x - 26, 1612, 52, 48);
+      g.beginPath();
+      g.moveTo(x, 1612);
+      g.lineTo(x, 1660);
+      g.stroke();
+      R(x - 58, 1572, 116, 6, "#6E9F5C");
+      R(x - 12, 1688, 24, 8, "#B9B2A2");
+      T("\uC6B4\uB3D9\uC7A5", x, 1558, 13, "#2F6E3C");
+    },
+    school: (g, x, h) => {
+      const { R, E, T } = h;
+      R(x - 56, 1590, 112, 104, "#C9785A");
+      R(x - 56, 1590, 112, 7, "#8E4F38");
+      R(x - 18, 1556, 36, 40, "#D7886A");
+      g.fillStyle = "#8E4F38";
+      g.beginPath();
+      g.moveTo(x - 22, 1556);
+      g.lineTo(x, 1536);
+      g.lineTo(x + 22, 1556);
+      g.closePath();
+      g.fill();
+      E(x, 1572, 9, 9, "#FFF7DC");
+      R(x - 1, 1566, 2, 7, "#333");
+      R(x, 1572, 6, 2, "#333");
+      for (let c = 0; c < 4; c++) {
+        R(x - 48 + c * 26, 1608, 18, 16, "#CFE6F5");
+        R(x - 48 + c * 26, 1640, 18, 16, "#CFE6F5");
+      }
+      R(x - 12, 1662, 24, 32, "#6B4A32");
+      R(x + 30, 1520, 2, 40, "#555");
+      R(x + 32, 1520, 16, 10, "#E8554E");
+      T("\uD559\uAD50", x, 1706, 13, "#8E4F38");
+    },
+    hospital: (g, x, h) => {
+      const { R, E, T } = h;
+      R(x - 52, 1560, 104, 134, "#F4F8F8");
+      R(x - 52, 1560, 104, 8, "#9CC8C8");
+      R(x - 9, 1575, 18, 52, "#E8554E");
+      R(x - 26, 1592, 52, 18, "#E8554E");
+      for (let c = 0; c < 4; c++) R(x - 44 + c * 23, 1640, 16, 14, "#BFE3F0");
+      R(x - 12, 1662, 24, 32, "#9CC8C8");
+      T("\uBCD1\uC6D0", x, 1548, 13, "#2F6E6E");
+    }
+  };
+  function genericBuilding(g, x, h, d) {
+    const { R, T } = h, k = d.look || {};
+    R(x - 54, 1560, 108, 134, k.body || "#B8C4DD");
+    R(x - 54, 1560, 108, 9, k.roof || "#6E7FA6");
+    for (let r = 0; r < 5; r++) for (let c = 0; c < 4; c++) R(x - 44 + c * 23, 1578 + r * 21, 16, 13, k.win || "#CFE6F5");
+    R(x - 12, 1662, 24, 32, k.door || "#6B4A32");
+    T(d.n, x, 1548, 13, k.roof || "#2E3A5C");
+  }
   function drawStreet(g, leaf) {
-    const R = (x2, y, w, h, f) => {
+    const H = WORLD.H, R = (x, y, w, h2, f) => {
       g.fillStyle = f;
-      g.fillRect(x2, y, w, h);
-    }, E = (x2, y, rx, ry, f) => {
+      g.fillRect(x, y, w, h2);
+    }, E = (x, y, rx, ry, f) => {
       g.fillStyle = f;
       g.beginPath();
-      g.ellipse(x2, y, rx, ry, 0, 0, 7);
+      g.ellipse(x, y, rx, ry, 0, 0, 7);
       g.fill();
     };
-    const T = (t, x2, y, sz, col) => {
+    const T = (t, x, y, sz, col) => {
       g.font = "700 " + sz + 'px "Noto Sans KR",system-ui,sans-serif';
       g.textAlign = "center";
       g.lineWidth = 3;
       g.strokeStyle = "rgba(255,255,255,.92)";
-      g.strokeText(t, x2, y);
+      g.strokeText(t, x, y);
       g.fillStyle = col || "#1B2340";
-      g.fillText(t, x2, y);
+      g.fillText(t, x, y);
     };
-    R(0, 1500, 800, 300, "#DDD7CA");
+    const h = { R, E, T };
+    R(0, 1500, 800, H - 1500, "#DDD7CA");
     R(0, 1500, 800, 14, "#C9C2B2");
-    R(0, 425, 40, 1375, "#9BA6BC");
-    R(760, 425, 40, 1375, "#A8A39A");
-    R(0, 1500, 40, 300, "#9BA6BC");
-    R(760, 1500, 40, 300, "#A8A39A");
+    R(0, 425, 40, H - 425, "#9BA6BC");
+    R(760, 425, 40, H - 425, "#A8A39A");
     g.fillStyle = "rgba(255,255,255,.35)";
-    for (let y = 1510; y < 1780; y += 34) {
+    for (let y = 1510; y < H - 20; y += 34) {
       g.fillRect(8, y, 22, 14);
       g.fillRect(770, y, 22, 14);
     }
-    R(40, 1500, 80, 300, "#8A91A0");
-    R(680, 1500, 80, 300, "#8A91A0");
-    R(40, 1696, 720, 84, "#CFC8B8");
-    g.fillStyle = "rgba(0,0,0,.08)";
-    for (let x2 = 40; x2 < 760; x2 += 30) g.fillRect(x2, 1738, 16, 3);
+    R(40, 1500, 80, H - 1500, "#8A91A0");
+    R(680, 1500, 80, H - 1500, "#8A91A0");
     T("\uC0DD\uD65C \uAC70\uB9AC", 400, 1508, 12, "#5B6788");
-    const bx = PLX;
-    let x = bx.office;
-    R(x - 56, 1556, 112, 138, "#4A5A82");
-    R(x - 56, 1556, 112, 8, "#2E3A5C");
-    for (let r = 0; r < 7; r++) for (let c = 0; c < 5; c++) R(x - 50 + c * 21, 1570 + r * 17, 15, 11, r * c % 4 === 1 ? "#FFE08A" : "#9CC7F0");
-    R(x - 12, 1664, 24, 30, "#2B3550");
-    T("\uD68C\uC0AC", x, 1548, 13, "#2E3A5C");
-    x = bx.home;
-    R(x - 52, 1560, 104, 134, "#E8D8BE");
-    R(x - 52, 1560, 104, 8, "#C7A982");
-    for (let r = 0; r < 6; r++) for (let c = 0; c < 4; c++) {
-      R(x - 44 + c * 23, 1574 + r * 19, 16, 12, (r + c) % 3 === 0 ? "#FFE08A" : "#A8D3EA");
-      R(x - 46 + c * 23, 1587 + r * 19, 20, 3, "#B79A6D");
+    for (let r = 0; r < PL_ROWS; r++) {
+      const dy = r * PL_ROW_H;
+      R(40, 1696 + dy, 720, 84, "#CFC8B8");
+      g.fillStyle = "rgba(0,0,0,.08)";
+      for (let x = 40; x < 760; x += 30) g.fillRect(x, 1738 + dy, 16, 3);
     }
-    R(x - 11, 1662, 22, 32, "#8B6A47");
-    T("\uC9D1 (\uC544\uD30C\uD2B8)", x, 1548, 13, "#7A5A33");
-    x = bx.field;
-    R(x - 58, 1576, 116, 118, "#8CC477");
-    g.strokeStyle = "#C4694A";
-    g.lineWidth = 9;
-    g.beginPath();
-    g.ellipse(x, 1636, 46, 46, 0, 0, 7);
-    g.stroke();
-    g.strokeStyle = "#fff";
-    g.lineWidth = 2;
-    g.strokeRect(x - 26, 1612, 52, 48);
-    g.beginPath();
-    g.moveTo(x, 1612);
-    g.lineTo(x, 1660);
-    g.stroke();
-    R(x - 58, 1572, 116, 6, "#6E9F5C");
-    R(x - 12, 1688, 24, 8, "#B9B2A2");
-    T("\uC6B4\uB3D9\uC7A5", x, 1558, 13, "#2F6E3C");
-    x = bx.school;
-    R(x - 56, 1590, 112, 104, "#C9785A");
-    R(x - 56, 1590, 112, 7, "#8E4F38");
-    R(x - 18, 1556, 36, 40, "#D7886A");
-    g.fillStyle = "#8E4F38";
-    g.beginPath();
-    g.moveTo(x - 22, 1556);
-    g.lineTo(x, 1536);
-    g.lineTo(x + 22, 1556);
-    g.closePath();
-    g.fill();
-    E(x, 1572, 9, 9, "#FFF7DC");
-    R(x - 1, 1566, 2, 7, "#333");
-    R(x, 1572, 6, 2, "#333");
-    for (let c = 0; c < 4; c++) {
-      R(x - 48 + c * 26, 1608, 18, 16, "#CFE6F5");
-      R(x - 48 + c * 26, 1640, 18, 16, "#CFE6F5");
-    }
-    R(x - 12, 1662, 24, 32, "#6B4A32");
-    R(x + 30, 1520, 2, 40, "#555");
-    R(x + 32, 1520, 16, 10, "#E8554E");
-    T("\uD559\uAD50", x, 1706, 13, "#8E4F38");
-    x = bx.hospital;
-    R(x - 52, 1560, 104, 134, "#F4F8F8");
-    R(x - 52, 1560, 104, 8, "#9CC8C8");
-    R(x - 9, 1575, 18, 52, "#E8554E");
-    R(x - 26, 1592, 52, 18, "#E8554E");
-    for (let c = 0; c < 4; c++) R(x - 44 + c * 23, 1640, 16, 14, "#BFE3F0");
-    R(x - 12, 1662, 24, 32, "#9CC8C8");
-    T("\uBCD1\uC6D0", x, 1548, 13, "#2F6E6E");
     PLIDS.forEach((p) => {
-      const px = bx[p];
-      R(px - 26, 1534, 52, 5, "#F3E9A8");
-      E(px, 1523, 8, 8, "#FFB800");
+      const q = PL_POS[p], d = PLACES[p];
+      g.save();
+      g.translate(0, q.dy);
+      (BLD[d.bld || p] || ((gg, x, hh) => genericBuilding(gg, x, hh, d)))(g, q.x, h);
+      R(q.x - 26, 1534, 52, 5, "#F3E9A8");
+      E(q.x, 1523, 8, 8, "#FFB800");
       g.strokeStyle = "#fff";
       g.lineWidth = 2;
       g.beginPath();
-      g.arc(px, 1523, 8, 0, 7);
+      g.arc(q.x, 1523, 8, 0, 7);
       g.stroke();
+      g.restore();
     });
     [[26, 1560], [774, 1560]].forEach((a) => {
       R(a[0] - 3, a[1] + 2, 6, 14, "#6B4A32");
@@ -2630,6 +2686,168 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
       m = 1;
     }
     return m;
+  }
+  const SCN = {
+    office: (h) => {
+      const { g, R, E, T, grid, B } = h;
+      R(0, 0, 520, 112, "#3D4A66");
+      for (let i = 0; i < 6; i++) {
+        R(14 + i * 82, 16, 64, 70, "#9CC7F0");
+        R(14 + i * 82, 60, 64, 26, "#6E8CC0");
+      }
+      R(0, 0, 520, 10, "#2E3A5C");
+      R(0, 112, 520, 590, "#E4E8EF");
+      grid("rgba(90,100,130,.16)", 40);
+      let b = B("m", "#5B6F9E", "#3D4A66");
+      for (let i = 0; i < 3; i++) {
+        R(b[0] + 20 + i * 44, b[1] + 14, 6, 50, "#E7EAF3");
+        R(b[0] + 14 + i * 44, b[1] + 34, 18, 5, "#C8CFE0");
+      }
+      b = B("n", "#A3593F", "#7A3F2B");
+      R(b[0] + 10, b[1] + 16, 70, 44, "#D9835F");
+      R(b[0] + 90, b[1] + 22, 40, 30, "#F2EFE8");
+      E(b[0] + 110, b[1] + 36, 10, 10, "#6B4A32");
+      b = B("e", "#EDEFF5", "#9AA3BA");
+      R(b[0] + 12, b[1] + 12, 126, 50, "#fff");
+      g.fillStyle = "#4263EB";
+      for (let i = 0; i < 4; i++) R(b[0] + 22, b[1] + 20 + i * 10, 40 + i * 14, 4, "#4263EB");
+      [[380, 160], [440, 160]].forEach((a) => {
+        R(a[0], a[1], 46, 26, "#B8C0D6");
+        R(a[0] + 12, a[1] - 10, 22, 12, "#3D4A66");
+      });
+    },
+    home: (h) => {
+      const { g, R, E, T, grid, B } = h;
+      R(0, 0, 520, 112, "#F1E4D3");
+      R(190, 18, 140, 76, "#BFE3F5");
+      R(256, 18, 8, 76, "#F1E4D3");
+      R(190, 54, 140, 6, "#F1E4D3");
+      R(0, 0, 520, 10, "#CDB594");
+      R(0, 112, 520, 590, "#D9B98B");
+      g.strokeStyle = "rgba(120,84,40,.22)";
+      g.lineWidth = 1;
+      for (let y = 112; y <= 700; y += 28) {
+        g.beginPath();
+        g.moveTo(0, y);
+        g.lineTo(520, y);
+        g.stroke();
+      }
+      let b = B("m", "#9FB7E0", "#6F88BA");
+      R(b[0] + 8, b[1] + 14, 134, 52, "#fff");
+      R(b[0] + 8, b[1] + 14, 44, 52, "#F5E3C8");
+      b = B("n", "#CFC9BC", "#9E978A");
+      R(b[0] + 10, b[1] + 16, 56, 40, "#8B6A47");
+      E(b[0] + 112, b[1] + 36, 22, 16, "#fff");
+      E(b[0] + 112, b[1] + 36, 10, 6, "#D9835F");
+      b = B("e", "#B26A55", "#7E4333");
+      R(b[0] + 10, b[1] + 14, 130, 52, "#D58A74");
+      R(b[0] + 10, b[1] + 14, 130, 14, "#B26A55");
+      R(330, 448, 150, 10, "#2F3744");
+      R(340, 418, 130, 30, "#242B3A");
+      E(400, 640, 70, 28, "#C9A06A");
+    },
+    field: (h) => {
+      const { g, R, E, T, grid, B } = h;
+      R(0, 0, 520, 112, "#BFE3F5");
+      for (let i = 0; i < 8; i++) R(i * 70, 70, 50, 42, "#6E9F5C");
+      R(0, 94, 520, 18, "#8F7E62");
+      R(0, 112, 520, 590, "#8CC477");
+      for (let y = 112; y < 700; y += 40) R(0, y, 520, 20, "rgba(255,255,255,.07)");
+      g.strokeStyle = "#C4694A";
+      g.lineWidth = 28;
+      g.beginPath();
+      g.ellipse(260, 440, 215, 230, 0, 0, 7);
+      g.stroke();
+      g.strokeStyle = "rgba(255,255,255,.7)";
+      g.lineWidth = 2;
+      g.beginPath();
+      g.ellipse(260, 440, 229, 244, 0, 0, 7);
+      g.stroke();
+      g.beginPath();
+      g.ellipse(260, 440, 201, 216, 0, 0, 7);
+      g.stroke();
+      let b = B("m", "#E8554E", "#B23C37");
+      for (let i = 0; i < 5; i++) R(b[0] + 12 + i * 28, b[1] + 12, 12, 56, "#fff");
+      b = B("n", "#8B6A47", "#5A4630");
+      R(b[0] + 8, b[1] + 14, 134, 10, "#C9A06A");
+      R(b[0] + 8, b[1] + 34, 134, 10, "#C9A06A");
+      E(b[0] + 118, b[1] - 10, 26, 24, "#417A36");
+      R(b[0] + 115, b[1] + 10, 6, 14, "#5A4630");
+      b = B("e", "#B7B0A2", "#8F897C");
+      for (let i = 0; i < 4; i++) R(b[0] + 6, b[1] + 10 + i * 14, 138, 8, i % 2 ? "#CFC9BB" : "#E4DFD2");
+      R(370, 150, 6, 50, "#fff");
+      R(430, 150, 6, 50, "#fff");
+      R(370, 150, 66, 6, "#fff");
+    },
+    school: (h) => {
+      const { g, R, E, T, grid, B } = h;
+      R(0, 0, 520, 112, "#7B8FB5");
+      R(60, 18, 400, 70, "#2F5D50");
+      R(60, 18, 400, 5, "#C9A06A");
+      R(60, 83, 400, 5, "#C9A06A");
+      T("\uC624\uB298\uB3C4 \uD55C \uAC78\uC74C", 260, 60, 18, "#E8F3EE");
+      R(0, 0, 520, 10, "#5A6C92");
+      R(0, 112, 520, 590, "#E9DFC8");
+      grid("rgba(120,100,60,.16)", 40);
+      let b = B("m", "#7B8FB5", "#5A6C92");
+      for (let i = 0; i < 5; i++) {
+        R(b[0] + 10 + i * 28, b[1] + 12, 22, 56, "#95A8CC");
+        R(b[0] + 18 + i * 28, b[1] + 38, 6, 4, "#fff");
+      }
+      b = B("n", "#C9A06A", "#9C7840");
+      R(b[0] + 10, b[1] + 14, 130, 22, "#E4DFD2");
+      R(b[0] + 10, b[1] + 44, 130, 22, "#E4DFD2");
+      for (let i = 0; i < 4; i++) {
+        E(b[0] + 28 + i * 32, b[1] + 25, 9, 6, "#D9835F");
+        E(b[0] + 28 + i * 32, b[1] + 55, 9, 6, "#8CC477");
+      }
+      b = B("e", "#8B6A47", "#5A4630");
+      for (let i = 0; i < 6; i++) {
+        R(b[0] + 8 + i * 22, b[1] + 10, 17, 54, ["#E8554E", "#4263EB", "#2CB38F", "#FFB800", "#8B4FA6", "#4A5566"][i]);
+      }
+      [[330, 460], [420, 520], [340, 580]].forEach((a) => {
+        R(a[0], a[1], 46, 28, "#C9A06A");
+        R(a[0] + 6, a[1] + 6, 34, 16, "#E4DFD2");
+      });
+    },
+    hospital: (h) => {
+      const { g, R, E, T, grid, B } = h;
+      R(0, 0, 520, 112, "#CFE6E6");
+      R(215, 22, 90, 70, "#fff");
+      R(250, 32, 20, 50, "#E8554E");
+      R(232, 48, 56, 18, "#E8554E");
+      R(0, 0, 520, 10, "#9CC8C8");
+      R(0, 112, 520, 590, "#EAF4F4");
+      grid("rgba(100,150,150,.2)", 40);
+      let b = B("m", "#9CC8C8", "#6BA0A0");
+      R(b[0] + 10, b[1] + 16, 130, 22, "#fff");
+      E(b[0] + 120, b[1] + 54, 10, 10, "#E8554E");
+      b = B("n", "#7B8FB5", "#5A6C92");
+      R(b[0] + 10, b[1] + 14, 58, 52, "#E4DFD2");
+      R(b[0] + 18, b[1] + 22, 42, 16, "#6BC4A0");
+      R(b[0] + 84, b[1] + 14, 56, 52, "#C9A06A");
+      b = B("e", "#fff", "#9AA3BA");
+      R(b[0] + 10, b[1] + 14, 60, 52, "#BFE3F0");
+      R(b[0] + 80, b[1] + 14, 60, 52, "#BFE3F0");
+      R(b[0] + 10, b[1] + 14, 60, 12, "#9CC8C8");
+      R(b[0] + 80, b[1] + 14, 60, 12, "#9CC8C8");
+      [[400, 170], [440, 170]].forEach((a) => {
+        E(a[0], a[1], 12, 12, "#6BC4A0");
+        R(a[0] - 4, a[1] + 8, 8, 12, "#8B6A47");
+      });
+    }
+  };
+  function genericScene(h, d) {
+    const { R, grid } = h, s = d.scene || {}, bl = s.blocks || [["#9FB7E0", "#6F88BA"], ["#D9BE8F", "#A98F63"], ["#B8C9A8", "#8AA07A"]];
+    R(0, 0, 520, 112, s.wall || "#C9D3E8");
+    for (let i = 0; i < 4; i++) R(30 + i * 118, 22, 82, 62, s.win || "#BFE3F5");
+    R(0, 0, 520, 10, s.edge || "#8E9BBA");
+    R(0, 112, 520, 590, s.floor || "#E8E4DA");
+    grid(s.line || "rgba(100,100,120,.15)", 40);
+    SL.forEach((sl, i) => {
+      const b = h.B(sl.k, bl[i][0], bl[i][1]);
+      R(b[0] + 14, b[1] + 16, b[2] - 28, b[3] - 34, "rgba(255,255,255,.5)");
+    });
   }
   function buildPlace(pid) {
     const K = PS.K, c = document.createElement("canvas");
@@ -2678,145 +2896,7 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
       R(b[0], b[1] + b[3] - 4, b[2], 4, "rgba(0,0,0,.18)");
       return b;
     };
-    if (pid === "office") {
-      R(0, 0, 520, 112, "#3D4A66");
-      for (let i = 0; i < 6; i++) {
-        R(14 + i * 82, 16, 64, 70, "#9CC7F0");
-        R(14 + i * 82, 60, 64, 26, "#6E8CC0");
-      }
-      R(0, 0, 520, 10, "#2E3A5C");
-      R(0, 112, 520, 590, "#E4E8EF");
-      grid("rgba(90,100,130,.16)", 40);
-      let b = B("m", "#5B6F9E", "#3D4A66");
-      for (let i = 0; i < 3; i++) {
-        R(b[0] + 20 + i * 44, b[1] + 14, 6, 50, "#E7EAF3");
-        R(b[0] + 14 + i * 44, b[1] + 34, 18, 5, "#C8CFE0");
-      }
-      b = B("n", "#A3593F", "#7A3F2B");
-      R(b[0] + 10, b[1] + 16, 70, 44, "#D9835F");
-      R(b[0] + 90, b[1] + 22, 40, 30, "#F2EFE8");
-      E(b[0] + 110, b[1] + 36, 10, 10, "#6B4A32");
-      b = B("e", "#EDEFF5", "#9AA3BA");
-      R(b[0] + 12, b[1] + 12, 126, 50, "#fff");
-      g.fillStyle = "#4263EB";
-      for (let i = 0; i < 4; i++) R(b[0] + 22, b[1] + 20 + i * 10, 40 + i * 14, 4, "#4263EB");
-      [[380, 160], [440, 160]].forEach((a) => {
-        R(a[0], a[1], 46, 26, "#B8C0D6");
-        R(a[0] + 12, a[1] - 10, 22, 12, "#3D4A66");
-      });
-    } else if (pid === "home") {
-      R(0, 0, 520, 112, "#F1E4D3");
-      R(190, 18, 140, 76, "#BFE3F5");
-      R(256, 18, 8, 76, "#F1E4D3");
-      R(190, 54, 140, 6, "#F1E4D3");
-      R(0, 0, 520, 10, "#CDB594");
-      R(0, 112, 520, 590, "#D9B98B");
-      g.strokeStyle = "rgba(120,84,40,.22)";
-      g.lineWidth = 1;
-      for (let y = 112; y <= 700; y += 28) {
-        g.beginPath();
-        g.moveTo(0, y);
-        g.lineTo(520, y);
-        g.stroke();
-      }
-      let b = B("m", "#9FB7E0", "#6F88BA");
-      R(b[0] + 8, b[1] + 14, 134, 52, "#fff");
-      R(b[0] + 8, b[1] + 14, 44, 52, "#F5E3C8");
-      b = B("n", "#CFC9BC", "#9E978A");
-      R(b[0] + 10, b[1] + 16, 56, 40, "#8B6A47");
-      E(b[0] + 112, b[1] + 36, 22, 16, "#fff");
-      E(b[0] + 112, b[1] + 36, 10, 6, "#D9835F");
-      b = B("e", "#B26A55", "#7E4333");
-      R(b[0] + 10, b[1] + 14, 130, 52, "#D58A74");
-      R(b[0] + 10, b[1] + 14, 130, 14, "#B26A55");
-      R(330, 448, 150, 10, "#2F3744");
-      R(340, 418, 130, 30, "#242B3A");
-      E(400, 640, 70, 28, "#C9A06A");
-    } else if (pid === "field") {
-      R(0, 0, 520, 112, "#BFE3F5");
-      for (let i = 0; i < 8; i++) R(i * 70, 70, 50, 42, "#6E9F5C");
-      R(0, 94, 520, 18, "#8F7E62");
-      R(0, 112, 520, 590, "#8CC477");
-      for (let y = 112; y < 700; y += 40) R(0, y, 520, 20, "rgba(255,255,255,.07)");
-      g.strokeStyle = "#C4694A";
-      g.lineWidth = 28;
-      g.beginPath();
-      g.ellipse(260, 440, 215, 230, 0, 0, 7);
-      g.stroke();
-      g.strokeStyle = "rgba(255,255,255,.7)";
-      g.lineWidth = 2;
-      g.beginPath();
-      g.ellipse(260, 440, 229, 244, 0, 0, 7);
-      g.stroke();
-      g.beginPath();
-      g.ellipse(260, 440, 201, 216, 0, 0, 7);
-      g.stroke();
-      let b = B("m", "#E8554E", "#B23C37");
-      for (let i = 0; i < 5; i++) R(b[0] + 12 + i * 28, b[1] + 12, 12, 56, "#fff");
-      b = B("n", "#8B6A47", "#5A4630");
-      R(b[0] + 8, b[1] + 14, 134, 10, "#C9A06A");
-      R(b[0] + 8, b[1] + 34, 134, 10, "#C9A06A");
-      E(b[0] + 118, b[1] - 10, 26, 24, "#417A36");
-      R(b[0] + 115, b[1] + 10, 6, 14, "#5A4630");
-      b = B("e", "#B7B0A2", "#8F897C");
-      for (let i = 0; i < 4; i++) R(b[0] + 6, b[1] + 10 + i * 14, 138, 8, i % 2 ? "#CFC9BB" : "#E4DFD2");
-      R(370, 150, 6, 50, "#fff");
-      R(430, 150, 6, 50, "#fff");
-      R(370, 150, 66, 6, "#fff");
-    } else if (pid === "school") {
-      R(0, 0, 520, 112, "#7B8FB5");
-      R(60, 18, 400, 70, "#2F5D50");
-      R(60, 18, 400, 5, "#C9A06A");
-      R(60, 83, 400, 5, "#C9A06A");
-      T("\uC624\uB298\uB3C4 \uD55C \uAC78\uC74C", 260, 60, 18, "#E8F3EE");
-      R(0, 0, 520, 10, "#5A6C92");
-      R(0, 112, 520, 590, "#E9DFC8");
-      grid("rgba(120,100,60,.16)", 40);
-      let b = B("m", "#7B8FB5", "#5A6C92");
-      for (let i = 0; i < 5; i++) {
-        R(b[0] + 10 + i * 28, b[1] + 12, 22, 56, "#95A8CC");
-        R(b[0] + 18 + i * 28, b[1] + 38, 6, 4, "#fff");
-      }
-      b = B("n", "#C9A06A", "#9C7840");
-      R(b[0] + 10, b[1] + 14, 130, 22, "#E4DFD2");
-      R(b[0] + 10, b[1] + 44, 130, 22, "#E4DFD2");
-      for (let i = 0; i < 4; i++) {
-        E(b[0] + 28 + i * 32, b[1] + 25, 9, 6, "#D9835F");
-        E(b[0] + 28 + i * 32, b[1] + 55, 9, 6, "#8CC477");
-      }
-      b = B("e", "#8B6A47", "#5A4630");
-      for (let i = 0; i < 6; i++) {
-        R(b[0] + 8 + i * 22, b[1] + 10, 17, 54, ["#E8554E", "#4263EB", "#2CB38F", "#FFB800", "#8B4FA6", "#4A5566"][i]);
-      }
-      [[330, 460], [420, 520], [340, 580]].forEach((a) => {
-        R(a[0], a[1], 46, 28, "#C9A06A");
-        R(a[0] + 6, a[1] + 6, 34, 16, "#E4DFD2");
-      });
-    } else {
-      R(0, 0, 520, 112, "#CFE6E6");
-      R(215, 22, 90, 70, "#fff");
-      R(250, 32, 20, 50, "#E8554E");
-      R(232, 48, 56, 18, "#E8554E");
-      R(0, 0, 520, 10, "#9CC8C8");
-      R(0, 112, 520, 590, "#EAF4F4");
-      grid("rgba(100,150,150,.2)", 40);
-      let b = B("m", "#9CC8C8", "#6BA0A0");
-      R(b[0] + 10, b[1] + 16, 130, 22, "#fff");
-      E(b[0] + 120, b[1] + 54, 10, 10, "#E8554E");
-      b = B("n", "#7B8FB5", "#5A6C92");
-      R(b[0] + 10, b[1] + 14, 58, 52, "#E4DFD2");
-      R(b[0] + 18, b[1] + 22, 42, 16, "#6BC4A0");
-      R(b[0] + 84, b[1] + 14, 56, 52, "#C9A06A");
-      b = B("e", "#fff", "#9AA3BA");
-      R(b[0] + 10, b[1] + 14, 60, 52, "#BFE3F0");
-      R(b[0] + 80, b[1] + 14, 60, 52, "#BFE3F0");
-      R(b[0] + 10, b[1] + 14, 60, 12, "#9CC8C8");
-      R(b[0] + 80, b[1] + 14, 60, 12, "#9CC8C8");
-      [[400, 170], [440, 170]].forEach((a) => {
-        E(a[0], a[1], 12, 12, "#6BC4A0");
-        R(a[0] - 4, a[1] + 8, 8, 12, "#8B6A47");
-      });
-    }
+    (SCN[PLACES[pid].scn || pid] || ((hh) => genericScene(hh, PLACES[pid])))({ g, R, E, T, grid, B });
     R(200, 672, 120, 28, "#8B6A47");
     R(206, 676, 108, 24, "#C9A06A");
     T("\uB098\uAC00\uB294 \uBB38", 260, 694, 11, "#5A4630");
@@ -2900,7 +2980,7 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
     const stDone = (s) => [0, 1, 2].filter((i) => plDone(pid + "." + s + i)).length;
     function head() {
       const c = el.querySelector("#pcnt");
-      if (c) c.textContent = " \xB7 \uC624\uB298 " + plCount(pid) + " / 9";
+      if (c) c.textContent = " \xB7 \uC624\uB298 " + plCount(pid) + " / " + PL_PER;
     }
     function card() {
       const c = el.querySelector("#pcard");
@@ -3007,7 +3087,7 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
       cx.restore();
     }
     function leave() {
-      const sp = { x: PLX[pid], y: 1528 };
+      const sp = { x: PL_POS[pid].x, y: 1528 + PL_POS[pid].dy };
       closePlace();
       openWorld(sp);
     }
@@ -3076,6 +3156,7 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
     } catch (e) {
     }
   }, 2e4);
+  window.CQ_DEV = { places: PLIDS.slice(), problems: placeProblems, unmappedJobs: () => J.filter((j) => !placeOfJob(j.id)).map((j) => j.id), perPlace: PL_PER };
   render();
   if (S.job && S.startPlaza !== false && !window.__cqNoPlaza) setTimeout(openWorld, 0);
   (async () => {

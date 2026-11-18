@@ -1,5 +1,10 @@
 import base64, os, sys, json
+OUT = os.environ.get('CQ_OUT', 'out')
+os.makedirs(OUT, exist_ok=True)
 t0 = open('template.html', encoding='utf8').read()
+# 생활 장소: 데이터 + 엔진을 템플릿의 표시 위치에 끼워 넣는다
+assert t0.count('/*__PLACES__*/') == 1
+t0 = t0.replace('/*__PLACES__*/', '\n' + open(os.environ.get('CQ_PLACES_DATA', 'places-data.js'), encoding='utf8').read() + '\n' + open('places-engine.js', encoding='utf8').read())
 d = open('data2.js', encoding='utf8').read()
 shim = open('online.js', encoding='utf8').read()
 icon = base64.b64encode(open('out/icon180.png', 'rb').read()).decode()
@@ -82,19 +87,20 @@ def strip_artifact_head(t):
     return box['t']
 
 
+open(OUT + '/index.html' if OUT != 'out' else 'index.html', 'w', encoding='utf8').write(t0.replace('/*__DATA__*/', d))  # 아티팩트(claude.ai) 원본 빌드
 # 1) 로그인 없이 온라인(파티·광장 만남·테스트 모니터링) 가능한 단독 파일. 설정이 비어 있으면 혼자 하는 모드.
 t = strip_artifact_head(online_texts(common(t0)))
 cfg = '<script>window.CQ_CONFIG=' + json.dumps({'url': cfg_url, 'key': cfg_key}) + ';</script>\n'
-open('out/career-quest-online.html', 'w', encoding='utf8').write(
+open(OUT + '/career-quest-online.html', 'w', encoding='utf8').write(
     head + banner + cfg + '<script>' + shim + '</script>\n' + t.replace('/*__DATA__*/', d) + '\n</body></html>\n')
 # 2) 혼자 하는 단독 파일
 t = strip_artifact_head(offline_texts(common(t0)))
-open('out/career-quest-party.html', 'w', encoding='utf8').write(head + banner + t.replace('/*__DATA__*/', d) + '\n</body></html>\n')
+open(OUT + '/career-quest-party.html', 'w', encoding='utf8').write(head + banner + t.replace('/*__DATA__*/', d) + '\n</body></html>\n')
 # 3) 아티팩트(로그인 필요 없는 모바일 링크)용
 t = offline_texts(common(t0))
 box, rep = mk(t)
 rep("<title>커리어 퀘스트 파티</title>", "<title>커리어 퀘스트 파티 모바일</title>")
-open('out/artifact-mobile.html', 'w', encoding='utf8').write(box['t'].replace('/*__DATA__*/', d))
+open(OUT + '/artifact-mobile.html', 'w', encoding='utf8').write(box['t'].replace('/*__DATA__*/', d))
 import re, subprocess
 ESB='/opt/npm-tools/node_modules/@esbuild/linux-x64/bin/esbuild'
 def down(f):
@@ -107,5 +113,5 @@ def down(f):
         return m.group(1)+r.stdout.replace('</script','<\\/script')+m.group(3)
     h=re.sub(r'(<script>)(.*?)(</script>)',one,h,flags=re.S)
     open(f,'w',encoding='utf8').write(h)
-for f in ('career-quest-online','career-quest-party','artifact-mobile'): down('out/'+f+'.html')
-print('built', {f: os.path.getsize('out/' + f) for f in ('career-quest-online.html', 'career-quest-party.html', 'artifact-mobile.html')})
+for f in ('career-quest-online','career-quest-party','artifact-mobile'): down(OUT + '/' + f + '.html')
+print('built', {f: os.path.getsize(OUT + '/' + f) for f in ('career-quest-online.html', 'career-quest-party.html', 'artifact-mobile.html')})
