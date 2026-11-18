@@ -96,6 +96,8 @@ open(OUT + '/career-quest-online.html', 'w', encoding='utf8').write(
 # 2) 혼자 하는 단독 파일
 t = strip_artifact_head(offline_texts(common(t0)))
 open(OUT + '/career-quest-party.html', 'w', encoding='utf8').write(head + banner + t.replace('/*__DATA__*/', d) + '\n</body></html>\n')
+# 공개 주소(GitHub Pages)가 여는 루트 index.html 은 viewport 가 들어 있는 단독 빌드여야 휴대폰에서 제 크기로 보인다
+open(OUT + '/index.html' if OUT != 'out' else 'index.html', 'w', encoding='utf8').write(head + banner + t.replace('/*__DATA__*/', d) + '\n</body></html>\n')
 # 3) 아티팩트(로그인 필요 없는 모바일 링크)용
 t = offline_texts(common(t0))
 box, rep = mk(t)
@@ -114,4 +116,5 @@ def down(f):
     h=re.sub(r'(<script>)(.*?)(</script>)',one,h,flags=re.S)
     open(f,'w',encoding='utf8').write(h)
 for f in ('career-quest-online','career-quest-party','artifact-mobile'): down(OUT + '/' + f + '.html')
+down('index.html' if OUT == 'out' else OUT + '/index.html')
 print('built', {f: os.path.getsize(OUT + '/' + f) for f in ('career-quest-online.html', 'career-quest-party.html', 'artifact-mobile.html')})
