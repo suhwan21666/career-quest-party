@@ -1,0 +1,14 @@
+const {chromium,devices}=require('playwright');const path=require('path');let f=0;const ok=(c,m)=>{console.log((c?'PASS ':'FAIL ')+m);if(!c)f++};
+(async()=>{const b=await chromium.launch();const c=await b.newContext({...devices['iPhone 13'],timezoneId:'Asia/Seoul'});const p=await c.newPage();const e=[];p.on('pageerror',x=>e.push(x.message));
+await p.addInitScript(()=>{window.__cqNoPlaza=1});await p.goto('file://'+path.resolve('out/career-quest-party.html'));await p.waitForTimeout(400);
+await p.fill('#nk','테스터');await p.click('[data-a=next]');await p.click('[data-a=sel][data-j=developer]');await p.click('[data-a=start]');await p.waitForTimeout(600);
+ok(await p.locator('[data-a=snack]').count()===0,'오늘 탭: 틈새는 처음에 접혀 있음');
+ok(await p.evaluate(()=>document.documentElement.scrollHeight)<1500,'오늘 탭 길이 짧아짐');
+await p.click('[data-a=fold][data-k=more]');await p.waitForTimeout(150);
+ok(await p.locator('[data-a=snack]').count()>0,'더 해보기 펼치면 틈새 보임');
+await p.click('[data-a=fold][data-k=more]');await p.waitForTimeout(150);ok(await p.locator('[data-a=snack]').count()===0,'다시 누르면 접힘');
+await p.click('[data-a=tab][data-t=me]');await p.waitForTimeout(200);
+ok(await p.locator('[data-a=fold]').count()===4,'캐릭터 탭: 접이식 4개');
+await p.click('[data-a=fold][data-k=set]');await p.waitForTimeout(150);ok(await p.locator('#nk').count()===1,'꾸미기·설정 펼치면 이름 입력 보임');
+ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),'가로 넘침 없음');ok(!e.length,'오류 없음');
+await b.close();process.exit(f?1:0)})();

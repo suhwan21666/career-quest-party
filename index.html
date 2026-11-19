@@ -193,6 +193,7 @@ html{-webkit-text-size-adjust:100%;overscroll-behavior-y:none}
 .stamp.ok{background:var(--gold);color:var(--gold-ink)}
 
 /* 탭 */
+.fold>.fh{width:100%;display:flex;align-items:center;gap:8px;background:var(--surface);border:2px solid var(--line);border-radius:14px;padding:12px 14px;text-align:left;font:inherit;color:inherit;cursor:pointer;margin:0}.fold>.fh h2{margin:0;font-size:17px}.fold>.fh .sub{margin-left:auto;font-size:12px;color:var(--muted)}.fold>.fh .ch{font-size:11px;color:var(--muted)}.fold[open],.fold>.fh[aria-expanded=true]{border-color:var(--blue)}.fold>.fh+*{margin-top:8px}
 .sent{display:grid;gap:10px}.sent .s{display:grid;grid-template-columns:46px 1fr;gap:8px;align-items:start}.sent .d{font-size:12px;color:var(--muted);padding-top:2px}.sent .tx{font-size:14px;overflow-wrap:anywhere}
 .lad{display:grid;gap:8px}.lad .r{display:grid;grid-template-columns:44px 1fr auto;gap:8px;align-items:center;padding:8px 10px;border:2px solid var(--line);border-radius:12px;background:var(--surface)}.lad .r.ok{border-color:var(--blue)}.lad .r.lock{opacity:.55}.lad .hl{font-family:var(--f-display);color:var(--blue)}.lad .st{font-size:13px;color:var(--muted);white-space:nowrap}.bar{height:6px;background:var(--line);border-radius:9px;overflow:hidden;margin-top:4px}.bar i{display:block;height:100%;background:var(--coral)}
 nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:10;background:var(--surface);border-top:2px solid var(--line);
@@ -447,7 +448,7 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
     const n = String(s == null ? "" : s).toLowerCase().replace(/[\s.\-_*~!?,]/g, "");
     return BAD.some((w) => n.includes(w));
   };
-  const APP_BUILD = "v0.4.2";
+  const APP_BUILD = "v0.5.0";
   const PAGE_URL = /^https?:/.test(location.href) ? location.href.split("#")[0].split("?")[0] : "";
   const XP = { act: 15, story: 12, com: 10, habit: 12, habitMini: 8, snack: 3 }, CLEAR = 10, CHEST = 25, CHEER_GET = 2, CHEER_SEND = 1, WEEK_GOAL = 10, WEEK_XP = 30, MASTER = 30, SNACK_MAX = 5;
   const HAIRC = ["#3A2B22", "#7A4A2E", "#D9B36C", "#8B8B8B", "#6E2A3A"], TOPC = ["#F1EFE8", "#185FA5", "#D85A30", "#3B6D11", "#2C2C2A"], SKIN = ["#FFDCC2", "#EBBA92", "#B98363"];
@@ -1090,12 +1091,21 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
     const n = Object.keys(S.stampBook || {}).length, td = stampsToday().ids.length;
     return `<section class="sec"><div class="hd"><h2>\uAD11\uD654\uBB38 \uAD11\uC7A5</h2><span class="sub num">\uC2A4\uD0EC\uD504 ${n} / ${LM.length}</span></div><div class="panel"><div class="muted" style="font-size:14px;margin-bottom:10px">\uADF8\uB9BC \uC18D \uAD11\uD654\uBB38 \uAD11\uC7A5\uC744 \uAC78\uC5B4 \uB2E4\uB140\uC694. \uAC19\uC740 \uC2DC\uAC04\uC5D0 \uB4E4\uC5B4\uC628 \uCE5C\uAD6C\uB4E4\uACFC \uB9C8\uC8FC\uCE58\uBA74 \uC778\uC0AC\uB3C4 \uD560 \uC218 \uC788\uC5B4\uC694. <b id="plz" style="color:var(--mint-deep)">${plazaTxt()}</b> \uACF3\uACF3\uC758 \uD45C\uC2DC\uC5D0\uC11C \uC2A4\uD0EC\uD504\uB97C \uCC0D\uC5B4 \uBCF4\uC138\uC694.${td ? ` \uC624\uB298 ${td}\uACF3\uC744 \uB2E4\uB140\uC654\uC5B4\uC694.` : ""}</div><button class="btn blue" data-a="world">\uAD11\uC7A5 \uAC78\uC5B4\uBCF4\uAE30</button></div></section>`;
   };
+  function moreSub() {
+    const t = S.today, w = getWeek();
+    let p = 0;
+    try {
+      p = PLIDS.reduce((a, x) => a + plCount(x), 0);
+    } catch (e) {
+    }
+    return "\uD2C8\uC0C8 " + (t.snacks || 0) + "/" + SNACK_MAX + " \xB7 \uC8FC\uAC04 " + Math.min(w.count, WEEK_GOAL) + "/" + WEEK_GOAL + " \xB7 \uC7A5\uC18C " + p;
+  }
   function vToday() {
     const t = S.today, n = t.qs.filter((q) => q.done).length, L = partyList(), sum = L.reduce((a, m) => a + m.done, 0), goal = goalOf(L.length);
-    return hud() + `<section class="sec"><div class="hd"><h2>\uC624\uB298\uC758 \uD018\uC2A4\uD2B8</h2><span class="sub num">${n} / ${t.qs.length} \uC644\uB8CC${S.streak > 0 ? ` \xB7 \uACBD\uD5D8\uCE58 +${Math.round((mult() - 1) * 100)}%` : ""}</span></div><div class="note" style="margin-bottom:12px">\uC624\uB298\uC740 1\uAC1C\uB9CC \uD574\uB3C4 \uC5F0\uC18D \uAE30\uB85D\uC774 \uC774\uC5B4\uC838\uC694. \uD558\uACE0 \uC2F6\uC740 \uAC83\uBD80\uD130, \uD558\uB8E8\uB97C \uC26C\uC5B4\uB3C4 \uD734\uC2DD\uAD8C\uC774 \uC9C0\uCF1C\uC918\uC694.</div>${t.qs.map(questCard).join("")}
+    return hud() + `<section class="sec"><div class="hd"><h2>\uC624\uB298\uC758 \uD018\uC2A4\uD2B8</h2><span class="sub num">${n} / ${t.qs.length} \uC644\uB8CC${S.streak > 0 ? ` \xB7 \uACBD\uD5D8\uCE58 +${Math.round((mult() - 1) * 100)}%` : ""}</span></div>${(S.done || 0) < 3 ? '<div class="note" style="margin-bottom:12px">\uC624\uB298\uC740 1\uAC1C\uB9CC \uD574\uB3C4 \uC5F0\uC18D \uAE30\uB85D\uC774 \uC774\uC5B4\uC838\uC694. \uD558\uB8E8\uB97C \uC26C\uC5B4\uB3C4 \uD734\uC2DD\uAD8C\uC774 \uC9C0\uCF1C\uC918\uC694.</div>' : ""}${t.qs.map(questCard).join("")}
   ${n === t.qs.length ? `<div class="allclear"><div><h3>\uC624\uB298 \uD018\uC2A4\uD2B8 \uC62C\uD074\uB9AC\uC5B4!</h3><div style="font-size:14px;opacity:.9">\uB0B4\uC77C \uC544\uCE68 \uC0C8 \uD018\uC2A4\uD2B8\uAC00 \uC5F4\uB824\uC694. \uD30C\uD2F0 \uBCF4\uBB3C\uC0C1\uC790\uB3C4 \uD655\uC778\uD574\uBCF4\uC138\uC694.</div></div></div>` : ""}</section>
-  ${snackSec()}${weekSec()}${placeSec()}${plazaSec()}<section class="sec"><div class="hd"><h2>\uD30C\uD2F0 \uC0C1\uD669</h2><button class="link" data-a="tab" data-t="party">\uD30C\uD2F0 \uBCF4\uAE30</button></div>
-  <div class="chest">${ICON.chest}<div class="t">${esc(S.party ? S.party.name : "\uBAA8\uD5D8 \uB3D9\uB8CC \uD30C\uD2F0")}</div><div><div class="bar mint"><i style="width:${Math.min(100, sum / goal * 100)}%"></i></div><div class="xpt num"><span>\uD30C\uD2F0 \uD018\uC2A4\uD2B8 ${Math.min(sum, goal)} / ${goal}</span><span>${S.chestDay === KST() ? "\uC624\uB298 \uC218\uB839 \uC644\uB8CC" : sum >= goal ? "\uC0C1\uC790 \uC5F4 \uC218 \uC788\uC5B4\uC694" : ""}</span></div></div></div></section>`;
+  ${fold("more", "\uB354 \uD574\uBCF4\uAE30", moreSub(), `${snackSec()}${weekSec()}${placeSec()}${plazaSec()}<section class="sec"><div class="hd"><h2>\uD30C\uD2F0 \uC0C1\uD669</h2><button class="link" data-a="tab" data-t="party">\uD30C\uD2F0 \uBCF4\uAE30</button></div>
+  <div class="chest">${ICON.chest}<div class="t">${esc(S.party ? S.party.name : "\uBAA8\uD5D8 \uB3D9\uB8CC \uD30C\uD2F0")}</div><div><div class="bar mint"><i style="width:${Math.min(100, sum / goal * 100)}%"></i></div><div class="xpt num"><span>\uD30C\uD2F0 \uD018\uC2A4\uD2B8 ${Math.min(sum, goal)} / ${goal}</span><span>${S.chestDay === KST() ? "\uC624\uB298 \uC218\uB839 \uC644\uB8CC" : sum >= goal ? "\uC0C1\uC790 \uC5F4 \uC218 \uC788\uC5B4\uC694" : ""}</span></div></div></div></section>`)}`;
   }
   function vParty() {
     const L = partyList(), sum = L.reduce((a, m) => a + m.done, 0), goal = goalOf(L.length), claimed = S.chestDay === KST(), can = sum >= goal && !claimed, d = KST();
@@ -1205,9 +1215,9 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
     const L = lvInfo(S.totalXp), j = JB[S.job], lk = S.look;
     const slots = [["\uBA38\uB9AC", 2, "\uBAA8\uC790\xB7\uBA38\uB9AC \uC7A5\uBE44"], ["\uBAB8", 3, "\uC9C1\uC5C5 \uC720\uB2C8\uD3FC"], ["\uC190", 4, "\uC9C1\uC5C5 \uB3C4\uAD6C"]];
     return hud() + `<section class="sec"><div class="hero"><div class="stage">${av(S.job, L.l, lk, { label: "\uB0B4 \uCE90\uB9AD\uD130" })}</div><h2 style="margin-top:6px">${esc(S.nick)}</h2><div class="muted" style="font-size:14px">${esc(j.name)} \xB7 ${tierOf(L.l)}${L.l >= 6 ? " \xB7 \uC219\uB828\uC758 \uBE5B" : ""}</div><div class="tier">${slots.map((s) => `<span class="slot ${L.l >= s[1] ? "on" : ""}"><b>${s[0]}</b>${L.l >= s[1] ? s[2] : "Lv." + s[1] + "\uC5D0 \uD68D\uB4DD"}</span>`).join("")}${L.l < 6 ? `<span class="slot"><b>\uBE5B</b>Lv.6 \uC219\uB828</span>` : ""}${L.l < 10 ? `<span class="slot"><b>\uBCC4</b>Lv.10 \uBA85\uC778</span>` : `<span class="slot on"><b>\uBCC4</b>\uBA85\uC778\uC758 \uBCC4</span>`}</div></div></section>
-  ${sentenceBook()}${habitRecord()}<section class="sec"><div class="hd"><h2>\uB098\uC758 \uC5ED\uB7C9</h2><span class="sub">\uD018\uC2A4\uD2B8\uB97C \uD560\uC218\uB85D \uC790\uB77C\uC694</span></div><div class="panel">${radar()}<div class="muted" style="font-size:13px;margin-top:6px">${esc(j.name)}\uC5D0\uAC8C \uD2B9\uD788 \uC911\uC694\uD55C \uC5ED\uB7C9: ${j.dna.map((s) => SN[s]).join(" \xB7 ")}</div></div></section>
-  <section class="sec"><div class="hd"><h2>\uAFB8\uBBF8\uAE30</h2></div><div class="panel"><div class="field"><label>\uC774\uB984</label><input class="inp" id="nk" maxlength="10" value="${esc(S.nick)}"></div><div class="field"><label>\uBA38\uB9AC \uBAA8\uC591</label><div class="seg">${["\uC9E7\uC740 \uBA38\uB9AC", "\uAE34 \uBA38\uB9AC", "\uACF1\uC2AC"].map((n, i) => `<button data-a="look" data-f="hair" data-v="${i}" aria-pressed="${lk.hair === i}">${n}</button>`).join("")}</div></div><div class="field"><label>\uBA38\uB9AC\uC0C9</label>${sw(HAIRC, lk.hc, "\uBA38\uB9AC\uC0C9")}</div><div class="field"><label>\uC0C1\uC758 (\uC720\uB2C8\uD3FC \uC804)</label>${sw(TOPC, lk.top, "\uC0C1\uC758")}</div><div class="field" style="margin-bottom:0"><label>\uD53C\uBD80\uC0C9</label>${sw(SKIN, lk.skin, "\uD53C\uBD80\uC0C9")}</div></div></section>
-  <section class="sec"><div class="note">\uCD1D ${S.done || 0}\uAC1C\uC758 \uD018\uC2A4\uD2B8\uB97C \uC644\uB8CC\uD588\uC5B4\uC694. \uB370\uC774\uD130\uB294 \uC774 \uAE30\uAE30\uC758 \uBE0C\uB77C\uC6B0\uC800\uC5D0\uB9CC \uC800\uC7A5\uB3FC\uC694. \uBE0C\uB77C\uC6B0\uC800 \uB370\uC774\uD130\uB97C \uC9C0\uC6B0\uBA74 \uAE30\uB85D\uB3C4 \uC0AC\uB77C\uC838\uC694.</div></section>${alarmSec()}${reminderSec()}${testSec()}<section class="sec" style="display:flex;gap:18px;justify-content:center"><button class="link" data-a="privacy">\uAC1C\uC778\uC815\uBCF4 \uC548\uB0B4</button><button class="link" data-a="delAsk">\uB0B4 \uB370\uC774\uD130 \uC0AD\uC81C</button></section>`;
+  ${sentenceBook()}${habitRecord()}${fold("stat", "\uB098\uC758 \uC5ED\uB7C9", "\uD018\uC2A4\uD2B8\uB97C \uD560\uC218\uB85D \uC790\uB77C\uC694", `<div class="panel">${radar()}<div class="muted" style="font-size:13px;margin-top:6px">${esc(j.name)}\uC5D0\uAC8C \uD2B9\uD788 \uC911\uC694\uD55C \uC5ED\uB7C9: ${j.dna.map((s) => SN[s]).join(" \xB7 ")}</div></div>`)}
+  ${fold("set", "\uAFB8\uBBF8\uAE30 \xB7 \uC54C\uB9BC \xB7 \uC124\uC815", "", `<div class="panel"><div class="field"><label>\uC774\uB984</label><input class="inp" id="nk" maxlength="10" value="${esc(S.nick)}"></div><div class="field"><label>\uBA38\uB9AC \uBAA8\uC591</label><div class="seg">${["\uC9E7\uC740 \uBA38\uB9AC", "\uAE34 \uBA38\uB9AC", "\uACF1\uC2AC"].map((n, i) => `<button data-a="look" data-f="hair" data-v="${i}" aria-pressed="${lk.hair === i}">${n}</button>`).join("")}</div></div><div class="field"><label>\uBA38\uB9AC\uC0C9</label>${sw(HAIRC, lk.hc, "\uBA38\uB9AC\uC0C9")}</div><div class="field"><label>\uC0C1\uC758 (\uC720\uB2C8\uD3FC \uC804)</label>${sw(TOPC, lk.top, "\uC0C1\uC758")}</div><div class="field" style="margin-bottom:0"><label>\uD53C\uBD80\uC0C9</label>${sw(SKIN, lk.skin, "\uD53C\uBD80\uC0C9")}</div></div>${alarmSec()}${reminderSec()}${testSec()}<section class="sec" style="display:flex;gap:18px;justify-content:center"><button class="link" data-a="privacy">\uAC1C\uC778\uC815\uBCF4 \uC548\uB0B4</button><button class="link" data-a="delAsk">\uB0B4 \uB370\uC774\uD130 \uC0AD\uC81C</button></section>`)}
+  <section class="sec"><div class="note">\uCD1D ${S.done || 0}\uAC1C\uC758 \uD018\uC2A4\uD2B8\uB97C \uC644\uB8CC\uD588\uC5B4\uC694. \uB370\uC774\uD130\uB294 \uC774 \uAE30\uAE30\uC758 \uBE0C\uB77C\uC6B0\uC800\uC5D0\uB9CC \uC800\uC7A5\uB3FC\uC694. \uBE0C\uB77C\uC6B0\uC800 \uB370\uC774\uD130\uB97C \uC9C0\uC6B0\uBA74 \uAE30\uB85D\uB3C4 \uC0AC\uB77C\uC838\uC694.</div></section>`;
   }
   function habitPanel() {
     const hi = habInfo(S.hab);
@@ -1227,9 +1237,13 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
       return sg ? `<div class="note" style="margin-top:8px"><b>\uC0C8 \uC2B5\uAD00 \uC81C\uC548</b> Lv${sg.lv} "${esc(sg.title)}" \u2014 ${esc(sg.mini)} <button class="link" data-a="habpick" data-h="${sg.id}">\uC2DC\uC791\uD558\uAE30</button></div>` : "";
     })()}</div></section>`;
   }
+  function fold(k, title, sub, body) {
+    const o = !!(ui.fo && ui.fo[k]) || !!window.__cqOpenAll;
+    return `<section class="sec fold"><button class="fh" data-a="fold" data-k="${k}" aria-expanded="${o}"><h2>${title}</h2><span class="sub">${sub || ""}</span><span class="ch" aria-hidden="true">${o ? "\u25B2" : "\u25BC"}</span></button>${o ? body : ""}</section>`;
+  }
   function sentenceBook() {
     const L = S.story.slice().reverse(), n = L.length, all = ui.sAll, V = all ? L : L.slice(0, 7);
-    return `<section class="sec"><div class="hd"><h2>\uB0B4\uAC00 \uC4F4 \uD55C \uBB38\uC7A5</h2><span class="sub num">${n}\uAC1C</span></div><div class="panel">${n ? `<div class="sent">${V.map((e) => `<div class="s"><span class="d num">${esc(String(e.day || "").slice(5).replace("-", "/"))}</span><div><div class="tx">${esc(e.t)}</div><div class="muted" style="font-size:12px">${esc(e.p || "")}</div></div></div>`).join("")}</div>${n > 7 ? `<button class="link" style="margin-top:8px" data-a="sentall">${all ? "\uC811\uAE30" : "\uC804\uCCB4 " + n + "\uAC1C \uBCF4\uAE30"}</button>` : ""}` : '<div class="empty" style="padding:6px 0">\uC544\uC9C1 \uC4F4 \uBB38\uC7A5\uC774 \uC5C6\uC5B4\uC694.<br>\uC624\uB298 \uD018\uC2A4\uD2B8\uC5D0\uC11C \uD55C \uBB38\uC7A5\uC744 \uC4F0\uBA74 \uC5EC\uAE30\uC5D0 \uBAA8\uC5EC\uC694.</div>'}</div></section>`;
+    return fold("sent", "\uB0B4\uAC00 \uC4F4 \uD55C \uBB38\uC7A5", n + "\uAC1C", `<div class="panel">${n ? `<div class="sent">${V.map((e) => `<div class="s"><span class="d num">${esc(String(e.day || "").slice(5).replace("-", "/"))}</span><div><div class="tx">${esc(e.t)}</div><div class="muted" style="font-size:12px">${esc(e.p || "")}</div></div></div>`).join("")}</div>${n > 7 ? `<button class="link" style="margin-top:8px" data-a="sentall">${all ? "\uC811\uAE30" : "\uC804\uCCB4 " + n + "\uAC1C \uBCF4\uAE30"}</button>` : ""}` : '<div class="empty" style="padding:6px 0">\uC544\uC9C1 \uC4F4 \uBB38\uC7A5\uC774 \uC5C6\uC5B4\uC694.<br>\uC624\uB298 \uD018\uC2A4\uD2B8\uC5D0\uC11C \uD55C \uBB38\uC7A5\uC744 \uC4F0\uBA74 \uC5EC\uAE30\uC5D0 \uBAA8\uC5EC\uC694.</div>'}</div>`);
   }
   function habitRecord() {
     const jh = (HABITS[S.job] || []).map((_, i) => S.job + ":" + i), ex = Object.keys(S.habs).filter((id) => !jh.includes(id) && habInfo(id) && hAch(id)), nA = jh.filter(hAch).length;
@@ -1237,7 +1251,7 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
       const a = habInfo(id), h = S.habs[id] || {}, ok = hAch(id), op = hOpen(id), cur = S.hab === id;
       return `<div class="r${ok ? " ok" : !op ? " lock" : ""}"><div class="hl">Lv${a.lv}</div><div><b>${esc(a.title)}</b>${cur ? ' <span class="chip">\uD558\uB294 \uC911</span>' : ""}<div class="muted" style="font-size:12px">${ok ? `${esc(hAchDay(id))} \uB2EC\uC131 \xB7 \uCD1D ${h.total || 0}\uD68C \xB7 \uCD5C\uACE0 ${h.best || 0}\uC77C \uC5F0\uC18D` : op ? `${esc(a.mini)}` : `Lv${a.lv - 1}\uC744 \uB2EC\uC131\uD558\uBA74 \uC5F4\uB824\uC694`}</div>${op && !ok ? `<div class="bar"><i style="width:${Math.min(100, Math.round(hTot(id) / HT * 100))}%"></i></div>` : ""}</div><div class="st num">${ok ? "\uB2EC\uC131 \u2713" : op ? Math.min(hTot(id), HT) + "/" + HT : "\u{1F512}"}</div></div>`;
     };
-    return `<section class="sec"><div class="hd"><h2>\uB0B4 \uC2B5\uAD00 \uAE30\uB85D</h2><span class="sub num">\uB2EC\uC131 ${nA} / ${jh.length}</span></div><div class="panel"><div class="lad">${jh.map(row).join("")}${ex.map(row).join("")}</div><div class="note" style="margin-top:10px">\uC2B5\uAD00\uC744 ${HT}\uBC88 \uD574\uB0B4\uBA74 \uB2EC\uC131\uC774\uC5D0\uC694. \uD558\uB8E8 \uAC74\uB108\uB6F0\uC5B4\uB3C4 \uAD1C\uCC2E\uACE0, \uB2EC\uC131\uD558\uBA74 \uB2E4\uC74C \uB808\uBCA8 \uC2B5\uAD00\uC774 \uC5F4\uB824\uC694.</div></div></section>`;
+    return fold("hrec", "\uB0B4 \uC2B5\uAD00 \uAE30\uB85D", "\uB2EC\uC131 " + nA + " / " + jh.length, `<div class="panel"><div class="lad">${jh.map(row).join("")}${ex.map(row).join("")}</div><div class="note" style="margin-top:10px">\uC2B5\uAD00\uC744 ${HT}\uBC88 \uD574\uB0B4\uBA74 \uB2EC\uC131\uC774\uC5D0\uC694. \uD558\uB8E8 \uAC74\uB108\uB6F0\uC5B4\uB3C4 \uAD1C\uCC2E\uACE0, \uB2EC\uC131\uD558\uBA74 \uB2E4\uC74C \uB808\uBCA8 \uC2B5\uAD00\uC774 \uC5F4\uB824\uC694.</div></div>`);
   }
   function vStory() {
     const L = S.story.slice().reverse(), n = S.story.length;
@@ -1477,6 +1491,11 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
       },
       sentall() {
         ui.sAll = !ui.sAll;
+        render();
+      },
+      fold() {
+        ui.fo = ui.fo || {};
+        ui.fo[d.k] = !ui.fo[d.k];
         render();
       },
       habopen() {
