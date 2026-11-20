@@ -194,11 +194,12 @@ html{-webkit-text-size-adjust:100%;overscroll-behavior-y:none}
 
 /* 탭 */
 .fold>.fh{width:100%;display:flex;align-items:center;gap:8px;background:var(--surface);border:2px solid var(--line);border-radius:14px;padding:12px 14px;text-align:left;font:inherit;color:inherit;cursor:pointer;margin:0}.fold>.fh h2{margin:0;font-size:17px}.fold>.fh .sub{margin-left:auto;font-size:12px;color:var(--muted)}.fold>.fh .ch{font-size:11px;color:var(--muted)}.fold[open],.fold>.fh[aria-expanded=true]{border-color:var(--blue)}.fold>.fh+*{margin-top:8px}
+.subnav{margin:10px 0 0}.subnav button{flex:1}
 .sent{display:grid;gap:10px}.sent .s{display:grid;grid-template-columns:46px 1fr;gap:8px;align-items:start}.sent .d{font-size:12px;color:var(--muted);padding-top:2px}.sent .tx{font-size:14px;overflow-wrap:anywhere}
 .lad{display:grid;gap:8px}.lad .r{display:grid;grid-template-columns:44px 1fr auto;gap:8px;align-items:center;padding:8px 10px;border:2px solid var(--line);border-radius:12px;background:var(--surface)}.lad .r.ok{border-color:var(--blue)}.lad .r.lock{opacity:.55}.lad .hl{font-family:var(--f-display);color:var(--blue)}.lad .st{font-size:13px;color:var(--muted);white-space:nowrap}.bar{height:6px;background:var(--line);border-radius:9px;overflow:hidden;margin-top:4px}.bar i{display:block;height:100%;background:var(--coral)}
 nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:10;background:var(--surface);border-top:2px solid var(--line);
   padding:6px max(10px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(10px,env(safe-area-inset-left,0px))}
-nav.tabs div{max-width:520px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);gap:2px}
+nav.tabs div{max-width:520px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:2px}
 nav.tabs button{background:none;border:0;border-radius:12px;padding:6px 0 4px;display:grid;justify-items:center;gap:1px;color:var(--muted);font-family:var(--f-display);font-size:13px;position:relative}
 nav.tabs button svg{width:26px;height:26px}
 nav.tabs button[aria-current="page"]{color:var(--blue);background:var(--soft)}
@@ -448,7 +449,7 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
     const n = String(s == null ? "" : s).toLowerCase().replace(/[\s.\-_*~!?,]/g, "");
     return BAD.some((w) => n.includes(w));
   };
-  const APP_BUILD = "v0.5.0";
+  const APP_BUILD = "v0.6.0";
   const PAGE_URL = /^https?:/.test(location.href) ? location.href.split("#")[0].split("?")[0] : "";
   const XP = { act: 15, story: 12, com: 10, habit: 12, habitMini: 8, snack: 3 }, CLEAR = 10, CHEST = 25, CHEER_GET = 2, CHEER_SEND = 1, WEEK_GOAL = 10, WEEK_XP = 30, MASTER = 30, SNACK_MAX = 5;
   const HAIRC = ["#3A2B22", "#7A4A2E", "#D9B36C", "#8B8B8B", "#6E2A3A"], TOPC = ["#F1EFE8", "#185FA5", "#D85A30", "#3B6D11", "#2C2C2A"], SKIN = ["#FFDCC2", "#EBBA92", "#B98363"];
@@ -1098,18 +1099,18 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
       p = PLIDS.reduce((a, x) => a + plCount(x), 0);
     } catch (e) {
     }
-    return "\uD2C8\uC0C8 " + (t.snacks || 0) + "/" + SNACK_MAX + " \xB7 \uC8FC\uAC04 " + Math.min(w.count, WEEK_GOAL) + "/" + WEEK_GOAL + " \xB7 \uC7A5\uC18C " + p;
+    return "\uD2C8\uC0C8 " + (t.snacks || 0) + "/" + SNACK_MAX + " \xB7 \uC8FC\uAC04 " + Math.min(w.count, WEEK_GOAL) + "/" + WEEK_GOAL;
   }
   function vToday() {
     const t = S.today, n = t.qs.filter((q) => q.done).length, L = partyList(), sum = L.reduce((a, m) => a + m.done, 0), goal = goalOf(L.length);
     return hud() + `<section class="sec"><div class="hd"><h2>\uC624\uB298\uC758 \uD018\uC2A4\uD2B8</h2><span class="sub num">${n} / ${t.qs.length} \uC644\uB8CC${S.streak > 0 ? ` \xB7 \uACBD\uD5D8\uCE58 +${Math.round((mult() - 1) * 100)}%` : ""}</span></div>${(S.done || 0) < 3 ? '<div class="note" style="margin-bottom:12px">\uC624\uB298\uC740 1\uAC1C\uB9CC \uD574\uB3C4 \uC5F0\uC18D \uAE30\uB85D\uC774 \uC774\uC5B4\uC838\uC694. \uD558\uB8E8\uB97C \uC26C\uC5B4\uB3C4 \uD734\uC2DD\uAD8C\uC774 \uC9C0\uCF1C\uC918\uC694.</div>' : ""}${t.qs.map(questCard).join("")}
   ${n === t.qs.length ? `<div class="allclear"><div><h3>\uC624\uB298 \uD018\uC2A4\uD2B8 \uC62C\uD074\uB9AC\uC5B4!</h3><div style="font-size:14px;opacity:.9">\uB0B4\uC77C \uC544\uCE68 \uC0C8 \uD018\uC2A4\uD2B8\uAC00 \uC5F4\uB824\uC694. \uD30C\uD2F0 \uBCF4\uBB3C\uC0C1\uC790\uB3C4 \uD655\uC778\uD574\uBCF4\uC138\uC694.</div></div></div>` : ""}</section>
-  ${fold("more", "\uB354 \uD574\uBCF4\uAE30", moreSub(), `${snackSec()}${weekSec()}${placeSec()}${plazaSec()}<section class="sec"><div class="hd"><h2>\uD30C\uD2F0 \uC0C1\uD669</h2><button class="link" data-a="tab" data-t="party">\uD30C\uD2F0 \uBCF4\uAE30</button></div>
+  ${fold("more", "\uB354 \uD574\uBCF4\uAE30", moreSub(), `${snackSec()}${weekSec()}<section class="sec"><div class="hd"><h2>\uD30C\uD2F0 \uC0C1\uD669</h2><button class="link" data-a="tab" data-t="party">\uD30C\uD2F0 \uBCF4\uAE30</button></div>
   <div class="chest">${ICON.chest}<div class="t">${esc(S.party ? S.party.name : "\uBAA8\uD5D8 \uB3D9\uB8CC \uD30C\uD2F0")}</div><div><div class="bar mint"><i style="width:${Math.min(100, sum / goal * 100)}%"></i></div><div class="xpt num"><span>\uD30C\uD2F0 \uD018\uC2A4\uD2B8 ${Math.min(sum, goal)} / ${goal}</span><span>${S.chestDay === KST() ? "\uC624\uB298 \uC218\uB839 \uC644\uB8CC" : sum >= goal ? "\uC0C1\uC790 \uC5F4 \uC218 \uC788\uC5B4\uC694" : ""}</span></div></div></div></section>`)}`;
   }
   function vParty() {
     const L = partyList(), sum = L.reduce((a, m) => a + m.done, 0), goal = goalOf(L.length), claimed = S.chestDay === KST(), can = sum >= goal && !claimed, d = KST();
-    let h = hud() + `<section class="sec"><div class="hd"><h2>${esc(S.party ? S.party.name : "\uBAA8\uD5D8 \uB3D9\uB8CC \uD30C\uD2F0")}</h2><span class="sub">${S.party ? "\uBA64\uBC84 " + L.length + "/4" : "NPC \uB3D9\uB8CC\uC640 \uD568\uAED8"}</span></div>`;
+    let h = hud() + plazaSec() + placeSec() + `<section class="sec"><div class="hd"><h2>${esc(S.party ? S.party.name : "\uBAA8\uD5D8 \uB3D9\uB8CC \uD30C\uD2F0")}</h2><span class="sub">${S.party ? "\uBA64\uBC84 " + L.length + "/4" : "NPC \uB3D9\uB8CC\uC640 \uD568\uAED8"}</span></div>`;
     h += `<div class="chest">${ICON.chest}<div class="t">\uD30C\uD2F0 \uBCF4\uBB3C\uC0C1\uC790</div><div><div class="bar mint"><i style="width:${Math.min(100, sum / goal * 100)}%"></i></div><div class="xpt num"><span>\uBAA8\uB450 \uD569\uCCD0 \uD018\uC2A4\uD2B8 ${Math.min(sum, goal)} / ${goal}\uAC1C</span><span>+${CHEST} XP</span></div></div><div class="go"><button class="btn mint" data-a="chest" ${can ? "" : "disabled"}>${claimed ? "\uC624\uB298\uC740 \uC5F4\uC5C8\uC5B4\uC694" : can ? "\uC0C1\uC790 \uC5F4\uAE30" : "\uD018\uC2A4\uD2B8\uB97C \uB354 \uBAA8\uC544\uC694"}</button></div></div>`;
     if (S.party) {
       h += `<div class="panel" style="margin-top:12px"><div class="codebox"><span class="muted" style="font-size:13px">\uCD08\uB300 \uCF54\uB4DC</span><span class="code" id="pc">${esc(S.party.code)}</span><button class="btn sm ghost" data-a="copy">\uBCF5\uC0AC</button></div><div class="muted" style="font-size:13px;margin-top:6px">\uCE5C\uAD6C\uC5D0\uAC8C \uC774 \uCF54\uB4DC\uB97C \uC54C\uB824\uC8FC\uC138\uC694. \uCE5C\uAD6C\uB294 \uC774 \uD398\uC774\uC9C0\uB97C \uC5F4\uACE0 \uD30C\uD2F0 \uD0ED\uC5D0\uC11C \uCF54\uB4DC\uB97C \uC785\uB825\uD558\uBA74 \uD569\uB958\uD574\uC694.</div>${!db ? '<div class="note" style="margin-top:6px">\uC774 \uBC84\uC804\uC740 \uCE5C\uAD6C\uC640 \uC2E4\uC2DC\uAC04\uC73C\uB85C \uD30C\uD2F0\uB97C \uB9FA\uC744 \uC218 \uC5C6\uC5B4\uC694. NPC \uB3D9\uB8CC\uC640 \uD568\uAED8\uD574\uC694.</div>' : ""}${ui.conn === "error" ? '<div class="err">\uD30C\uD2F0 \uC815\uBCF4\uB97C \uBD88\uB7EC\uC624\uC9C0 \uBABB\uD588\uC5B4\uC694.</div>' : ui.conn === "slow" ? '<div class="note" style="margin-top:6px">\uC5F0\uACB0\uC774 \uC624\uB798 \uAC78\uB9AC\uACE0 \uC788\uC5B4\uC694.</div>' : ""}</div>`;
@@ -1308,10 +1309,15 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
     }
     return `<div class="ov" data-a="ovclose"><div class="sheet" role="dialog" aria-modal="true">${b}</div></div>`;
   }
+  const MEG = ["me", "story", "book"];
+  function subnav() {
+    if (!MEG.includes(ui.tab)) return "";
+    return `<div class="seg subnav" role="tablist">${[["me", "\uCE90\uB9AD\uD130"], ["story", "\uC77C\uC9C0"], ["book", "\uB3C4\uAC10"]].map((x) => `<button data-a="tab" data-t="${x[0]}" aria-pressed="${ui.tab === x[0]}">${x[1]}</button>`).join("")}</div>`;
+  }
   function tabs() {
-    const T = [["today", "\uC624\uB298", ICON.t_today], ["party", "\uD30C\uD2F0", ICON.t_party], ["story", "\uC77C\uC9C0", ICON.t_story], ["me", "\uCE90\uB9AD\uD130", ICON.t_me], ["book", "\uB3C4\uAC10", ICON.t_book]];
+    const T = [["today", "\uC624\uB298", ICON.t_today], ["party", "\uAD11\uC7A5\xB7\uD30C\uD2F0", ICON.t_party], ["me", "\uB098", ICON.t_me]];
     const nq = S.today ? S.today.qs.filter((q) => !q.done).length : 0;
-    return `<nav class="tabs" aria-label="\uBA54\uB274"><div>${T.map((t) => `<button data-a="tab" data-t="${t[0]}" ${ui.tab === t[0] ? 'aria-current="page"' : ""}>${t[2]}<span>${t[1]}</span>${t[0] === "today" && nq ? `<span class="badge num">${nq}</span>` : ""}</button>`).join("")}</div></nav>`;
+    return `<nav class="tabs" aria-label="\uBA54\uB274"><div>${T.map((t) => `<button data-a="tab" data-t="${t[0]}" ${ui.tab === t[0] || t[0] === "me" && MEG.includes(ui.tab) ? 'aria-current="page"' : ""}>${t[2]}<span>${t[1]}</span>${t[0] === "today" && nq ? `<span class="badge num">${nq}</span>` : ""}</button>`).join("")}</div></nav>`;
   }
   let viewKey = "";
   function render() {
@@ -1331,7 +1337,7 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
     } else {
       if (!S.today || S.today.day !== KST() || S.today.qs.some((q) => q.k === "sit")) makeDay();
       else if (!S.today.qs.some((q) => q.k === "habit")) S.today.qs.push({ k: "habit", done: 0 });
-      app.innerHTML = { today: vToday, party: vParty, story: vStory, me: vMe, book: vBook }[ui.tab]() + tabs();
+      app.innerHTML = subnav() + { today: vToday, party: vParty, story: vStory, me: vMe, book: vBook }[ui.tab]() + tabs();
       $("#layer").innerHTML = modalHtml();
       if (ui.modal) {
         if (ui.modalSeen !== ui.modal) {

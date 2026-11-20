@@ -33,7 +33,7 @@ for(const [dn,dev] of [['iph',devices['iPhone 13']],['desk',{viewport:{width:100
  ok(await p.locator('.world:not(.pworld)').count()===1&&await p.locator('.pworld').count()===0,dn+' 나가면 광장으로 복귀');
  await p.click('[data-w=close]');await p.waitForTimeout(300);
  ok(await p.locator('.world').count()===0,dn+' 메뉴로 나가면 오늘 화면');
- ok((await p.locator('#app').innerText()).includes('생활 장소 습관'),dn+' 오늘 화면에 장소 습관 요약');
+ await p.click('[data-a=tab][data-t=party]');await p.waitForTimeout(200);ok((await p.locator('#app').innerText()).includes('생활 장소 습관'),dn+' 광장 탭에 장소 습관 요약');
  await p.screenshot({path:`shots6/pl_${dn}_today.png`,fullPage:false});
  await p.locator('[data-a=tab][data-t=me]:not(.link)').click();await p.waitForTimeout(300);
  ok((await p.locator('#app').innerText()).includes('장소 습관 알림'),dn+' 캐릭터 탭에 알림 설정');
@@ -42,7 +42,7 @@ for(const [dn,dev] of [['iph',devices['iPhone 13']],['desk',{viewport:{width:100
  await c.close()}
 // 5개 장소 전부 렌더 + 지도 오류 없음
 {const c=await b.newContext({...devices['iPhone 13'],timezoneId:'Asia/Seoul'});const p=await c.newPage();const errs=[];p.on('pageerror',e=>errs.push(e.message));
- await p.addInitScript(s=>{localStorage.setItem('cq-party-v1',s)},S0({startPlaza:false}));await p.goto(F);await p.waitForTimeout(400);
+ await p.addInitScript(s=>{localStorage.setItem('cq-party-v1',s)},S0({startPlaza:false}));await p.goto(F);await p.waitForTimeout(400);await p.click('[data-a=tab][data-t=party]');await p.waitForTimeout(200);
  for(const pid of ['office','home','field','school','hospital']){await p.evaluate(()=>0);await p.locator(`[data-a=plc][data-p=${pid}]`).click();await p.waitForTimeout(500);
   await p.click('[data-p=go][data-s=n]');await p.waitForTimeout(300);await p.screenshot({path:`shots6/sc_${pid}.png`});
   ok(/\+4/.test(await p.locator('#pcard').innerText()),pid+' 점심 구역 카드');await p.click('.pworld [data-p=out]');await p.waitForTimeout(400);await p.click('[data-w=close]');await p.waitForTimeout(200)}

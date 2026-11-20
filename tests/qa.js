@@ -29,7 +29,7 @@ const fakeDb=()=>{const store={};const subs=[];const snap=(id,v)=>({id,exists:v!
   const {p,errs}=await mkPage(w,h,dark);
   const o=await hscroll(p);ok(`시작화면 ${w}px ${dark?'다크':'라이트'} 가로스크롤없음`,o<=0,'overflow '+o);
   await start(p);
-  for(const tab of ['today','party','story','me','book']){
+  for(const tab of ['today','party','me','story','book']){
     await p.click(`[data-a=tab][data-t=${tab}]`);const ov=await hscroll(p);
     if(ov>0)ok(`${tab} ${w}px ${dark?'다크':'라이트'} 가로스크롤`,false,'overflow '+ov);
   }

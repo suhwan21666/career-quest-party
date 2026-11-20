@@ -1,0 +1,32 @@
+const {chromium}=require('playwright');
+const out='/tmp/claude-0/-home-claude/11c39566-7110-5737-8b80-1278e6e73b14/scratchpad/build/shots2/';
+(async()=>{
+ const b=await chromium.launch();
+ const c=await b.newContext({viewport:{width:400,height:820},deviceScaleFactor:2,colorScheme:'light'});
+ const p=await c.newPage();const errs=[];p.on('pageerror',e=>errs.push('PE '+e.message));
+ await p.goto('file:///tmp/claude-0/-home-claude/11c39566-7110-5737-8b80-1278e6e73b14/scratchpad/build/index.html');
+ await p.fill('#nk','하늘');await p.click('[data-a=next]');await p.click('[data-a=sel][data-j=developer]');await p.click('[data-a=start]');
+ await p.evaluate(()=>window.scrollTo(0,0));
+ await p.locator('.q.habit').scrollIntoViewIfNeeded();
+ await p.screenshot({path:out+'01_습관카드_선택전.png'});
+ await p.click('[data-a=habopen]');
+ await p.waitForTimeout(300);
+ await p.screenshot({path:out+'02_습관고르기.png'});
+ await p.click('[data-a=habpick][data-h="developer:0"]');
+ await p.locator('.q.habit').scrollIntoViewIfNeeded();
+ await p.screenshot({path:out+'03_습관카드.png'});
+ // 과거 6일 연속 기록 주입 → 오늘 하면 7일 (줄기 보너스)
+ await p.evaluate(()=>{const s=JSON.parse(localStorage.getItem('cq-party-v1'));const f=n=>{const d=new Date(Date.now()-n*864e5);return new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Seoul'}).format(d)};
+  s.habs={'developer:0':{streak:6,best:6,total:6,last:f(1),days:[6,5,4,3,2,1].map(f)}};s.lastDay=f(1);s.streak=6;localStorage.setItem('cq-party-v1',JSON.stringify(s))});
+ await p.reload();await p.waitForTimeout(200);
+ await p.locator('.q.habit').scrollIntoViewIfNeeded();
+ await p.click('[data-a=hab][data-m="0"]');
+ await p.waitForTimeout(1300);
+ await p.screenshot({path:out+'04_7일연속.png'});
+ await p.click('[data-a=tab][data-t=me]');await p.click('.subnav [data-t=story]');await p.evaluate(()=>window.scrollTo(0,0));
+ await p.screenshot({path:out+'05_습관기록.png'});
+ await p.click('[data-a=tab][data-t=party]');await p.evaluate(()=>window.scrollTo(0,0));
+ await p.screenshot({path:out+'06_파티.png'});
+ console.log('errs',errs);
+ await b.close();
+})();

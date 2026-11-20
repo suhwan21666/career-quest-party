@@ -180,11 +180,12 @@ html{-webkit-text-size-adjust:100%;overscroll-behavior-y:none}
 
 /* 탭 */
 .fold>.fh{width:100%;display:flex;align-items:center;gap:8px;background:var(--surface);border:2px solid var(--line);border-radius:14px;padding:12px 14px;text-align:left;font:inherit;color:inherit;cursor:pointer;margin:0}.fold>.fh h2{margin:0;font-size:17px}.fold>.fh .sub{margin-left:auto;font-size:12px;color:var(--muted)}.fold>.fh .ch{font-size:11px;color:var(--muted)}.fold[open],.fold>.fh[aria-expanded=true]{border-color:var(--blue)}.fold>.fh+*{margin-top:8px}
+.subnav{margin:10px 0 0}.subnav button{flex:1}
 .sent{display:grid;gap:10px}.sent .s{display:grid;grid-template-columns:46px 1fr;gap:8px;align-items:start}.sent .d{font-size:12px;color:var(--muted);padding-top:2px}.sent .tx{font-size:14px;overflow-wrap:anywhere}
 .lad{display:grid;gap:8px}.lad .r{display:grid;grid-template-columns:44px 1fr auto;gap:8px;align-items:center;padding:8px 10px;border:2px solid var(--line);border-radius:12px;background:var(--surface)}.lad .r.ok{border-color:var(--blue)}.lad .r.lock{opacity:.55}.lad .hl{font-family:var(--f-display);color:var(--blue)}.lad .st{font-size:13px;color:var(--muted);white-space:nowrap}.bar{height:6px;background:var(--line);border-radius:9px;overflow:hidden;margin-top:4px}.bar i{display:block;height:100%;background:var(--coral)}
 nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:10;background:var(--surface);border-top:2px solid var(--line);
   padding:6px max(10px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(10px,env(safe-area-inset-left,0px))}
-nav.tabs div{max-width:520px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);gap:2px}
+nav.tabs div{max-width:520px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:2px}
 nav.tabs button{background:none;border:0;border-radius:12px;padding:6px 0 4px;display:grid;justify-items:center;gap:1px;color:var(--muted);font-family:var(--f-display);font-size:13px;position:relative}
 nav.tabs button svg{width:26px;height:26px}
 nav.tabs button[aria-current="page"]{color:var(--blue);background:var(--soft)}
@@ -374,7 +375,7 @@ const prevDay=d=>new Date(Date.parse(d+'T00:00:00Z')-864e5).toISOString().slice(
 const hsh=s=>{let x=2166136261;for(const c of String(s)){x^=c.charCodeAt(0);x=Math.imul(x,16777619)}return x>>>0};
 const BAD=['시발','씨발','씨바','병신','지랄','개새끼','좆','썅','섹스','fuck','shit','bitch'];
 const dirty=s=>{const n=String(s==null?'':s).toLowerCase().replace(/[\s.\-_*~!?,]/g,'');return BAD.some(w=>n.includes(w))};
-const APP_BUILD='v0.5.0';
+const APP_BUILD='v0.6.0';
 const PAGE_URL='https://claude.ai/artifact/Edf9q7RhQqGvSZFLRWe2kA';
 const XP={act:15,story:12,com:10,habit:12,habitMini:8,snack:3}, CLEAR=10, CHEST=25, CHEER_GET=2, CHEER_SEND=1, WEEK_GOAL=10, WEEK_XP=30, MASTER=30, SNACK_MAX=5;
 const HAIRC=['#3A2B22','#7A4A2E','#D9B36C','#8B8B8B','#6E2A3A'], TOPC=['#F1EFE8','#185FA5','#D85A30','#3B6D11','#2C2C2A'], SKIN=['#FFDCC2','#EBBA92','#B98363'];
@@ -599,14 +600,14 @@ function snackSec(){const t=S.today,n=t.snacks||0,full=n>=SNACK_MAX;
 function weekSec(){const w=getWeek(),c=Math.min(w.count,WEEK_GOAL),ok=w.count>=WEEK_GOAL;
   return`<section class="sec"><div class="hd"><h2>이번 주 모험</h2><span class="sub">월요일에 새로 시작해요</span></div><div class="chest">${ICON.chest}<div class="t">퀘스트 ${WEEK_GOAL}개 달성</div><div><div class="bar mint"><i style="width:${c/WEEK_GOAL*100}%"></i></div><div class="xpt num"><span>${c} / ${WEEK_GOAL}</span><span>상자 +${WEEK_XP} XP</span></div></div><div class="go"><button class="btn mint" data-a="week" ${ok&&!w.claimed?'':'disabled'}>${w.claimed?'이번 주 상자는 열었어요':ok?'주간 상자 열기':'하루 1~2개씩이면 충분해요'}</button></div></div></section>`}
 const plazaSec=()=>{const n=Object.keys(S.stampBook||{}).length,td=stampsToday().ids.length;return`<section class="sec"><div class="hd"><h2>광화문 광장</h2><span class="sub num">스탬프 ${n} / ${LM.length}</span></div><div class="panel"><div class="muted" style="font-size:14px;margin-bottom:10px">그림 속 광화문 광장을 걸어 다녀요. 같은 시간에 들어온 친구들과 마주치면 인사도 할 수 있어요. <b id="plz" style="color:var(--mint-deep)">${plazaTxt()}</b> 곳곳의 표시에서 스탬프를 찍어 보세요.${td?` 오늘 ${td}곳을 다녀왔어요.`:''}</div><button class="btn blue" data-a="world">광장 걸어보기</button></div></section>`};
-function moreSub(){const t=S.today,w=getWeek();let p=0;try{p=PLIDS.reduce((a,x)=>a+plCount(x),0)}catch(e){}return'틈새 '+(t.snacks||0)+'/'+SNACK_MAX+' · 주간 '+Math.min(w.count,WEEK_GOAL)+'/'+WEEK_GOAL+' · 장소 '+p}
+function moreSub(){const t=S.today,w=getWeek();let p=0;try{p=PLIDS.reduce((a,x)=>a+plCount(x),0)}catch(e){}return'틈새 '+(t.snacks||0)+'/'+SNACK_MAX+' · 주간 '+Math.min(w.count,WEEK_GOAL)+'/'+WEEK_GOAL}
 function vToday(){const t=S.today,n=t.qs.filter(q=>q.done).length,L=partyList(),sum=L.reduce((a,m)=>a+m.done,0),goal=goalOf(L.length);
   return hud()+`<section class="sec"><div class="hd"><h2>오늘의 퀘스트</h2><span class="sub num">${n} / ${t.qs.length} 완료${S.streak>0?` · 경험치 +${Math.round((mult()-1)*100)}%`:''}</span></div>${(S.done||0)<3?'<div class="note" style="margin-bottom:12px">오늘은 1개만 해도 연속 기록이 이어져요. 하루를 쉬어도 휴식권이 지켜줘요.</div>':''}${t.qs.map(questCard).join('')}
   ${n===t.qs.length?`<div class="allclear"><div><h3>오늘 퀘스트 올클리어!</h3><div style="font-size:14px;opacity:.9">내일 아침 새 퀘스트가 열려요. 파티 보물상자도 확인해보세요.</div></div></div>`:''}</section>
-  ${fold('more','더 해보기',moreSub(),`${snackSec()}${weekSec()}${placeSec()}${plazaSec()}<section class="sec"><div class="hd"><h2>파티 상황</h2><button class="link" data-a="tab" data-t="party">파티 보기</button></div>
+  ${fold('more','더 해보기',moreSub(),`${snackSec()}${weekSec()}<section class="sec"><div class="hd"><h2>파티 상황</h2><button class="link" data-a="tab" data-t="party">파티 보기</button></div>
   <div class="chest">${ICON.chest}<div class="t">${esc(S.party?S.party.name:'모험 동료 파티')}</div><div><div class="bar mint"><i style="width:${Math.min(100,sum/goal*100)}%"></i></div><div class="xpt num"><span>파티 퀘스트 ${Math.min(sum,goal)} / ${goal}</span><span>${S.chestDay===KST()?'오늘 수령 완료':sum>=goal?'상자 열 수 있어요':''}</span></div></div></div></section>`)}`}
 function vParty(){const L=partyList(),sum=L.reduce((a,m)=>a+m.done,0),goal=goalOf(L.length),claimed=S.chestDay===KST(),can=sum>=goal&&!claimed,d=KST();
-  let h=hud()+`<section class="sec"><div class="hd"><h2>${esc(S.party?S.party.name:'모험 동료 파티')}</h2><span class="sub">${S.party?'멤버 '+L.length+'/4':'NPC 동료와 함께'}</span></div>`;
+  let h=hud()+plazaSec()+placeSec()+`<section class="sec"><div class="hd"><h2>${esc(S.party?S.party.name:'모험 동료 파티')}</h2><span class="sub">${S.party?'멤버 '+L.length+'/4':'NPC 동료와 함께'}</span></div>`;
   h+=`<div class="chest">${ICON.chest}<div class="t">파티 보물상자</div><div><div class="bar mint"><i style="width:${Math.min(100,sum/goal*100)}%"></i></div><div class="xpt num"><span>모두 합쳐 퀘스트 ${Math.min(sum,goal)} / ${goal}개</span><span>+${CHEST} XP</span></div></div><div class="go"><button class="btn mint" data-a="chest" ${can?'':'disabled'}>${claimed?'오늘은 열었어요':can?'상자 열기':'퀘스트를 더 모아요'}</button></div></div>`;
   if(S.party){h+=`<div class="panel" style="margin-top:12px"><div class="codebox"><span class="muted" style="font-size:13px">초대 코드</span><span class="code" id="pc">${esc(S.party.code)}</span><button class="btn sm ghost" data-a="copy">복사</button></div><div class="muted" style="font-size:13px;margin-top:6px">친구에게 이 코드를 알려주세요. 친구는 이 페이지를 열고 파티 탭에서 코드를 입력하면 합류해요.</div>${!db?'<div class="note" style="margin-top:6px">지금은 공유 연결이 없어서 파티원이 보이지 않아요. 로그인한 상태로 다시 열어주세요.</div>':''}${ui.conn==='error'?'<div class="err">파티 정보를 불러오지 못했어요.</div>':ui.conn==='slow'?'<div class="note" style="margin-top:6px">연결이 오래 걸리고 있어요.</div>':''}</div>`}
   h+='</section><section class="sec"><div class="hd"><h2>동료들</h2></div>';
@@ -689,9 +690,11 @@ function modalHtml(){const m=ui.modal;if(!m)return'';let b='';
   if(m.type==='del')b=`<div class="center"><h2>내 데이터를 삭제할까요?</h2><div class="muted">레벨, 일지, 습관, 파티 정보가 모두 사라지고 되돌릴 수 없어요.</div><div class="row"><button class="btn ghost" data-a="close">취소</button><button class="btn blue" data-a="delGo">삭제하기</button></div></div>`;
   if(m.type==='job'){const j=JB[m.id],c=S.cnt[j.id]||0;b=`<div class="center"><div style="width:130px">${av(j.id,4,S.look,{label:j.name})}</div><h2>${esc(j.name)}</h2><div class="muted">${esc(j.desc)}</div><div class="chip">특히 중요한 역량 · ${j.dna.map(s=>SN[s]).join(' · ')}</div><div class="num">이 직업 퀘스트 ${c} / ${MASTER}</div><div class="row">${m.id===S.job?'<span class="chip">지금 체험 중</span>':`<button class="btn blue" data-a="setjob" data-j="${j.id}">이 직업으로 모험하기</button>`}<button class="btn ghost" data-a="close">닫기</button></div></div>`}
   return`<div class="ov" data-a="ovclose"><div class="sheet" role="dialog" aria-modal="true">${b}</div></div>`}
-function tabs(){const T=[['today','오늘',ICON.t_today],['party','파티',ICON.t_party],['story','일지',ICON.t_story],['me','캐릭터',ICON.t_me],['book','도감',ICON.t_book]];
+const MEG=['me','story','book'];
+function subnav(){if(!MEG.includes(ui.tab))return'';return`<div class="seg subnav" role="tablist">${[['me','캐릭터'],['story','일지'],['book','도감']].map(x=>`<button data-a="tab" data-t="${x[0]}" aria-pressed="${ui.tab===x[0]}">${x[1]}</button>`).join('')}</div>`}
+function tabs(){const T=[['today','오늘',ICON.t_today],['party','광장·파티',ICON.t_party],['me','나',ICON.t_me]];
   const nq=S.today?S.today.qs.filter(q=>!q.done).length:0;
-  return`<nav class="tabs" aria-label="메뉴"><div>${T.map(t=>`<button data-a="tab" data-t="${t[0]}" ${ui.tab===t[0]?'aria-current="page"':''}>${t[2]}<span>${t[1]}</span>${t[0]==='today'&&nq?`<span class="badge num">${nq}</span>`:''}</button>`).join('')}</div></nav>`}
+  return`<nav class="tabs" aria-label="메뉴"><div>${T.map(t=>`<button data-a="tab" data-t="${t[0]}" ${(ui.tab===t[0]||(t[0]==='me'&&MEG.includes(ui.tab)))?'aria-current="page"':''}>${t[2]}<span>${t[1]}</span>${t[0]==='today'&&nq?`<span class="badge num">${nq}</span>`:''}</button>`).join('')}</div></nav>`}
 let viewKey='';
 function render(){
   const vk=(S.job?'g:'+ui.tab:'s:'+(ui.setup||1));if(vk!==viewKey){viewKey=vk;try{window.scrollTo(0,0)}catch(e){}}
@@ -699,7 +702,7 @@ function render(){
   if(!S.job){app.innerHTML=vSetup();$('#layer').innerHTML='';}
   else{if(!S.today||S.today.day!==KST()||S.today.qs.some(q=>q.k==='sit'))makeDay();
     else if(!S.today.qs.some(q=>q.k==='habit'))S.today.qs.push({k:'habit',done:0});
-    app.innerHTML={today:vToday,party:vParty,story:vStory,me:vMe,book:vBook}[ui.tab]()+tabs();$('#layer').innerHTML=modalHtml();if(ui.modal){if(ui.modalSeen!==ui.modal){ui.modalSeen=ui.modal;const f=$('#layer .sheet button');if(f)f.focus()}}else ui.modalSeen=null}
+    app.innerHTML=subnav()+{today:vToday,party:vParty,story:vStory,me:vMe,book:vBook}[ui.tab]()+tabs();$('#layer').innerHTML=modalHtml();if(ui.modal){if(ui.modalSeen!==ui.modal){ui.modalSeen=ui.modal;const f=$('#layer .sheet button');if(f)f.focus()}}else ui.modalSeen=null}
   ui.pop=null;
   if(keep){const e=document.getElementById(keep);if(e){e.focus();try{e.setSelectionRange(st,st)}catch(x){}}}}
 
