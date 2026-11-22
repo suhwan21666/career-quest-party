@@ -1,6 +1,6 @@
 const {chromium,devices}=require('playwright');const path=require('path');let f=0;const ok=(c,m)=>{console.log((c?'PASS ':'FAIL ')+m);if(!c)f++};
 (async()=>{const b=await chromium.launch();const c=await b.newContext({...devices['iPhone 13'],timezoneId:'Asia/Seoul'});const p=await c.newPage();const e=[];p.on('pageerror',x=>e.push(x.message));
-await p.addInitScript(()=>{window.__cqNoPlaza=1});await p.goto('file://'+path.resolve('out/career-quest-party.html'));await p.waitForTimeout(400);
+await p.addInitScript(()=>{window.__cqNoPlaza=1;window.__cqFeatAll=1});await p.goto('file://'+path.resolve('out/career-quest-party.html'));await p.waitForTimeout(400);
 await p.fill('#nk','테스터');await p.click('[data-a=next]');await p.click('[data-a=sel][data-j=developer]');await p.click('[data-a=start]');await p.waitForTimeout(600);
 ok(await p.locator('[data-a=snack]').count()===0,'오늘 탭: 틈새는 처음에 접혀 있음');
 ok(await p.evaluate(()=>document.documentElement.scrollHeight)<1500,'오늘 탭 길이 짧아짐');

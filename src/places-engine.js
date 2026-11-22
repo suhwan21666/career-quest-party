@@ -32,7 +32,7 @@ async function askNotif(){if(typeof Notification==='undefined'){toast('이 브�
   if(Notification.permission==='denied')toast('브라우저에서 알림이 꺼져 있어요. 앱 안에서만 알려드려요')}
 function setAl(p,s,on){if(!PLACES[p]||!SL.some(x=>x.k===s))return;S.al=S.al||{};if(on)S.al[alKey(p,s)]=1;else delete S.al[alKey(p,s)];persist();if(on)askNotif()}
 function setAlT(s,t){if(!/^([01]\d|2[0-3]):[0-5]\d$/.test(t||''))return;S.alT=S.alT||{};S.alT[s]=t;persist()}
-function alTick(){if(!S.job)return;const d=KST();if(!S.alF||S.alF.day!==d)S.alF={day:d,k:[]};
+function alTick(){if(!FEAT.places)return;if(!S.job)return;const d=KST();if(!S.alF||S.alF.day!==d)S.alF={day:d,k:[]};
   SL.forEach(sl=>{const ps=alPlaces(sl.k);if(!ps.length||S.alF.k.includes(sl.k))return;const[hh,mm]=alTime(sl.k).split(':').map(Number),t=hh*60+mm,n=nowMin();
     if(n<t||n>=t+90)return;S.alF.k.push(sl.k);persist();
     const left=ps.map(p=>PLACES[p].n+' '+(3-[0,1,2].filter(i=>plDone(p+'.'+sl.k+i)).length)+'개').join(' · '),body=sl.n+' 습관 시간이에요. '+left+' 남았어요';
