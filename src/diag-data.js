@@ -30,4 +30,4 @@ function metrics(){const d=KST(),A=(S.actd||[]).slice().sort(),pre=S.assess.find
  Object.keys(S.habs||{}).forEach(id=>{const n=(S.habs[id]||{}).total||0;if(!n)return;const hi=habInfo(id);if(!hi)return;jset[hi.j]=1;(hi.kind==='직접'?dir+=n:ind+=n);const f=S.fb&&S.fb[id];if(f){fun+=f.fun||0;ok+=f.ok||0;no+=f.no||0;if(f.keep)keep++}});
  jobs=Object.keys(jset).length;
  const span=A.length?dayDiff(A[0],A[A.length-1]):0;
- return{days:A.length,since:S.born||A[0]||d,span,ret7:A.length>=3&&span>=6,streak:S.streak|0,jobs,ind,dir,ach:Object.keys(S.hdone||{}).length,fun,ok,no,keep,pre:pre?avgR(pre):0,chk:chk?avgR(chk):0,delta:(pre&&chk)?avgR(chk)-avgR(pre):null}}
+ return{days:A.length,since:S.born||A[0]||d,span,ret7:A.length>=3&&span>=6,streak:S.streak|0,jobs,ind,dir,prf:(S.prf||[]).length,ach:Object.keys(S.hdone||{}).length,fun,ok,no,keep,pre:pre?avgR(pre):0,chk:chk?avgR(chk):0,delta:(pre&&chk)?avgR(chk)-avgR(pre):null}}

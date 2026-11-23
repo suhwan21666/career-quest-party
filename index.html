@@ -194,6 +194,7 @@ html{-webkit-text-size-adjust:100%;overscroll-behavior-y:none}
 
 /* 탭 */
 .fold>.fh{width:100%;display:flex;align-items:center;gap:8px;background:var(--surface);border:2px solid var(--line);border-radius:14px;padding:12px 14px;text-align:left;font:inherit;color:inherit;cursor:pointer;margin:0}.fold>.fh h2{margin:0;font-size:17px}.fold>.fh .sub{margin-left:auto;font-size:12px;color:var(--muted)}.fold>.fh .ch{font-size:11px;color:var(--muted)}.fold[open],.fold>.fh[aria-expanded=true]{border-color:var(--blue)}.fold>.fh+*{margin-top:8px}
+.evimg{width:64px;height:64px;object-fit:cover;border-radius:10px;border:2px solid var(--line);flex:none}.evimg.ph{display:grid;place-items:center;font-size:22px;background:var(--soft)}.evd{margin-top:8px}.evd summary{cursor:pointer;font-size:14px;color:var(--blue)}.evb{margin-top:6px}.prfl{display:grid;gap:12px}.pr{display:grid;grid-template-columns:64px 1fr auto;gap:10px;align-items:start}.pr .pt{min-width:0;overflow-wrap:anywhere}
 .dcards{display:grid;gap:10px}.dc{display:grid;gap:2px;text-align:left;padding:12px 14px;border:2px solid var(--line);border-radius:14px;background:var(--surface);color:inherit;font:inherit;cursor:pointer}.dc b{font-family:var(--f-display);font-size:17px}.dc span{font-size:14px;color:var(--muted)}.dc[aria-pressed=true]{border-color:var(--blue);background:var(--soft)}
 .rates{display:grid;gap:12px}.rq{display:grid;gap:6px;font-size:14px}.rt{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}.rt button{padding:10px 0;border:2px solid var(--line);border-radius:10px;background:var(--surface);color:inherit;font:inherit;cursor:pointer}.rt button[aria-pressed=true]{border-color:var(--blue);background:var(--blue);color:#fff}
 .kvs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.kv{display:grid;justify-items:center;padding:8px 4px;background:var(--soft);border-radius:12px}.kv b{font-size:17px}.kv span{font-size:12px;color:var(--muted)}
@@ -576,7 +577,7 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
     });
     jobs = Object.keys(jset).length;
     const span = A.length ? dayDiff(A[0], A[A.length - 1]) : 0;
-    return { days: A.length, since: S.born || A[0] || d, span, ret7: A.length >= 3 && span >= 6, streak: S.streak | 0, jobs, ind, dir, ach: Object.keys(S.hdone || {}).length, fun, ok, no, keep, pre: pre ? avgR(pre) : 0, chk: chk ? avgR(chk) : 0, delta: pre && chk ? avgR(chk) - avgR(pre) : null };
+    return { days: A.length, since: S.born || A[0] || d, span, ret7: A.length >= 3 && span >= 6, streak: S.streak | 0, jobs, ind, dir, prf: (S.prf || []).length, ach: Object.keys(S.hdone || {}).length, fun, ok, no, keep, pre: pre ? avgR(pre) : 0, chk: chk ? avgR(chk) : 0, delta: pre && chk ? avgR(chk) - avgR(pre) : null };
   }
   const STAGES = [[30, "\uC5F4\uB9E4"], [14, "\uAF43"], [7, "\uC904\uAE30"], [3, "\uC0C8\uC2F9"], [1, "\uC528\uC557"]];
   const stageOf = (n) => n < 1 ? "\uC900\uBE44" : STAGES.find((s) => n >= s[0])[1];
@@ -611,7 +612,7 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
     const n = String(s == null ? "" : s).toLowerCase().replace(/[\s.\-_*~!?,]/g, "");
     return BAD.some((w) => n.includes(w));
   };
-  const APP_BUILD = "v0.9.0";
+  const APP_BUILD = "v0.10.0";
   const PAGE_URL = /^https?:/.test(location.href) ? location.href.split("#")[0].split("?")[0] : "";
   const XP = { act: 15, story: 12, com: 10, habit: 12, habitMini: 8, snack: 3 }, CLEAR = 10, CHEST = 25, CHEER_GET = 2, CHEER_SEND = 1, WEEK_GOAL = 10, WEEK_XP = 30, MASTER = 30, SNACK_MAX = 5;
   const HAIRC = ["#3A2B22", "#7A4A2E", "#D9B36C", "#8B8B8B", "#6E2A3A"], TOPC = ["#F1EFE8", "#185FA5", "#D85A30", "#3B6D11", "#2C2C2A"], SKIN = ["#FFDCC2", "#EBBA92", "#B98363"];
@@ -621,7 +622,7 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
   if (S.hab && !habInfo(S.hab)) S.hab = null;
   if (!S.look || typeof S.look !== "object") S.look = blank().look;
   function blank() {
-    return { blocked: {}, rest: 1, week: null, hab: null, habs: {}, fb: {}, hver: 2, diag: null, assess: [], born: null, actd: [], v: 2, story: [], title: "", line: null, nick: "", job: null, look: { hair: 0, hc: 0, top: 1, skin: 0 }, totalXp: 0, stats: {}, streak: 0, lastDay: null, today: null, cnt: {}, done: 0, party: null, chestDay: null, claimed: {}, cheered: {}, npcSay: {}, stamps: null, stampBook: {}, pl: null, hdone: {}, al: {}, alT: {}, alF: null, startPlaza: true, testOpt: false, testNotes: [], testFirst: 0 };
+    return { blocked: {}, rest: 1, week: null, hab: null, habs: {}, fb: {}, hver: 2, diag: null, assess: [], born: null, actd: [], prf: [], v: 2, story: [], title: "", line: null, nick: "", job: null, look: { hair: 0, hc: 0, top: 1, skin: 0 }, totalXp: 0, stats: {}, streak: 0, lastDay: null, today: null, cnt: {}, done: 0, party: null, chestDay: null, claimed: {}, cheered: {}, npcSay: {}, stamps: null, stampBook: {}, pl: null, hdone: {}, al: {}, alT: {}, alF: null, startPlaza: true, testOpt: false, testNotes: [], testFirst: 0 };
   }
   function load() {
     try {
@@ -666,7 +667,18 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
   const ui = { tab: "today", open: null, pop: null, modal: null, members: null, cheers: null, conn: "idle", err: "", setup: 1, sel: null, pcode: "", pname: "" };
   let saveT = null, pushT = null;
   document.addEventListener("input", (e) => {
-    if (e.target && e.target.id === "fbnote") ui.fbNote = e.target.value;
+    const i = e.target && e.target.id;
+    if (i === "fbnote") ui.fbNote = e.target.value;
+    else if (i === "evlink") {
+      ui.ev = ui.ev || {};
+      ui.ev.link = e.target.value;
+    } else if (i === "evnote") {
+      ui.ev = ui.ev || {};
+      ui.ev.note = e.target.value;
+    }
+  });
+  document.addEventListener("change", (e) => {
+    if (e.target && e.target.id === "evfile" && e.target.files) readImg(e.target.files[0]);
   });
   let isAdmin = false, plazaN = 0, testers = [], unsubT = null, testT = 0;
   const plazaTxt = () => plazaN ? "\uC9C0\uAE08 \uAD11\uC7A5\uC5D0 " + plazaN + "\uBA85\uC774 \uC788\uC5B4\uC694." : "";
@@ -699,6 +711,7 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
       mdr: ci(x.mdr, 0, 99999, 0),
       ma: ci(x.ma, 0, 999, 0),
       mr: ci(x.mr, 0, 1, 0),
+      mf: ci(x.mf, 0, 999, 0),
       mp: ci(x.mp, 0, 50, 0),
       mc: ci(x.mc, 0, 50, 0),
       seen: ci(x.seen, 0, 4e12, 0),
@@ -709,7 +722,7 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
     const n = rows.length;
     if (!n) return "";
     const sum = (f) => rows.reduce((a, r) => a + f(r), 0), pair = rows.filter((r) => r.mp > 0 && r.mc > 0), act = rows.filter((r) => r.md > 0);
-    return `<div class="panel" style="padding:10px 12px;margin-bottom:8px;font-size:13px"><b>\uD6A8\uACFC \uC9C0\uD45C \uC694\uC57D</b><div>7\uC77C \uC774\uC0C1 \uC774\uC5B4\uAC04 \uC0AC\uB78C ${sum((r) => r.mr)}\uBA85 (${Math.round(sum((r) => r.mr) / n * 100)}%) \xB7 \uD3C9\uADE0 \uD65C\uB3D9\uC77C ${act.length ? (sum((r) => r.md) / act.length).toFixed(1) : "0"}\uC77C</div><div>\uD3C9\uADE0 \uC2DC\uB3C4\uD55C \uC9C1\uC5C5 ${(sum((r) => r.mj) / n).toFixed(1)}\uAC1C \xB7 \uC9C1\uC811 \uACBD\uD5D8 \uD569\uACC4 ${sum((r) => r.mdr)}\uBC88 \xB7 \uB2EC\uC131 \uC2B5\uAD00 \uD569\uACC4 ${sum((r) => r.ma)}\uAC1C</div><div>\uC790\uAE30\uD3C9\uAC00 \uBCC0\uD654(\uCC98\uC74C\u2192\uCD5C\uADFC, \uBE44\uAD50 \uAC00\uB2A5 ${pair.length}\uBA85): ${pair.length ? (sum((r) => r.mp > 0 && r.mc > 0 ? r.mc - r.mp : 0) / pair.length / 10).toFixed(1) + "\uC810" : "\uC544\uC9C1 \uC5C6\uC74C"}</div></div>`;
+    return `<div class="panel" style="padding:10px 12px;margin-bottom:8px;font-size:13px"><b>\uD6A8\uACFC \uC9C0\uD45C \uC694\uC57D</b><div>7\uC77C \uC774\uC0C1 \uC774\uC5B4\uAC04 \uC0AC\uB78C ${sum((r) => r.mr)}\uBA85 (${Math.round(sum((r) => r.mr) / n * 100)}%) \xB7 \uD3C9\uADE0 \uD65C\uB3D9\uC77C ${act.length ? (sum((r) => r.md) / act.length).toFixed(1) : "0"}\uC77C</div><div>\uD3C9\uADE0 \uC2DC\uB3C4\uD55C \uC9C1\uC5C5 ${(sum((r) => r.mj) / n).toFixed(1)}\uAC1C \xB7 \uC9C1\uC811 \uACBD\uD5D8 \uD569\uACC4 ${sum((r) => r.mdr)}\uBC88 \xB7 \uB2EC\uC131 \uC2B5\uAD00 \uD569\uACC4 ${sum((r) => r.ma)}\uAC1C</div><div>\uC99D\uBE59\uC744 \uB0A8\uAE34 \uC0AC\uB78C ${rows.filter((r) => r.mf > 0).length}\uBA85 (${Math.round(rows.filter((r) => r.mf > 0).length / n * 100)}%) \xB7 \uC99D\uBE59 \uD569\uACC4 ${sum((r) => r.mf)}\uAC1C</div><div>\uC790\uAE30\uD3C9\uAC00 \uBCC0\uD654(\uCC98\uC74C\u2192\uCD5C\uADFC, \uBE44\uAD50 \uAC00\uB2A5 ${pair.length}\uBA85): ${pair.length ? (sum((r) => r.mp > 0 && r.mc > 0 ? r.mc - r.mp : 0) / pair.length / 10).toFixed(1) + "\uC810" : "\uC544\uC9C1 \uC5C6\uC74C"}</div></div>`;
   }
   function tdoc() {
     let lv = 1;
@@ -717,7 +730,7 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
       lv = lvInfo(S.totalXp).l;
     } catch (e) {
     }
-    return { nick: String(S.nick || "").slice(0, 12), dev: shortUa(navigator.userAgent), ua: String(navigator.userAgent).slice(0, 160), scr: innerWidth + "x" + innerHeight, build: APP_BUILD, lv, xp: S.totalXp | 0, streak: S.streak | 0, done: S.done | 0, stamps: Object.keys(S.stampBook || {}).length, err: String(window.__cqErr || "").slice(0, 120), notes: (S.testNotes || []).slice(-10), seen: Date.now(), first: S.testFirst || Date.now(), md: metrics().days, mj: metrics().jobs, mdr: metrics().dir, ma: metrics().ach, mr: metrics().ret7 ? 1 : 0, mp: Math.round(metrics().pre * 10), mc: Math.round(metrics().chk * 10) };
+    return { nick: String(S.nick || "").slice(0, 12), dev: shortUa(navigator.userAgent), ua: String(navigator.userAgent).slice(0, 160), scr: innerWidth + "x" + innerHeight, build: APP_BUILD, lv, xp: S.totalXp | 0, streak: S.streak | 0, done: S.done | 0, stamps: Object.keys(S.stampBook || {}).length, err: String(window.__cqErr || "").slice(0, 120), notes: (S.testNotes || []).slice(-10), seen: Date.now(), first: S.testFirst || Date.now(), md: metrics().days, mj: metrics().jobs, mdr: metrics().dir, ma: metrics().ach, mr: metrics().ret7 ? 1 : 0, mf: metrics().prf, mp: Math.round(metrics().pre * 10), mc: Math.round(metrics().chk * 10) };
   }
   function pushTest(now) {
     if (!db || !uid || !canWrite || !S.testOpt || !S.job) return;
@@ -1289,6 +1302,7 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
     else s += `<div class="foot"><button class="link" data-a="habopen">\uC2B5\uAD00 \uBC14\uAFB8\uAE30</button><span class="row"><button class="btn ghost" data-a="hab" data-m="1">\uCD5C\uC18C \uBC84\uC804\uB9CC</button><button class="btn" data-a="hab" data-m="0">\uD574\uB0C8\uC5B4\uC694!</button></span></div><div class="cue" style="grid-column:1/-1">+${Math.round(XP.habit * mult())} XP (\uCD5C\uC18C \uBC84\uC804 +${Math.round(XP.habitMini * mult())}) \xB7 \uD558\uB8E8 \uAC74\uB108\uB6F0\uC5B4\uB3C4 \uAD1C\uCC2E\uC544\uC694. \uB2E4\uC2DC \uC2DC\uC791\uD558\uBA74 \uB3FC\uC694.</div>`;
     const sg = hSuggest();
     s += hAch(hi.id) ? sg ? `<div class="cue" style="grid-column:1/-1"><b>\uC0C8 \uC2B5\uAD00 \uC81C\uC548</b> Lv${sg.lv} "${esc(sg.title)}" <button class="link" data-a="habpick" data-h="${sg.id}">\uC774 \uC2B5\uAD00\uC73C\uB85C \uBC14\uAFB8\uAE30</button></div>` : '<div class="cue" style="grid-column:1/-1">\uC774 \uC2B5\uAD00\uC744 \uB2EC\uC131\uD588\uC5B4\uC694 \u2713</div>' : `<div class="cue" style="grid-column:1/-1"><b>${hStage(hTot(hi.id))}</b> \xB7 ${hTot(hi.id) < HU ? HU - hTot(hi.id) + "\uBC88 \uB354 \uD574\uBCF4\uBA74 \uB2E4\uC74C \uB2E8\uACC4\uAC00 \uC5F4\uB824\uC694" : "\uB2EC\uC131\uAE4C\uC9C0 " + (HT - hTot(hi.id)) + "\uBC88"}${hi.kind === "\uC9C1\uC811" ? " \xB7 \uC9C1\uC811 \uD574\uBCF4\uACE0 \uD55C \uC904\uC744 \uB0A8\uACA8\uC694" : ""}</div>`;
+    s += `<div class="cue" style="grid-column:1/-1"><button class="link" data-a="evstart">\u{1F4CE} ${hi.kind === "\uC9C1\uC811" ? "\uC0AC\uC9C4\xB7\uB9C1\uD06C\uB85C \uC9C1\uC811 \uACBD\uD5D8 \uB0A8\uAE30\uAE30" : "\uC99D\uBE59 \uB0A8\uAE30\uAE30"}${(S.prf || []).filter((x) => x.h === hi.id).length ? " (" + (S.prf || []).filter((x) => x.h === hi.id).length + ")" : ""}</button></div>`;
     return s + "</article>";
   }
   function questCard(q, idx) {
@@ -1429,8 +1443,10 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
     unsub = [];
     try {
       localStorage.removeItem(KEY);
+      localStorage.removeItem(PK);
     } catch (e) {
     }
+    PIMG = null;
     S = blank();
     Object.assign(ui, { tab: "today", open: null, modal: null, members: null, cheerDocs: null, pinfo: null, setup: 1, sel: null, draft: "", err: "" });
     toast("\uB370\uC774\uD130\uB97C \uC0AD\uC81C\uD588\uC5B4\uC694");
@@ -1440,7 +1456,7 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
     const L = lvInfo(S.totalXp), j = JB[S.job], lk = S.look;
     const slots = [["\uBA38\uB9AC", 2, "\uBAA8\uC790\xB7\uBA38\uB9AC \uC7A5\uBE44"], ["\uBAB8", 3, "\uC9C1\uC5C5 \uC720\uB2C8\uD3FC"], ["\uC190", 4, "\uC9C1\uC5C5 \uB3C4\uAD6C"]];
     return hud() + `<section class="sec"><div class="hero"><div class="stage">${av(S.job, L.l, lk, { label: "\uB0B4 \uCE90\uB9AD\uD130" })}</div><h2 style="margin-top:6px">${esc(S.nick)}</h2><div class="muted" style="font-size:14px">${esc(j.name)} \xB7 ${tierOf(L.l)}${L.l >= 6 ? " \xB7 \uC219\uB828\uC758 \uBE5B" : ""}</div><div class="tier">${slots.map((s) => `<span class="slot ${L.l >= s[1] ? "on" : ""}"><b>${s[0]}</b>${L.l >= s[1] ? s[2] : "Lv." + s[1] + "\uC5D0 \uD68D\uB4DD"}</span>`).join("")}${L.l < 6 ? `<span class="slot"><b>\uBE5B</b>Lv.6 \uC219\uB828</span>` : ""}${L.l < 10 ? `<span class="slot"><b>\uBCC4</b>Lv.10 \uBA85\uC778</span>` : `<span class="slot on"><b>\uBCC4</b>\uBA85\uC778\uC758 \uBCC4</span>`}</div></div></section>
-  ${growRecord()}${changeSec()}${sentenceBook()}${habitRecord()}${fold("stat", "\uB098\uC758 \uC5ED\uB7C9", "\uD018\uC2A4\uD2B8\uB97C \uD560\uC218\uB85D \uC790\uB77C\uC694", `<div class="panel">${radar()}<div class="muted" style="font-size:13px;margin-top:6px">${esc(j.name)}\uC5D0\uAC8C \uD2B9\uD788 \uC911\uC694\uD55C \uC5ED\uB7C9: ${j.dna.map((s) => SN[s]).join(" \xB7 ")}</div></div>`)}
+  ${growRecord()}${proofSec()}${changeSec()}${sentenceBook()}${habitRecord()}${fold("stat", "\uB098\uC758 \uC5ED\uB7C9", "\uD018\uC2A4\uD2B8\uB97C \uD560\uC218\uB85D \uC790\uB77C\uC694", `<div class="panel">${radar()}<div class="muted" style="font-size:13px;margin-top:6px">${esc(j.name)}\uC5D0\uAC8C \uD2B9\uD788 \uC911\uC694\uD55C \uC5ED\uB7C9: ${j.dna.map((s) => SN[s]).join(" \xB7 ")}</div></div>`)}
   ${fold("set", "\uAFB8\uBBF8\uAE30 \xB7 \uC54C\uB9BC \xB7 \uC124\uC815", "", `<div class="panel"><div class="field"><label>\uC774\uB984</label><input class="inp" id="nk" maxlength="10" value="${esc(S.nick)}"></div><div class="field"><label>\uBA38\uB9AC \uBAA8\uC591</label><div class="seg">${["\uC9E7\uC740 \uBA38\uB9AC", "\uAE34 \uBA38\uB9AC", "\uACF1\uC2AC"].map((n, i) => `<button data-a="look" data-f="hair" data-v="${i}" aria-pressed="${lk.hair === i}">${n}</button>`).join("")}</div></div><div class="field"><label>\uBA38\uB9AC\uC0C9</label>${sw(HAIRC, lk.hc, "\uBA38\uB9AC\uC0C9")}</div><div class="field"><label>\uC0C1\uC758 (\uC720\uB2C8\uD3FC \uC804)</label>${sw(TOPC, lk.top, "\uC0C1\uC758")}</div><div class="field" style="margin-bottom:0"><label>\uD53C\uBD80\uC0C9</label>${sw(SKIN, lk.skin, "\uD53C\uBD80\uC0C9")}</div></div>${FEAT.places ? alarmSec() : ""}${reminderSec()}${testSec()}<section class="sec" style="display:flex;gap:18px;justify-content:center"><button class="link" data-a="privacy">\uAC1C\uC778\uC815\uBCF4 \uC548\uB0B4</button><button class="link" data-a="delAsk">\uB0B4 \uB370\uC774\uD130 \uC0AD\uC81C</button></section>`)}
   <section class="sec"><div class="note">\uCD1D ${S.done || 0}\uAC1C\uC758 \uD018\uC2A4\uD2B8\uB97C \uC644\uB8CC\uD588\uC5B4\uC694. \uB370\uC774\uD130\uB294 \uC774 \uAE30\uAE30\uC758 \uBE0C\uB77C\uC6B0\uC800\uC5D0\uB9CC \uC800\uC7A5\uB3FC\uC694. \uBE0C\uB77C\uC6B0\uC800 \uB370\uC774\uD130\uB97C \uC9C0\uC6B0\uBA74 \uAE30\uB85D\uB3C4 \uC0AC\uB77C\uC838\uC694.</div></section>`;
   }
@@ -1466,6 +1482,103 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
     const v = ui.fo && ui.fo[k], o = (v === void 0 ? k === "grow" : !!v) || !!window.__cqOpenAll;
     return `<section class="sec fold"><button class="fh" data-a="fold" data-k="${k}" aria-expanded="${o}"><h2>${title}</h2><span class="sub">${sub || ""}</span><span class="ch" aria-hidden="true">${o ? "\u25B2" : "\u25BC"}</span></button>${o ? body : ""}</section>`;
   }
+  const PK = "cq-proof-img", PHOTO_MAX = 20, PRF_MAX = 60;
+  let PIMG = null;
+  function pimg() {
+    if (PIMG) return PIMG;
+    try {
+      PIMG = JSON.parse(localStorage.getItem(PK) || "{}");
+    } catch (e) {
+      PIMG = {};
+    }
+    return PIMG;
+  }
+  function psave() {
+    try {
+      localStorage.setItem(PK, JSON.stringify(PIMG));
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+  const okUrl = (u) => /^https?:\/\/[^\s<>"']{3,190}$/i.test(u || "");
+  function addProof(hid, o) {
+    const id = "p" + Date.now().toString(36) + Math.random().toString(36).slice(2, 5), e = { i: id, h: hid, d: KST(), t: String(o.note || "").slice(0, 80), u: o.link || "", p: 0 };
+    if (o.img) {
+      const m = pimg();
+      m[id] = o.img;
+      if (psave()) e.p = 1;
+      else {
+        delete m[id];
+        toast("\uC800\uC7A5 \uACF5\uAC04\uC774 \uBD80\uC871\uD574\uC11C \uC0AC\uC9C4\uC740 \uC800\uC7A5\uD558\uC9C0 \uBABB\uD588\uC5B4\uC694");
+      }
+    }
+    if (!e.t && !e.u && !e.p) return false;
+    S.prf.push(e);
+    const ph = S.prf.filter((x) => x.p);
+    while (ph.length > PHOTO_MAX) {
+      const o2 = ph.shift();
+      delete pimg()[o2.i];
+      o2.p = 0;
+    }
+    while (S.prf.length > PRF_MAX) {
+      const o2 = S.prf.shift();
+      if (o2.p) delete pimg()[o2.i];
+    }
+    psave();
+    persist();
+    return true;
+  }
+  function delProof(id) {
+    const i = S.prf.findIndex((x) => x.i === id);
+    if (i < 0) return;
+    if (S.prf[i].p) {
+      delete pimg()[id];
+      psave();
+    }
+    S.prf.splice(i, 1);
+    persist();
+  }
+  function readImg(file) {
+    if (!file || !/^image\//.test(file.type || "")) {
+      toast("\uC0AC\uC9C4 \uD30C\uC77C\uC744 \uACE8\uB77C \uC8FC\uC138\uC694");
+      return;
+    }
+    const done = (src) => {
+      const im = new Image();
+      im.onload = () => {
+        try {
+          const k = Math.min(1, 900 / Math.max(im.width, im.height)), c = document.createElement("canvas");
+          c.width = Math.max(1, Math.round(im.width * k));
+          c.height = Math.max(1, Math.round(im.height * k));
+          c.getContext("2d").drawImage(im, 0, 0, c.width, c.height);
+          ui.ev = ui.ev || {};
+          ui.ev.img = c.toDataURL("image/jpeg", 0.7);
+          render();
+        } catch (e) {
+          toast("\uC0AC\uC9C4\uC744 \uBD88\uB7EC\uC624\uC9C0 \uBABB\uD588\uC5B4\uC694");
+        }
+      };
+      im.onerror = () => toast("\uC0AC\uC9C4\uC744 \uBD88\uB7EC\uC624\uC9C0 \uBABB\uD588\uC5B4\uC694");
+      im.src = src;
+    };
+    const r = new FileReader();
+    r.onload = () => done(r.result);
+    r.onerror = () => toast("\uC0AC\uC9C4\uC744 \uBD88\uB7EC\uC624\uC9C0 \uBABB\uD588\uC5B4\uC694");
+    r.readAsDataURL(file);
+  }
+  function evBlock() {
+    const e = ui.ev || {};
+    return `<div class="evb"><div class="muted" style="font-size:13px">\uC120\uD0DD \uC0AC\uD56D\uC774\uC5D0\uC694. \uB098\uC5D0\uAC8C\uB9CC \uBCF4\uC774\uACE0 \uC774 \uAE30\uAE30\uC5D0\uB9CC \uC800\uC7A5\uB3FC\uC694. \uC5BC\uAD74\xB7\uC5F0\uB77D\uCC98\xB7\uAC1C\uC778\uC815\uBCF4\uAC00 \uBCF4\uC774\uC9C0 \uC54A\uAC8C \uD574\uC8FC\uC138\uC694.</div><div class="row" style="align-items:center;gap:8px;margin:8px 0">${e.img ? `<img class="evimg" src="${e.img}" alt="\uCCA8\uBD80\uD560 \uC0AC\uC9C4"><button class="btn sm ghost" data-a="evnoimg">\uC0AC\uC9C4 \uBE7C\uAE30</button>` : `<label class="btn sm" for="evfile">\u{1F4F7} \uC0AC\uC9C4 \uC120\uD0DD</label>`}<input type="file" id="evfile" accept="image/*" hidden></div><input class="inp" id="evlink" inputmode="url" placeholder="\uACB0\uACFC\uBB3C \uB9C1\uD06C (https://\u2026) \uC120\uD0DD" value="${esc(e.link || "")}" maxlength="200"></div>`;
+  }
+  function proofSec() {
+    const L = (S.prf || []).slice().reverse(), im = pimg();
+    const body = L.length ? `<div class="panel"><div class="prfl">${L.map((x) => {
+      const hi = habInfo(x.h);
+      return `<div class="pr">${x.p && im[x.i] ? `<img class="evimg" src="${im[x.i]}" alt="\uC99D\uBE59 \uC0AC\uC9C4">` : '<div class="evimg ph">\u{1F4CE}</div>'}<div class="pt"><b>${esc(hi ? hi.title : "\uC2B5\uAD00")}</b><div class="muted" style="font-size:12px">${esc(String(x.d).slice(5).replace("-", "/"))}${hi ? " \xB7 Lv" + hi.lv + " " + hi.kind : ""}</div>${x.t ? `<div style="font-size:13px">${esc(x.t)}</div>` : ""}${x.u ? `<div style="font-size:13px"><a href="${esc(x.u)}" target="_blank" rel="noopener noreferrer">${esc(x.u.replace(/^https?:\/\//, "").slice(0, 40))}</a></div>` : ""}</div><button class="btn sm ghost" data-a="evdel" data-i="${x.i}" aria-label="\uC0AD\uC81C">\uC0AD\uC81C</button></div>`;
+    }).join("")}</div><div class="muted" style="font-size:12px;margin-top:8px">\uC0AC\uC9C4\uC740 \uCD5C\uADFC ${PHOTO_MAX}\uC7A5\uAE4C\uC9C0 \uC774 \uAE30\uAE30\uC5D0 \uBCF4\uAD00\uB3FC\uC694. \uBE0C\uB77C\uC6B0\uC800 \uB370\uC774\uD130\uB97C \uC9C0\uC6B0\uBA74 \uC0AC\uB77C\uC838\uC694.</div></div>` : `<div class="panel"><div class="empty" style="padding:6px 0">\uC544\uC9C1 \uB0A8\uAE34 \uC99D\uBE59\uC774 \uC5C6\uC5B4\uC694.<br>\uC2B5\uAD00 \uCE74\uB4DC\uC758 "\uC99D\uBE59 \uB0A8\uAE30\uAE30"\uB85C \uC0AC\uC9C4\xB7\uB9C1\uD06C\uB97C \uB0A8\uAE38 \uC218 \uC788\uC5B4\uC694.</div></div>`;
+    return fold("proof", "\uB0B4 \uACBD\uD5D8 \uC99D\uBE59", L.length + "\uAC1C", body);
+  }
   function vDiag() {
     const g = ui.diag, s = g.step, hd = `<div class="setup"><div class="muted num" style="font-size:12px">${g.chk ? "\uC790\uAE30\uD3C9\uAC00" : "\uC131\uD5A5 \uC9C4\uB2E8 " + s + " / 3"}</div>`;
     if (s === 1) return hd + `<h1>\uB04C\uB9AC\uB294 \uD65C\uB3D9\uC744 \uACE8\uB77C\uC694</h1><p class="lead">\uC9C0\uAE08 \uB9C8\uC74C\uC774 \uAC00\uB294 \uD65C\uB3D9\uC744 3\uAC1C\uAE4C\uC9C0 \uACE8\uB77C\uBCF4\uC138\uC694. \uC815\uB2F5\uC740 \uC5C6\uC5B4\uC694.</p><div class="dcards">${DIAG_ACT.map((a) => `<button class="dc" data-a="dpick" data-s="${a[0]}" aria-pressed="${g.picks.includes(a[0])}"><b>${esc(SN[a[0]])}</b><span>${esc(a[1])}</span></button>`).join("")}</div><div class="row" style="margin-top:14px"><button class="btn ghost" data-a="dclose">\uB2EB\uAE30</button><button class="btn blue" style="flex:1;padding:14px" data-a="dnext" ${g.picks.length ? "" : "disabled"}>\uB2E4\uC74C (${g.picks.length}/3)</button></div></div>`;
@@ -1480,7 +1593,7 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
     const pr = S.assess.find((x) => x.k === "pre"), ck = S.assess.filter((x) => x.k === "chk").pop();
     let s = "[\uCEE4\uB9AC\uC5B4 \uD018\uC2A4\uD2B8 \uD30C\uD2F0 \xB7 \uB0B4 \uAE30\uB85D]\n";
     s += "\uD65C\uB3D9\uC77C " + m.days + "\uC77C \xB7 \uC5F0\uC18D " + m.streak + "\uC77C \xB7 \uC2DC\uB3C4\uD55C \uC9C1\uC5C5 " + m.jobs + "\uAC1C\n";
-    s += "\uAC04\uC811 \uACBD\uD5D8 " + m.ind + "\uBC88 \xB7 \uC9C1\uC811 \uACBD\uD5D8 " + m.dir + "\uBC88 \xB7 \uB2EC\uC131 \uC2B5\uAD00 " + m.ach + "\uAC1C\n";
+    s += "\uAC04\uC811 \uACBD\uD5D8 " + m.ind + "\uBC88 \xB7 \uC9C1\uC811 \uACBD\uD5D8 " + m.dir + "\uBC88 \xB7 \uC99D\uBE59 " + m.prf + "\uAC1C \xB7 \uB2EC\uC131 \uC2B5\uAD00 " + m.ach + "\uAC1C\n";
     s += "\uB290\uB08C: \uC7AC\uBC0C\uC5B4\uC694 " + m.fun + " \xB7 \uBCF4\uD1B5 " + m.ok + " \xB7 \uC548 \uB9DE\uC544\uC694 " + m.no + " \xB7 \uACC4\uC18D \uD574\uBCF4\uACE0 \uC2F6\uC740 \uD589\uB3D9 " + m.keep + "\n";
     if (pr && ck) {
       s += "\uC790\uAE30\uD3C9\uAC00(5\uC810 \uB9CC\uC810) \uD3C9\uADE0 " + m.pre.toFixed(1) + " \u2192 " + m.chk.toFixed(1) + "\n";
@@ -1528,7 +1641,13 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
       notes.sort((a, b) => a.d < b.d ? 1 : -1);
       return { j, tot, ind, dir, mx, fun, ok, no, keep, notes, score: fun * 2 + ok + keep * 3 - no * 2 };
     }).filter((r) => r.tot > 0);
-    const body = rows.length ? `<div class="panel"><div class="grow">${rows.map((r) => `<div class="g"><div class="row" style="align-items:center;gap:8px"><b>${esc(JB[r.j].name)}</b><span class="muted num" style="font-size:12px">\uD589\uB3D9 ${r.tot}\uBC88 \xB7 \uCD5C\uACE0 Lv${r.mx}</span></div><div class="gk"><span class="chip kind-i">\uAC04\uC811 ${r.ind}</span><span class="chip kind-d">\uC9C1\uC811 ${r.dir}</span>${r.fun + r.ok + r.no ? `<span class="chip">\u{1F604}${r.fun} \u{1F642}${r.ok} \u{1F615}${r.no}</span>` : ""}${r.keep ? `<span class="chip">\uACC4\uC18D \uD558\uACE0 \uC2F6\uC740 \uD589\uB3D9 ${r.keep}</span>` : ""}</div>${r.notes.slice(0, 2).map((x) => `<div class="muted" style="font-size:12px">${esc(String(x.d).slice(5).replace("-", "/"))} \xB7 ${esc(x.t)}</div>`).join("")}</div>`).join("")}</div>${(() => {
+    const body = rows.length ? `<div class="panel"><div class="grow">${rows.map((r) => `<div class="g"><div class="row" style="align-items:center;gap:8px"><b>${esc(JB[r.j].name)}</b><span class="muted num" style="font-size:12px">\uD589\uB3D9 ${r.tot}\uBC88 \xB7 \uCD5C\uACE0 Lv${r.mx}</span></div><div class="gk"><span class="chip kind-i">\uAC04\uC811 ${r.ind}</span><span class="chip kind-d">\uC9C1\uC811 ${r.dir}</span>${r.fun + r.ok + r.no ? `<span class="chip">\u{1F604}${r.fun} \u{1F642}${r.ok} \u{1F615}${r.no}</span>` : ""}${r.keep ? `<span class="chip">\uACC4\uC18D \uD558\uACE0 \uC2F6\uC740 \uD589\uB3D9 ${r.keep}</span>` : ""}${(() => {
+      const n = (S.prf || []).filter((x) => {
+        const h = habInfo(x.h);
+        return h && h.j === r.j;
+      }).length;
+      return n ? `<span class="chip">\u{1F4CE} \uC99D\uBE59 ${n}</span>` : "";
+    })()}</div>${r.notes.slice(0, 2).map((x) => `<div class="muted" style="font-size:12px">${esc(String(x.d).slice(5).replace("-", "/"))} \xB7 ${esc(x.t)}</div>`).join("")}</div>`).join("")}</div>${(() => {
       const b = rows.filter((r) => r.fun + r.ok + r.no + r.keep > 0).sort((a, c) => c.score - a.score)[0];
       return b && b.score > 0 ? `<div class="note" style="margin-top:10px">\uC9C0\uAE08\uAE4C\uC9C0 \uAC00\uC7A5 \uC798 \uB9DE\uB294 \uB290\uB08C\uC774 \uB4E0 \uC9C1\uC5C5\uC740 <b>${esc(JB[b.j].name)}</b>\uC774\uC5D0\uC694. \uB2E4\uB978 \uC9C1\uC5C5\uB3C4 \uB354 \uD574\uBCF4\uBA70 \uBE44\uAD50\uD574\uBCF4\uC138\uC694.</div>` : "";
     })()}</div>` : `<div class="panel"><div class="empty" style="padding:6px 0">\uC544\uC9C1 \uACBD\uD5D8\uD55C \uD589\uB3D9\uC774 \uC5C6\uC5B4\uC694.<br>\uC624\uB298 \uD018\uC2A4\uD2B8\uC5D0\uC11C \uC9C1\uC5C5 \uC2B5\uAD00\uC744 \uD574\uBCF4\uBA74 \uC5EC\uAE30\uC5D0 \uC313\uC5EC\uC694.</div></div>`;
@@ -1604,11 +1723,15 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
     const rbtn = () => `<div class="seg" style="margin:10px 0 6px">${[["fun", "\u{1F604} \uC7AC\uBC0C\uC5B4\uC694"], ["ok", "\u{1F642} \uBCF4\uD1B5"], ["no", "\u{1F615} \uC548 \uB9DE\uC544\uC694"]].map((x) => `<button data-a="fbr" data-r="${x[0]}" aria-pressed="${ui.fbR === x[0]}">${x[1]}</button>`).join("")}</div><label class="row" style="align-items:center;gap:8px;font-size:14px"><input type="checkbox" ${ui.fbKeep ? "checked" : ""} data-a="fbkeep"><span>\uACC4\uC18D \uD574\uBCF4\uACE0 \uC2F6\uC5B4\uC694</span></label>`;
     if (m.type === "proof") {
       const hi = habInfo(S.hab);
-      b = `<h2>\uC9C1\uC811 \uD574\uBCF8 \uAC78 \uB0A8\uACA8\uC694</h2><div class="muted" style="font-size:14px"><b>${esc(hi.title)}</b><br>${esc(m.mini ? hi.mini : hi.cue)}</div><textarea class="inp" id="fbnote" rows="2" maxlength="80" placeholder="\uBB34\uC5C7\uC744 \uD574\uBD24\uB098\uC694? (\uD55C \uC904)" style="margin-top:10px">${esc(ui.fbNote || "")}</textarea>${rbtn()}<div class="err" role="alert">${esc(ui.err2 || "")}</div><div class="row"><button class="btn ghost" data-a="close">\uB2EB\uAE30</button><button class="btn blue" style="flex:1" data-a="proofgo">\uAE30\uB85D\uD558\uACE0 \uC644\uB8CC</button></div>`;
+      b = `<h2>\uC9C1\uC811 \uD574\uBCF8 \uAC78 \uB0A8\uACA8\uC694</h2><div class="muted" style="font-size:14px"><b>${esc(hi.title)}</b><br>${esc(m.mini ? hi.mini : hi.cue)}</div><textarea class="inp" id="fbnote" rows="2" maxlength="80" placeholder="\uBB34\uC5C7\uC744 \uD574\uBD24\uB098\uC694? (\uD55C \uC904)" style="margin-top:10px">${esc(ui.fbNote || "")}</textarea>${rbtn()}<details class="evd" ${ui.ev && (ui.ev.img || ui.ev.link) ? "open" : ""}><summary>\u{1F4CE} \uC0AC\uC9C4\xB7\uB9C1\uD06C \uC99D\uBE59 (\uC120\uD0DD)</summary>${evBlock()}</details><div class="err" role="alert">${esc(ui.err2 || "")}</div><div class="row"><button class="btn ghost" data-a="close">\uB2EB\uAE30</button><button class="btn blue" style="flex:1" data-a="proofgo">\uAE30\uB85D\uD558\uACE0 \uC644\uB8CC</button></div>`;
     }
     if (m.type === "feel") {
       const hi = habInfo(m.id);
       b = `<h2>\uD574\uBCF4\uB2C8 \uC5B4\uB560\uB098\uC694?</h2><div class="muted" style="font-size:14px">${esc(hi.title)} \xB7 ${hTot(m.id)}\uBC88\uC9F8</div>${rbtn()}<div class="row" style="margin-top:8px"><button class="btn ghost" data-a="close">\uAC74\uB108\uB6F0\uAE30</button><button class="btn blue" style="flex:1" data-a="fbsave">\uAE30\uB85D\uD558\uAE30</button></div>`;
+    }
+    if (m.type === "evid") {
+      const hi = habInfo(m.h);
+      b = `<h2>\uC99D\uBE59 \uB0A8\uAE30\uAE30</h2><div class="muted" style="font-size:14px"><b>${esc(hi ? hi.title : "")}</b></div>${evBlock()}<textarea class="inp" id="evnote" rows="2" maxlength="80" placeholder="\uD55C \uC904 \uBA54\uBAA8 (\uC120\uD0DD)">${esc((ui.ev || {}).note || "")}</textarea><div class="err" role="alert">${esc(ui.err2 || "")}</div><div class="row"><button class="btn ghost" data-a="close">\uB2EB\uAE30</button><button class="btn blue" style="flex:1" data-a="evsave">\uC800\uC7A5\uD558\uAE30</button></div>`;
     }
     if (m.type === "explore") {
       b = `<h2>\uD589\uB3D9\uC73C\uB85C \uC9C1\uC5C5 \uB458\uB7EC\uBCF4\uAE30</h2><div class="muted" style="font-size:14px;margin-bottom:8px">\uC9C1\uC5C5 \uC124\uBA85\uC744 \uC77D\uB294 \uB300\uC2E0, 5\uBD84\uB9CC \uC9C1\uC811 \uD574\uBCF4\uACE0 \uB098\uC640 \uB9DE\uB294\uC9C0 \uB290\uAEF4\uBCF4\uC138\uC694. \uC5B8\uC81C\uB4E0 \uB2E4\uB978 \uC9C1\uC5C5\uC73C\uB85C \uBC14\uAFC0 \uC218 \uC788\uC5B4\uC694.</div>${jobsShown().filter((j) => (CORE[j.id] || []).length).map((j) => `<div class="exj"><div class="row" style="align-items:center;gap:8px"><b style="font-family:var(--f-display);font-size:17px">${esc(j.name)}</b><span class="muted" style="font-size:12px">${esc(j.cat)}</span></div><ul class="corelist">${CORE[j.id].map((x) => `<li>${esc(x)}</li>`).join("")}</ul><button class="btn sm" data-a="exstart" data-j="${j.id}">5\uBD84 \uD574\uBCF4\uAE30 \xB7 ${esc(HABITS[j.id][0][0])}</button></div>`).join("")}<div class="row" style="margin-top:8px"><button class="btn ghost" data-a="close">\uB2EB\uAE30</button></div>`;
@@ -1906,6 +2029,7 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
           ui.fbR = null;
           ui.fbKeep = false;
           ui.err2 = "";
+          ui.ev = { link: "", note: "", img: null };
           ui.modal = { type: "proof", idx: i, mini: d.m === "1" };
           return render();
         }
@@ -1925,8 +2049,18 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
           ui.err2 = "\uD55C \uC904 \uC774\uC0C1 \uC801\uC5B4\uC8FC\uC138\uC694. \uB098\uC911\uC5D0 \uB0B4 \uAE30\uB85D\uC5D0 \uB0A8\uC544\uC694.";
           return render();
         }
-        ui.modal = null;
-        completeHabit(m.idx, m.mini, { note: n, r: ui.fbR, keep: ui.fbKeep });
+        {
+          const ev = ui.ev || {}, lk = (ev.link || "").trim();
+          if (lk && !okUrl(lk)) {
+            ui.err2 = "\uB9C1\uD06C\uB294 https:// \uB85C \uC2DC\uC791\uD574\uC57C \uD574\uC694.";
+            return render();
+          }
+          const hid = S.hab;
+          ui.modal = null;
+          completeHabit(m.idx, m.mini, { note: n, r: ui.fbR, keep: ui.fbKeep });
+          if (ev.img || lk) addProof(hid, { img: ev.img, link: lk, note: n });
+          ui.ev = null;
+        }
       },
       fbsave() {
         const m = ui.modal;
@@ -1940,6 +2074,38 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
       },
       explore() {
         ui.modal = { type: "explore" };
+        render();
+      },
+      evstart() {
+        ui.ev = { link: "", note: "", img: null };
+        ui.err2 = "";
+        ui.modal = { type: "evid", h: S.hab };
+        render();
+      },
+      evnoimg() {
+        if (ui.ev) ui.ev.img = null;
+        render();
+      },
+      evsave() {
+        const e2 = ui.ev || {}, link = (e2.link || "").trim(), note = (e2.note || "").trim();
+        if (link && !okUrl(link)) {
+          ui.err2 = "\uB9C1\uD06C\uB294 https:// \uB85C \uC2DC\uC791\uD574\uC57C \uD574\uC694.";
+          return render();
+        }
+        if (!e2.img && !link && !note) {
+          ui.err2 = "\uC0AC\uC9C4, \uB9C1\uD06C, \uBA54\uBAA8 \uC911 \uD558\uB098\uB97C \uB0A8\uACA8 \uC8FC\uC138\uC694.";
+          return render();
+        }
+        if (addProof(ui.modal.h, { img: e2.img, link, note })) {
+          ui.modal = null;
+          ui.ev = null;
+          toast("\uC99D\uBE59\uC744 \uB0A8\uACBC\uC5B4\uC694");
+          render();
+        }
+      },
+      evdel() {
+        delProof(d.i);
+        toast("\uC99D\uBE59\uC744 \uC9C0\uC6E0\uC5B4\uC694");
         render();
       },
       diagstart() {
@@ -3678,7 +3844,7 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
     render();
   }, hOpen: (id) => hOpen(id), hSuggest: () => hSuggest(), hAch: (id) => hAch(id), habInfo: (id) => habInfo(id), hTot: (id) => hTot(id), get CORE() {
     return CORE;
-  }, metrics: () => metrics(), admSummary: (rows) => admSummary(rows.map((r) => cleanTester("x", r))), diagRec: (p) => diagRec(p).map((x) => x.j.id), get LAD() {
+  }, metrics: () => metrics(), addProof: (h, o) => addProof(h, o), pimg: () => pimg(), admSummary: (rows) => admSummary(rows.map((r) => cleanTester("x", r))), diagRec: (p) => diagRec(p).map((x) => x.j.id), get LAD() {
     return LAD;
   } };
   render();
