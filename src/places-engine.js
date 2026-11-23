@@ -185,4 +185,4 @@ setInterval(()=>{try{alTick()}catch(e){}},20000);
 /* 개발 점검용: 새 직업·장소를 넣은 뒤 tests/places_check.js 가 이 값을 읽어요 */
 window.CQ_DEV={places:PLIDS.slice(),problems:placeProblems,unmappedJobs:()=>J.filter(j=>!placeOfJob(j.id)).map(j=>j.id),perPlace:PL_PER};
 /* 개발·점검용 읽기 창구(습관 사다리) */
-window.CQ_DEV.hab={get HABITS(){return HABITS},get S(){return S},KST:()=>KST(),prevDay:d=>prevDay(d),save:()=>{persist();render()},hOpen:id=>hOpen(id),hSuggest:()=>hSuggest(),hAch:id=>hAch(id)};
+window.CQ_DEV.hab={get HABITS(){return HABITS},get S(){return S},KST:()=>KST(),prevDay:d=>prevDay(d),save:()=>{persist();render()},hOpen:id=>hOpen(id),hSuggest:()=>hSuggest(),hAch:id=>hAch(id),habInfo:id=>habInfo(id),hTot:id=>hTot(id),get CORE(){return CORE},get LAD(){return LAD}};

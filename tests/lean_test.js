@@ -4,7 +4,7 @@ for(const [dn,dev] of [['iph',devices['iPhone 13']],['desk',{viewport:{width:100
 const c=await b.newContext({...dev,timezoneId:'Asia/Seoul'});const p=await c.newPage();const e=[];p.on('pageerror',x=>e.push(x.message));
 await p.goto('file://'+path.resolve('out/career-quest-party.html'));await p.waitForTimeout(400);
 await p.fill('#nk','테스터');await p.click('[data-a=next]');
-ok(await p.locator('[data-a=sel]').count()===6,dn+' 직업 6개만 선택 가능');
+ok(await p.locator('[data-a=sel]').count()===8,dn+' 직업 8개만 선택 가능');
 await p.click('[data-a=sel][data-j=marketer]');await p.click('[data-a=start]');await p.waitForTimeout(700);
 ok(await p.locator('.world').count()===0,dn+' 광장이 자동으로 열리지 않음');
 const t=await p.locator('#app').innerText();

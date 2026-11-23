@@ -8,7 +8,7 @@ await p.click('[data-a=fold][data-k=more]');await p.waitForTimeout(150);
 ok(await p.locator('[data-a=snack]').count()>0,'더 해보기 펼치면 틈새 보임');
 await p.click('[data-a=fold][data-k=more]');await p.waitForTimeout(150);ok(await p.locator('[data-a=snack]').count()===0,'다시 누르면 접힘');
 await p.click('[data-a=tab][data-t=me]');await p.waitForTimeout(200);
-ok(await p.locator('[data-a=fold]').count()===4,'캐릭터 탭: 접이식 4개');
+ok(await p.locator('[data-a=fold]').count()===5,'캐릭터 탭: 접이식 5개');
 await p.click('[data-a=fold][data-k=set]');await p.waitForTimeout(150);ok(await p.locator('#nk').count()===1,'꾸미기·설정 펼치면 이름 입력 보임');
 ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),'가로 넘침 없음');ok(!e.length,'오류 없음');
 await b.close();process.exit(f?1:0)})();

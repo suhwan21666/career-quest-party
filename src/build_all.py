@@ -5,6 +5,8 @@ t0 = open('template.html', encoding='utf8').read()
 # 생활 장소: 데이터 + 엔진을 템플릿의 표시 위치에 끼워 넣는다
 assert t0.count('/*__PLACES__*/') == 1
 t0 = t0.replace('/*__PLACES__*/', '\n' + open(os.environ.get('CQ_PLACES_DATA', 'places-data.js'), encoding='utf8').read() + '\n' + open('places-engine.js', encoding='utf8').read())
+assert t0.count('/*__LADDER__*/') == 1
+t0 = t0.replace('/*__LADDER__*/', open('habits-ladder.js', encoding='utf8').read())
 d = open('data2.js', encoding='utf8').read()
 shim = open('online.js', encoding='utf8').read()
 icon = base64.b64encode(open('out/icon180.png', 'rb').read()).decode()
