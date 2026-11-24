@@ -612,7 +612,7 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
     const n = String(s == null ? "" : s).toLowerCase().replace(/[\s.\-_*~!?,]/g, "");
     return BAD.some((w) => n.includes(w));
   };
-  const APP_BUILD = "v0.10.0";
+  const APP_BUILD = "v0.11.0";
   const PAGE_URL = /^https?:/.test(location.href) ? location.href.split("#")[0].split("?")[0] : "";
   const XP = { act: 15, story: 12, com: 10, habit: 12, habitMini: 8, snack: 3 }, CLEAR = 10, CHEST = 25, CHEER_GET = 2, CHEER_SEND = 1, WEEK_GOAL = 10, WEEK_XP = 30, MASTER = 30, SNACK_MAX = 5;
   const HAIRC = ["#3A2B22", "#7A4A2E", "#D9B36C", "#8B8B8B", "#6E2A3A"], TOPC = ["#F1EFE8", "#185FA5", "#D85A30", "#3B6D11", "#2C2C2A"], SKIN = ["#FFDCC2", "#EBBA92", "#B98363"];
@@ -622,7 +622,7 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
   if (S.hab && !habInfo(S.hab)) S.hab = null;
   if (!S.look || typeof S.look !== "object") S.look = blank().look;
   function blank() {
-    return { blocked: {}, rest: 1, week: null, hab: null, habs: {}, fb: {}, hver: 2, diag: null, assess: [], born: null, actd: [], prf: [], v: 2, story: [], title: "", line: null, nick: "", job: null, look: { hair: 0, hc: 0, top: 1, skin: 0 }, totalXp: 0, stats: {}, streak: 0, lastDay: null, today: null, cnt: {}, done: 0, party: null, chestDay: null, claimed: {}, cheered: {}, npcSay: {}, stamps: null, stampBook: {}, pl: null, hdone: {}, al: {}, alT: {}, alF: null, startPlaza: true, testOpt: false, testNotes: [], testFirst: 0 };
+    return { blocked: {}, rest: 1, week: null, hab: null, habs: {}, fb: {}, hver: 2, diag: null, assess: [], born: null, actd: [], prf: [], cid: "", ev: [], evN: 0, evBase: 0, evSent: 0, v: 2, story: [], title: "", line: null, nick: "", job: null, look: { hair: 0, hc: 0, top: 1, skin: 0 }, totalXp: 0, stats: {}, streak: 0, lastDay: null, today: null, cnt: {}, done: 0, party: null, chestDay: null, claimed: {}, cheered: {}, npcSay: {}, stamps: null, stampBook: {}, pl: null, hdone: {}, al: {}, alT: {}, alF: null, startPlaza: true, testOpt: false, testNotes: [], testFirst: 0 };
   }
   function load() {
     try {
@@ -630,11 +630,29 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
       if (r && (r.v === 1 || r.v === 2)) {
         const s = __spreadValues(__spreadValues({}, blank()), r);
         if (!r.hver) migrateHab(s);
+        if (r.evN === void 0) {
+          s.evBase = s.totalXp | 0;
+          s.evN = 0;
+          s.ev = [];
+          s.evSent = 0;
+        }
+        if (!s.cid) s.cid = newCid();
         return s;
       }
     } catch (e) {
     }
-    return blank();
+    const f = blank();
+    f.cid = newCid();
+    return f;
+  }
+  function newCid() {
+    try {
+      const a = new Uint8Array(9);
+      crypto.getRandomValues(a);
+      return "c_" + Array.from(a, (x) => x.toString(36).padStart(2, "0")).join("").slice(0, 16);
+    } catch (e) {
+      return "c_" + Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+    }
   }
   function migrateHab(s) {
     try {
@@ -678,6 +696,11 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
     }
   });
   document.addEventListener("change", (e) => {
+    if (e.target && e.target.id === "impfile" && e.target.files) {
+      readBackupFile(e.target.files[0]);
+      e.target.value = "";
+      return;
+    }
     if (e.target && e.target.id === "evfile" && e.target.files) readImg(e.target.files[0]);
   });
   let isAdmin = false, plazaN = 0, testers = [], unsubT = null, testT = 0;
@@ -760,6 +783,8 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
     }, 1500);
     pushMe();
     pushTest();
+    clearTimeout(flushT);
+    flushT = setTimeout(flushEv, 800);
   }
   function me() {
     const L = lvInfo(S.totalXp);
@@ -866,9 +891,41 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
     }
   }
   const mult = () => 1 + Math.min(0.3, S.streak * 0.05);
-  function gain(xp) {
+  function logEv(k, x, meta) {
+    if (!Array.isArray(S.ev)) S.ev = [];
+    S.evN = (S.evN | 0) + 1;
+    S.ev.push(__spreadValues({ i: S.evN, ts: Date.now(), d: KST(), k, x }, meta || {}));
+    if (S.ev.length > 1500) {
+      const o = S.ev.splice(0, S.ev.length - 1500);
+      S.evBase = (S.evBase | 0) + o.reduce((a, e) => a + e.x, 0);
+      S.evSent = Math.max(S.evSent | 0, o[o.length - 1].i);
+    }
+  }
+  let flushing = false, flushT = null;
+  function flushEv() {
+    const A = window.CQ_API;
+    if (!A || typeof A.sendEvents !== "function" || flushing) return;
+    const pend = (S.ev || []).filter((e) => e.i > (S.evSent | 0)).slice(0, 200);
+    if (!pend.length) return;
+    flushing = true;
+    Promise.resolve().then(() => A.sendEvents({ cid: S.cid, build: APP_BUILD, evBase: S.evBase | 0, events: pend.map((e) => __spreadProps(__spreadValues({}, e), { id: S.cid + ":" + e.i })) })).then((r) => {
+      if (r && r.ok) {
+        S.evSent = Math.max(S.evSent | 0, r.acked ? +r.acked : pend[pend.length - 1].i);
+        try {
+          localStorage.setItem(KEY, JSON.stringify(S));
+        } catch (e) {
+        }
+      }
+    }).catch(() => {
+    }).finally(() => {
+      flushing = false;
+      if ((S.ev || []).some((e) => e.i > (S.evSent | 0)) && window.__cqFlushMore !== 0) flushT = setTimeout(flushEv, 1500);
+    });
+  }
+  function gain(xp, why, meta) {
     const before = lvInfo(S.totalXp).l;
     S.totalXp += Math.round(xp);
+    logEv(why || "misc", Math.round(xp), meta);
     const after = lvInfo(S.totalXp).l;
     if (after > before) levelUp(after);
     return Math.round(xp);
@@ -894,7 +951,7 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
       }
       ui.draft = "";
     }
-    const g = gain(inf.xp * mult());
+    const g = gain(inf.xp * mult(), "quest", { q: q.k, j: q.j || "common", b: inf.xp, m: mult() });
     inf.stats.forEach((s) => S.stats[s] = (S.stats[s] || 0) + 1);
     const key = q.j || "common";
     S.cnt[key] = (S.cnt[key] || 0) + 1;
@@ -903,7 +960,7 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
     logLine(q.k === "story" ? "\uC624\uB298\uC758 \uC7A5\uBA74\uC744 \uC37C\uC5B4\uC694." : '"' + inf.title + '" \uC644\uB8CC!');
     if (S.today.qs.every((x) => x.done) && !S.today.clear) {
       S.today.clear = 1;
-      const c = gain(CLEAR * mult());
+      const c = gain(CLEAR * mult(), "clear", { b: CLEAR, m: mult() });
       setTimeout(() => toast("\uC62C\uD074\uB9AC\uC5B4 \uBCF4\uB108\uC2A4 +" + c + " XP"), 900);
       logLine("\uC624\uB298 \uD018\uC2A4\uD2B8 \uC62C\uD074\uB9AC\uC5B4!");
     }
@@ -975,7 +1032,7 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
     q.done = 1;
     q.m = mini ? 1 : 0;
     ui.pop = idx;
-    let g = gain(Math.round((mini ? XP.habitMini : XP.habit) * (hi.kind === "\uC9C1\uC811" ? 1.5 : 1)) * mult());
+    let g = gain(Math.round((mini ? XP.habitMini : XP.habit) * (hi.kind === "\uC9C1\uC811" ? 1.5 : 1)) * mult(), "habit", { h: hi.id, kd: hi.kind, mini: mini ? 1 : 0, b: Math.round((mini ? XP.habitMini : XP.habit) * (hi.kind === "\uC9C1\uC811" ? 1.5 : 1)), m: mult() });
     if (extra) {
       if (extra.note) {
         h.notes = [...h.notes || [], { d, t: extra.note }].slice(-10);
@@ -992,7 +1049,7 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
       const nx = habInfo(hi.j + ":" + hi.lv);
       hw = nx ? "Lv" + hi.lv + ' \uB2EC\uC131! \uC0C8 \uC2B5\uAD00 "' + nx.title + '"\uC774 \uC5F4\uB838\uC5B4\uC694' : "Lv" + hi.lv + " \uB2EC\uC131! \uC774 \uC9C1\uC5C5\uC758 \uC2B5\uAD00\uC744 \uBAA8\uB450 \uD574\uB0C8\uC5B4\uC694";
       logLine('\uC2B5\uAD00 "' + hi.title + '" Lv' + hi.lv + " \uB2EC\uC131!");
-      g += gain(20 * mult());
+      g += gain(20 * mult(), "achieve", { h: hi.id, b: 20, m: mult() });
     }
     if (!hw) {
       const nx0 = habInfo(hi.j + ":" + hi.lv);
@@ -1003,13 +1060,13 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
     if (!extra && !window.__cqNoFb && [1, HU, HT, HM].includes(h.total)) ui.modal = { type: "feel", id: hi.id };
     const mb = MILE[h.streak];
     if (mb) {
-      g += gain(mb);
+      g += gain(mb, "milestone", { h: hi.id, n: h.streak });
       setTimeout(() => toast("\uC2B5\uAD00 " + h.streak + "\uC77C \uC5F0\uC18D! " + stageOf(h.streak) + " \uB2E8\uACC4 +" + mb + " XP"), 900);
     } else toast("+" + g + " XP \xB7 \uC2B5\uAD00 " + h.streak + "\uC77C\uC9F8");
     logLine('"' + hi.title + '" ' + h.streak + "\uC77C\uC9F8!");
     if (S.today.qs.every((x) => x.done) && !S.today.clear) {
       S.today.clear = 1;
-      const c = gain(CLEAR * mult());
+      const c = gain(CLEAR * mult(), "clear", { b: CLEAR, m: mult() });
       setTimeout(() => toast("\uC62C\uD074\uB9AC\uC5B4 \uBCF4\uB108\uC2A4 +" + c + " XP"), mb ? 2400 : 900);
       logLine("\uC624\uB298 \uD018\uC2A4\uD2B8 \uC62C\uD074\uB9AC\uC5B4!");
     }
@@ -1032,7 +1089,7 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
     const w = getWeek();
     if (w.claimed || w.count < WEEK_GOAL) return;
     w.claimed = 1;
-    const g = gain(WEEK_XP);
+    const g = gain(WEEK_XP, "week");
     logLine("\uC774\uBC88 \uC8FC \uBAA8\uD5D8 \uC0C1\uC790\uB97C \uC5F4\uC5C8\uC5B4\uC694!");
     ui.modal = { type: "chest", g };
     persist();
@@ -1047,7 +1104,7 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
     const t = S.today;
     if ((t.snacks || 0) >= SNACK_MAX) return;
     t.snacks = (t.snacks || 0) + 1;
-    const g = gain(XP.snack);
+    const g = gain(XP.snack, "snack");
     toast("+" + g + " XP \xB7 \uC7A0\uAE50 \uC26C\uC5B4\uAC00\uAE30");
     logLine("\uD2C8\uC0C8 \uD018\uC2A4\uD2B8 " + t.snacks + "\uBC88\uC9F8");
     persist();
@@ -1178,7 +1235,7 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
       }
     });
     if (got) {
-      const g = gain(got * CHEER_GET);
+      const g = gain(got * CHEER_GET, "cheer_in", { n: got });
       toast("\uC751\uC6D0 " + got + "\uAC1C \uB3C4\uCC29 +" + g + " XP");
       persist();
     }
@@ -1264,7 +1321,7 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
       S.npcSay[id] = ["\uACE0\uB9C8\uC6CC! \uD798\uC774 \uB09C\uB2E4!", "\uC640, \uC751\uC6D0 \uB355\uBD84\uC5D0 \uB354 \uD574\uBCFC\uAC8C.", "\uB124 \uC751\uC6D0\uC774 \uCD5C\uACE0\uC57C!"][hsh(id + d) % 3];
     } else if (db && uid && canWrite) db.doc("cheers/" + id + "_" + uid).set({ to: id, from: uid, fromNick: S.nick, party: S.party && S.party.code, date: d }).catch(() => {
     });
-    const g = gain(CHEER_SEND);
+    const g = gain(CHEER_SEND, "cheer_out");
     toast("\uC751\uC6D0\uC744 \uBCF4\uB0C8\uC5B4\uC694 +" + g + " XP");
     persist();
     render();
@@ -1274,7 +1331,7 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
     const sum = L.reduce((a, m) => a + m.done, 0);
     if (S.chestDay === KST() || sum < goalOf(L.length)) return;
     S.chestDay = KST();
-    const g = gain(CHEST);
+    const g = gain(CHEST, "chest");
     logLine("\uD30C\uD2F0 \uBCF4\uBB3C\uC0C1\uC790\uB97C \uC5F4\uC5C8\uC5B4\uC694!");
     ui.modal = { type: "chest", g };
     persist();
@@ -1457,7 +1514,7 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
     const slots = [["\uBA38\uB9AC", 2, "\uBAA8\uC790\xB7\uBA38\uB9AC \uC7A5\uBE44"], ["\uBAB8", 3, "\uC9C1\uC5C5 \uC720\uB2C8\uD3FC"], ["\uC190", 4, "\uC9C1\uC5C5 \uB3C4\uAD6C"]];
     return hud() + `<section class="sec"><div class="hero"><div class="stage">${av(S.job, L.l, lk, { label: "\uB0B4 \uCE90\uB9AD\uD130" })}</div><h2 style="margin-top:6px">${esc(S.nick)}</h2><div class="muted" style="font-size:14px">${esc(j.name)} \xB7 ${tierOf(L.l)}${L.l >= 6 ? " \xB7 \uC219\uB828\uC758 \uBE5B" : ""}</div><div class="tier">${slots.map((s) => `<span class="slot ${L.l >= s[1] ? "on" : ""}"><b>${s[0]}</b>${L.l >= s[1] ? s[2] : "Lv." + s[1] + "\uC5D0 \uD68D\uB4DD"}</span>`).join("")}${L.l < 6 ? `<span class="slot"><b>\uBE5B</b>Lv.6 \uC219\uB828</span>` : ""}${L.l < 10 ? `<span class="slot"><b>\uBCC4</b>Lv.10 \uBA85\uC778</span>` : `<span class="slot on"><b>\uBCC4</b>\uBA85\uC778\uC758 \uBCC4</span>`}</div></div></section>
   ${growRecord()}${proofSec()}${changeSec()}${sentenceBook()}${habitRecord()}${fold("stat", "\uB098\uC758 \uC5ED\uB7C9", "\uD018\uC2A4\uD2B8\uB97C \uD560\uC218\uB85D \uC790\uB77C\uC694", `<div class="panel">${radar()}<div class="muted" style="font-size:13px;margin-top:6px">${esc(j.name)}\uC5D0\uAC8C \uD2B9\uD788 \uC911\uC694\uD55C \uC5ED\uB7C9: ${j.dna.map((s) => SN[s]).join(" \xB7 ")}</div></div>`)}
-  ${fold("set", "\uAFB8\uBBF8\uAE30 \xB7 \uC54C\uB9BC \xB7 \uC124\uC815", "", `<div class="panel"><div class="field"><label>\uC774\uB984</label><input class="inp" id="nk" maxlength="10" value="${esc(S.nick)}"></div><div class="field"><label>\uBA38\uB9AC \uBAA8\uC591</label><div class="seg">${["\uC9E7\uC740 \uBA38\uB9AC", "\uAE34 \uBA38\uB9AC", "\uACF1\uC2AC"].map((n, i) => `<button data-a="look" data-f="hair" data-v="${i}" aria-pressed="${lk.hair === i}">${n}</button>`).join("")}</div></div><div class="field"><label>\uBA38\uB9AC\uC0C9</label>${sw(HAIRC, lk.hc, "\uBA38\uB9AC\uC0C9")}</div><div class="field"><label>\uC0C1\uC758 (\uC720\uB2C8\uD3FC \uC804)</label>${sw(TOPC, lk.top, "\uC0C1\uC758")}</div><div class="field" style="margin-bottom:0"><label>\uD53C\uBD80\uC0C9</label>${sw(SKIN, lk.skin, "\uD53C\uBD80\uC0C9")}</div></div>${FEAT.places ? alarmSec() : ""}${reminderSec()}${testSec()}<section class="sec" style="display:flex;gap:18px;justify-content:center"><button class="link" data-a="privacy">\uAC1C\uC778\uC815\uBCF4 \uC548\uB0B4</button><button class="link" data-a="delAsk">\uB0B4 \uB370\uC774\uD130 \uC0AD\uC81C</button></section>`)}
+  ${fold("set", "\uAFB8\uBBF8\uAE30 \xB7 \uC54C\uB9BC \xB7 \uC124\uC815", "", `<div class="panel"><div class="field"><label>\uC774\uB984</label><input class="inp" id="nk" maxlength="10" value="${esc(S.nick)}"></div><div class="field"><label>\uBA38\uB9AC \uBAA8\uC591</label><div class="seg">${["\uC9E7\uC740 \uBA38\uB9AC", "\uAE34 \uBA38\uB9AC", "\uACF1\uC2AC"].map((n, i) => `<button data-a="look" data-f="hair" data-v="${i}" aria-pressed="${lk.hair === i}">${n}</button>`).join("")}</div></div><div class="field"><label>\uBA38\uB9AC\uC0C9</label>${sw(HAIRC, lk.hc, "\uBA38\uB9AC\uC0C9")}</div><div class="field"><label>\uC0C1\uC758 (\uC720\uB2C8\uD3FC \uC804)</label>${sw(TOPC, lk.top, "\uC0C1\uC758")}</div><div class="field" style="margin-bottom:0"><label>\uD53C\uBD80\uC0C9</label>${sw(SKIN, lk.skin, "\uD53C\uBD80\uC0C9")}</div></div>${bkSec()}${FEAT.places ? alarmSec() : ""}${reminderSec()}${testSec()}<section class="sec" style="display:flex;gap:18px;justify-content:center"><button class="link" data-a="privacy">\uAC1C\uC778\uC815\uBCF4 \uC548\uB0B4</button><button class="link" data-a="delAsk">\uB0B4 \uB370\uC774\uD130 \uC0AD\uC81C</button></section>`)}
   <section class="sec"><div class="note">\uCD1D ${S.done || 0}\uAC1C\uC758 \uD018\uC2A4\uD2B8\uB97C \uC644\uB8CC\uD588\uC5B4\uC694. \uB370\uC774\uD130\uB294 \uC774 \uAE30\uAE30\uC758 \uBE0C\uB77C\uC6B0\uC800\uC5D0\uB9CC \uC800\uC7A5\uB3FC\uC694. \uBE0C\uB77C\uC6B0\uC800 \uB370\uC774\uD130\uB97C \uC9C0\uC6B0\uBA74 \uAE30\uB85D\uB3C4 \uC0AC\uB77C\uC838\uC694.</div></section>`;
   }
   function habitPanel() {
@@ -1570,6 +1627,78 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
   function evBlock() {
     const e = ui.ev || {};
     return `<div class="evb"><div class="muted" style="font-size:13px">\uC120\uD0DD \uC0AC\uD56D\uC774\uC5D0\uC694. \uB098\uC5D0\uAC8C\uB9CC \uBCF4\uC774\uACE0 \uC774 \uAE30\uAE30\uC5D0\uB9CC \uC800\uC7A5\uB3FC\uC694. \uC5BC\uAD74\xB7\uC5F0\uB77D\uCC98\xB7\uAC1C\uC778\uC815\uBCF4\uAC00 \uBCF4\uC774\uC9C0 \uC54A\uAC8C \uD574\uC8FC\uC138\uC694.</div><div class="row" style="align-items:center;gap:8px;margin:8px 0">${e.img ? `<img class="evimg" src="${e.img}" alt="\uCCA8\uBD80\uD560 \uC0AC\uC9C4"><button class="btn sm ghost" data-a="evnoimg">\uC0AC\uC9C4 \uBE7C\uAE30</button>` : `<label class="btn sm" for="evfile">\u{1F4F7} \uC0AC\uC9C4 \uC120\uD0DD</label>`}<input type="file" id="evfile" accept="image/*" hidden></div><input class="inp" id="evlink" inputmode="url" placeholder="\uACB0\uACFC\uBB3C \uB9C1\uD06C (https://\u2026) \uC120\uD0DD" value="${esc(e.link || "")}" maxlength="200"></div>`;
+  }
+  function backupObj(withPhotos) {
+    const st = JSON.parse(JSON.stringify(S));
+    return { app: "career-quest-party", format: 1, build: APP_BUILD, exportedAt: (/* @__PURE__ */ new Date()).toISOString(), cid: S.cid, state: st, images: withPhotos ? __spreadValues({}, pimg()) : void 0 };
+  }
+  function parseBackup(text) {
+    let o;
+    try {
+      o = JSON.parse(text);
+    } catch (e) {
+      return { err: "\uD30C\uC77C\uC744 \uC77D\uC744 \uC218 \uC5C6\uC5B4\uC694. \uB0B4\uBCF4\uB0B8 \uBC31\uC5C5 \uD30C\uC77C\uC774 \uB9DE\uB294\uC9C0 \uD655\uC778\uD574 \uC8FC\uC138\uC694." };
+    }
+    if (!o || o.app !== "career-quest-party" || o.format !== 1 || !o.state || typeof o.state !== "object") return { err: "\uCEE4\uB9AC\uC5B4 \uD018\uC2A4\uD2B8 \uD30C\uD2F0 \uBC31\uC5C5 \uD30C\uC77C\uC774 \uC544\uB2C8\uC5D0\uC694." };
+    if (o.state.v !== 1 && o.state.v !== 2) return { err: "\uC9C0\uC6D0\uD558\uC9C0 \uC54A\uB294 \uBC84\uC804\uC758 \uBC31\uC5C5\uC774\uC5D0\uC694." };
+    const s = blank();
+    Object.keys(s).forEach((k) => {
+      if (k in o.state) s[k] = o.state[k];
+    });
+    if (!s.look || typeof s.look !== "object") s.look = blank().look;
+    if (!Array.isArray(s.prf)) s.prf = [];
+    s.prf = s.prf.filter((x) => x && typeof x.i === "string" && (!x.u || okUrl(x.u))).slice(-PRF_MAX).map((x) => ({ i: String(x.i).slice(0, 24), h: String(x.h || ""), d: String(x.d || "").slice(0, 10), t: String(x.t || "").slice(0, 80), u: x.u || "", p: x.p ? 1 : 0 }));
+    ["story", "assess", "actd", "ev"].forEach((k) => {
+      if (!Array.isArray(s[k])) s[k] = [];
+    });
+    if (typeof s.habs !== "object" || !s.habs) s.habs = {};
+    if (typeof s.fb !== "object" || !s.fb) s.fb = {};
+    if (typeof s.hdone !== "object" || !s.hdone) s.hdone = {};
+    s.totalXp = Math.max(0, s.totalXp | 0);
+    s.nick = String(s.nick || "").slice(0, 12);
+    if (s.job && !JB[s.job]) s.job = null;
+    if (s.hab && !habInfo(s.hab)) s.hab = null;
+    if (!o.state.hver) migrateHab(s);
+    if (o.state.evN === void 0) {
+      s.evBase = s.totalXp;
+      s.evN = 0;
+      s.ev = [];
+      s.evSent = 0;
+    }
+    if (!s.cid || typeof s.cid !== "string") s.cid = newCid();
+    const im = {};
+    if (o.images && typeof o.images === "object") {
+      s.prf.forEach((x) => {
+        const v = o.images[x.i];
+        if (x.p && typeof v === "string" && /^data:image\/jpeg;base64,[A-Za-z0-9+\/=]+$/.test(v) && v.length < 4e5) im[x.i] = v;
+        else x.p = 0;
+      });
+    } else s.prf.forEach((x) => {
+      x.p = 0;
+    });
+    return { s, im, info: { nick: s.nick, job: s.job, xp: s.totalXp, done: s.done | 0, photos: Object.keys(im).length, at: String(o.exportedAt || "").slice(0, 10) } };
+  }
+  function readBackupFile(f) {
+    if (!f) return;
+    if (f.size > 6e6) {
+      toast("\uD30C\uC77C\uC774 \uB108\uBB34 \uCEE4\uC694");
+      return;
+    }
+    const r = new FileReader();
+    r.onload = () => {
+      const p = parseBackup(String(r.result));
+      if (p.err) {
+        toast(p.err);
+        return;
+      }
+      ui.modal = { type: "imp", p };
+      render();
+    };
+    r.onerror = () => toast("\uD30C\uC77C\uC744 \uC77D\uC9C0 \uBABB\uD588\uC5B4\uC694");
+    r.readAsText(f);
+  }
+  function bkSec() {
+    return `<section class="sec"><div class="hd"><h2>\uB0B4 \uAE30\uB85D \uBC31\uC5C5</h2></div><div class="panel"><div class="muted" style="font-size:13px">\uAE30\uB85D\uACFC \uC0AC\uC9C4\uC744 \uD30C\uC77C \uD558\uB098\uB85C \uC800\uC7A5\uD558\uACE0, \uB2E4\uB978 \uAE30\uAE30\uB098 \uB098\uC911\uC5D0 \uC11C\uBC84\uB85C \uC62E\uAE38 \uB54C \uAC00\uC838\uC640\uC694. \uD30C\uC77C\uC5D0\uB294 \uB0B4 \uAE00\uACFC \uC0AC\uC9C4\uC774 \uB4E4\uC5B4 \uC788\uC73C\uB2C8 \uC548\uC804\uD55C \uACF3\uC5D0 \uBCF4\uAD00\uD558\uC138\uC694.</div><div class="row" style="gap:8px;margin-top:8px;flex-wrap:wrap"><button class="btn sm" data-a="bkexport">\uAE30\uB85D \uB0B4\uBCF4\uB0B4\uAE30</button><label class="btn sm ghost" for="impfile">\uAE30\uB85D \uAC00\uC838\uC624\uAE30</label><input type="file" id="impfile" accept="application/json,.json" hidden></div></div></section>`;
   }
   function proofSec() {
     const L = (S.prf || []).slice().reverse(), im = pimg();
@@ -1732,6 +1861,10 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
     if (m.type === "evid") {
       const hi = habInfo(m.h);
       b = `<h2>\uC99D\uBE59 \uB0A8\uAE30\uAE30</h2><div class="muted" style="font-size:14px"><b>${esc(hi ? hi.title : "")}</b></div>${evBlock()}<textarea class="inp" id="evnote" rows="2" maxlength="80" placeholder="\uD55C \uC904 \uBA54\uBAA8 (\uC120\uD0DD)">${esc((ui.ev || {}).note || "")}</textarea><div class="err" role="alert">${esc(ui.err2 || "")}</div><div class="row"><button class="btn ghost" data-a="close">\uB2EB\uAE30</button><button class="btn blue" style="flex:1" data-a="evsave">\uC800\uC7A5\uD558\uAE30</button></div>`;
+    }
+    if (m.type === "imp") {
+      const i = m.p.info;
+      b = `<h2>\uC774 \uAE30\uB85D\uC73C\uB85C \uBC14\uAFC0\uAE4C\uC694?</h2><div class="muted" style="font-size:14px">${esc(i.nick || "\uC774\uB984 \uC5C6\uC74C")} \xB7 ${esc(i.job && JB[i.job] ? JB[i.job].name : "\uC9C1\uC5C5 \uBBF8\uC815")} \xB7 \uACBD\uD5D8\uCE58 ${i.xp} \xB7 \uD018\uC2A4\uD2B8 ${i.done}\uAC1C${i.photos ? " \xB7 \uC0AC\uC9C4 " + i.photos + "\uC7A5" : ""}${i.at ? " \xB7 " + esc(i.at) + " \uBC31\uC5C5" : ""}<br>\uC9C0\uAE08 \uC774 \uAE30\uAE30\uC758 \uAE30\uB85D\uC740 \uC774 \uB0B4\uC6A9\uC73C\uB85C \uBC14\uB00C\uACE0 \uB418\uB3CC\uB9B4 \uC218 \uC5C6\uC5B4\uC694. \uBA3C\uC800 "\uAE30\uB85D \uB0B4\uBCF4\uB0B4\uAE30"\uB85C \uC9C0\uAE08 \uAE30\uB85D\uC744 \uC800\uC7A5\uD574 \uB450\uBA74 \uC548\uC804\uD574\uC694.</div><div class="row" style="margin-top:10px"><button class="btn ghost" data-a="close">\uCDE8\uC18C</button><button class="btn blue" style="flex:1" data-a="impgo">\uAC00\uC838\uC624\uAE30</button></div>`;
     }
     if (m.type === "explore") {
       b = `<h2>\uD589\uB3D9\uC73C\uB85C \uC9C1\uC5C5 \uB458\uB7EC\uBCF4\uAE30</h2><div class="muted" style="font-size:14px;margin-bottom:8px">\uC9C1\uC5C5 \uC124\uBA85\uC744 \uC77D\uB294 \uB300\uC2E0, 5\uBD84\uB9CC \uC9C1\uC811 \uD574\uBCF4\uACE0 \uB098\uC640 \uB9DE\uB294\uC9C0 \uB290\uAEF4\uBCF4\uC138\uC694. \uC5B8\uC81C\uB4E0 \uB2E4\uB978 \uC9C1\uC5C5\uC73C\uB85C \uBC14\uAFC0 \uC218 \uC788\uC5B4\uC694.</div>${jobsShown().filter((j) => (CORE[j.id] || []).length).map((j) => `<div class="exj"><div class="row" style="align-items:center;gap:8px"><b style="font-family:var(--f-display);font-size:17px">${esc(j.name)}</b><span class="muted" style="font-size:12px">${esc(j.cat)}</span></div><ul class="corelist">${CORE[j.id].map((x) => `<li>${esc(x)}</li>`).join("")}</ul><button class="btn sm" data-a="exstart" data-j="${j.id}">5\uBD84 \uD574\uBCF4\uAE30 \xB7 ${esc(HABITS[j.id][0][0])}</button></div>`).join("")}<div class="row" style="margin-top:8px"><button class="btn ghost" data-a="close">\uB2EB\uAE30</button></div>`;
@@ -2074,6 +2207,30 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
       },
       explore() {
         ui.modal = { type: "explore" };
+        render();
+      },
+      bkexport() {
+        const o = backupObj(true), json = JSON.stringify(o), name = "career-quest-backup-" + KST() + ".json";
+        try {
+          Promise.resolve(dl && dl.save({ filename: name, data: new Blob([json], { type: "application/json" }) })).then(() => toast("\uBC31\uC5C5 \uD30C\uC77C\uC744 \uC800\uC7A5\uD588\uC5B4\uC694")).catch((e2) => {
+            if (!e2 || e2.code !== "dismissed") toast("\uC800\uC7A5\uD558\uC9C0 \uBABB\uD588\uC5B4\uC694");
+          });
+        } catch (e2) {
+          toast("\uC800\uC7A5\uD558\uC9C0 \uBABB\uD588\uC5B4\uC694");
+        }
+      },
+      impgo() {
+        const p = ui.modal && ui.modal.p;
+        if (!p) return;
+        S = p.s;
+        S.updated = Date.now();
+        PIMG = p.im;
+        psave();
+        ui.modal = null;
+        ui.tab = "today";
+        ui.diag = null;
+        persist();
+        toast("\uAE30\uB85D\uC744 \uAC00\uC838\uC654\uC5B4\uC694");
         render();
       },
       evstart() {
@@ -2902,7 +3059,7 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
       S.stampBook = S.stampBook || {};
       S.stampBook[l.id] = 1;
       if (st.ids.length <= 3) {
-        const g = gain(3);
+        const g = gain(3, "stamp");
         toast("\uC2A4\uD0EC\uD504 +" + g + " XP \xB7 " + l.name);
       } else toast("\uC2A4\uD0EC\uD504\uB97C \uCC0D\uC5C8\uC5B4\uC694 \xB7 " + l.name);
       logLine(l.name + "\uC5D0\uC11C \uC2A4\uD0EC\uD504\uB97C \uCC0D\uC5C8\uC5B4\uC694");
@@ -3093,7 +3250,7 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
     let g = 0;
     if (st.xp < PL_MAX) {
       st.xp++;
-      g = gain(PL_XP * mult());
+      g = gain(PL_XP * mult(), "place", { b: PL_XP, m: mult() });
     }
     S.stats[h.stat] = (S.stats[h.stat] || 0) + 1;
     S.done = (S.done || 0) + 1;
@@ -3844,7 +4001,10 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
     render();
   }, hOpen: (id) => hOpen(id), hSuggest: () => hSuggest(), hAch: (id) => hAch(id), habInfo: (id) => habInfo(id), hTot: (id) => hTot(id), get CORE() {
     return CORE;
-  }, metrics: () => metrics(), addProof: (h, o) => addProof(h, o), pimg: () => pimg(), admSummary: (rows) => admSummary(rows.map((r) => cleanTester("x", r))), diagRec: (p) => diagRec(p).map((x) => x.j.id), get LAD() {
+  }, metrics: () => metrics(), evState: () => ({ ev: S.ev, evBase: S.evBase, evN: S.evN, evSent: S.evSent, totalXp: S.totalXp, cid: S.cid, habs: S.habs, actd: S.actd }), parseBackup: (x) => {
+    const p = parseBackup(x);
+    return p.err ? { err: p.err } : { ok: 1, info: p.info, prf: p.s.prf };
+  }, backupText: () => JSON.stringify(backupObj(true)), addProof: (h, o) => addProof(h, o), pimg: () => pimg(), admSummary: (rows) => admSummary(rows.map((r) => cleanTester("x", r))), diagRec: (p) => diagRec(p).map((x) => x.j.id), get LAD() {
     return LAD;
   } };
   render();

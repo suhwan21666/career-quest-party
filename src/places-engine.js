@@ -17,7 +17,7 @@ const plDone=id=>plState().ids.includes(id);
 const plCount=p=>plState().ids.filter(x=>x.startsWith(p+'.')).length;
 const myPlace=()=>placeOfJob(S.job);
 function doPlaceHabit(id){const m=/^(\w+)\.([mne])(\d)$/.exec(id||'');if(!m)return false;const h=habOf(m[1],m[2],+m[3]);if(!h)return false;const st=plState();if(st.ids.includes(id))return false;
-  st.ids.push(id);let g=0;if(st.xp<PL_MAX){st.xp++;g=gain(PL_XP*mult())}
+  st.ids.push(id);let g=0;if(st.xp<PL_MAX){st.xp++;g=gain(PL_XP*mult(),'place',{b:PL_XP,m:mult()})}
   S.stats[h.stat]=(S.stats[h.stat]||0)+1;S.done=(S.done||0)+1;
   toast(g?'+'+g+' XP · '+h.t:'기록했어요 · '+h.t+' (오늘 경험치는 다 채웠어요)');logLine(PLACES[h.p].n+'에서 "'+h.t+'"');persist();return true}
 
@@ -185,4 +185,4 @@ setInterval(()=>{try{alTick()}catch(e){}},20000);
 /* 개발 점검용: 새 직업·장소를 넣은 뒤 tests/places_check.js 가 이 값을 읽어요 */
 window.CQ_DEV={places:PLIDS.slice(),problems:placeProblems,unmappedJobs:()=>J.filter(j=>!placeOfJob(j.id)).map(j=>j.id),perPlace:PL_PER};
 /* 개발·점검용 읽기 창구(습관 사다리) */
-window.CQ_DEV.hab={get HABITS(){return HABITS},get S(){return S},KST:()=>KST(),prevDay:d=>prevDay(d),save:()=>{persist();render()},hOpen:id=>hOpen(id),hSuggest:()=>hSuggest(),hAch:id=>hAch(id),habInfo:id=>habInfo(id),hTot:id=>hTot(id),get CORE(){return CORE},metrics:()=>metrics(),addProof:(h,o)=>addProof(h,o),pimg:()=>pimg(),admSummary:rows=>admSummary(rows.map(r=>cleanTester('x',r))),diagRec:p=>diagRec(p).map(x=>x.j.id),get LAD(){return LAD}};
+window.CQ_DEV.hab={get HABITS(){return HABITS},get S(){return S},KST:()=>KST(),prevDay:d=>prevDay(d),save:()=>{persist();render()},hOpen:id=>hOpen(id),hSuggest:()=>hSuggest(),hAch:id=>hAch(id),habInfo:id=>habInfo(id),hTot:id=>hTot(id),get CORE(){return CORE},metrics:()=>metrics(),evState:()=>({ev:S.ev,evBase:S.evBase,evN:S.evN,evSent:S.evSent,totalXp:S.totalXp,cid:S.cid,habs:S.habs,actd:S.actd}),parseBackup:x=>{const p=parseBackup(x);return p.err?{err:p.err}:{ok:1,info:p.info,prf:p.s.prf}},backupText:()=>JSON.stringify(backupObj(true)),addProof:(h,o)=>addProof(h,o),pimg:()=>pimg(),admSummary:rows=>admSummary(rows.map(r=>cleanTester('x',r))),diagRec:p=>diagRec(p).map(x=>x.j.id),get LAD(){return LAD}};
