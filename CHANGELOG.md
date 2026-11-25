@@ -3,6 +3,11 @@
 각 버전의 완성본은 `releases/<버전>/index.html`에 따로 보관해요. 루트 `index.html`은 항상 최신 버전이에요.
 소스는 `src/`에 있어요. `template.html`이 원본이고 `build_all.py`가 배포 파일 3종(혼자 하기, 온라인, 모바일 아티팩트)을 만들어요.
 
+## 서버 시험 — 2026-11-25 (앱 변경 없음, `server/` 갱신)
+- 실제 PostgreSQL 16에 스키마·시드·보안 정책을 적용해 시험(진짜 Supabase는 아님). `server/sync_core.js`(동기화 로직), `http_handler.js`, `adapter/cq-api.js`(앱 연결), `functions/sync-events/`(Edge Function 껍질, 미실행) 추가.
+- 시험 45항목 통과(DB 38 + 앱→서버 종단 7). 시험 중 발견·수정: 총합 함수가 PUBLIC에 열려 있던 문제.
+- 미검증: 진짜 Supabase(Auth·Storage·Edge/Deno). 자세한 내용은 `docs/SERVER_MIGRATION.md` 7장.
+
 ## v0.11.0 — 2026-11-24 · 서버 전환 준비 (서버는 아직 연결하지 않음)
 - **경험치 이벤트 기록**: 경험치가 오르는 모든 순간을 번호·날짜·종류·근거와 함께 기록(`S.ev`). 총 경험치 = 기준선(`evBase`) + 이벤트 합계. 기록은 1500개까지, 넘치면 합계를 기준선에 합쳐요. 기존 저장은 처음 열 때 기준선으로 자동 변환.
 - **기기 식별자(cid)**와 **전송 대기열**: `window.CQ_API.sendEvents` 를 꽂으면 새 이벤트를 200개씩 전송(멱등키 `cid:번호`), 실패하면 보류했다가 다시 시도. 없으면 아무 일도 하지 않아요.

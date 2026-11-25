@@ -2,7 +2,7 @@
 
 지금 앱은 **서버 없이** 이 기기(localStorage)에 저장돼요. v0.11.0은 서버를 붙이지 않고, 나중에 붙일 때 데이터를 잃지 않고 검증할 수 있도록 **앱 쪽 준비와 서버 설계 초안**을 만든 버전이에요.
 
-> 주의: `server/` 의 SQL·규칙은 **실제 서버에 적용해 보지 않았어요.** SQL은 문법 파서(pglast)로 49문장이 통과했을 뿐, RLS 동작·Edge Function·Storage 정책은 서버에서 직접 시험해야 해요.
+> 상태(2026-11-25): 스키마·보안 정책·동기화 로직을 **실제 PostgreSQL 16**에서 시험했어요(아래 7장). 다만 **진짜 Supabase 프로젝트에는 적용해 보지 않았어요.** Supabase 고유 부분(Auth 토큰 검증, Storage API, Edge Function/Deno 실행, 요금·한도)은 미검증이에요.
 
 ## 1. 이번에 앱에 들어간 준비
 
@@ -61,3 +61,29 @@ Supabase(Auth + Postgres + Storage + Edge Functions). 이유: 이미 v1 온라�
 - 이벤트 기록 이전의 XP(`evBase`)는 검증할 수 없어요.
 - 하루 상한(`LIMITS`)은 앱 동작에서 잡은 넉넉한 값이라 실제 데이터로 조정이 필요해요.
 - 파티 기능의 서버 규칙은 스키마만 있고 구현 설계는 아직 없어요.
+
+## 7. 서버 시험 결과 (2026-11-25)
+**환경**: 로컬 PostgreSQL 16 + Supabase 흉내 준비(`server/test/supabase_shim.sql`: anon/authenticated/service_role 역할, `auth.uid()`, `storage.objects`). 진짜 Supabase 와 같은 점: 역할 권한·RLS·정책 문법·SQL. 다른 점: JWT 해석(`request.jwt.claim.sub` 설정으로 대체), Storage 서비스 자체, PostgREST, Edge 런타임.
+
+| 시험 | 방법 | 결과 |
+|---|---|---|
+| 스키마 적용 | `test/run_all.sh` (빈 DB → 준비 → 스키마 → 시드) | 에러 없이 적용, 습관 104행, 정책 14개 |
+| 동기화 로직·보안 정책 | `test/db_test.js` | 38항목 통과 |
+| 앱 → 어댑터 → HTTP → DB 종단 | `test/e2e_test.js` (실제 앱을 브라우저로 구동) | 7항목 통과: 앱 총합 = 서버 총합, 인증 실패 시 보류 후 자동 재전송, 앱 조작 +400 XP는 서버 총합에 반영 안 됨 |
+| 번들 | `build_function.sh` → `core.mjs`, `test/bundle_test.mjs` | Node에서 ESM으로 동작 |
+
+**시험으로 찾아 고친 결함**: `user_total_xp` 함수가 기본으로 모든 사용자(PUBLIC)에게 실행 가능이었음 → `revoke ... from public` 추가.
+
+**확인된 동작**: 사용자는 자기 행만 읽고 씀 / 경험치 이벤트는 사용자가 직접 쓰기·수정·삭제 불가(서버만) / 익명은 아무것도 못 봄 / 지표 뷰는 일반 사용자 접근 불가 / 남의 사진 폴더 쓰기 거부 / 증빙 링크 `javascript:`·긴 메모를 DB가 거부 / 같은 배치 재전송·동시 4건에도 이중 반영 없음 / 남의 기기 ID 가로채기 거부(409) / 하루 상한은 이미 저장된 개수까지 합산 / 깨진 입력에도 서버가 죽지 않음.
+
+**실행**: `server/test/run_all.sh` (로컬 Postgres 필요, 환경변수 `PGMOD` 로 `pg` 모듈 위치 지정), 종단은 `e2e_test.js <앱.html>`.
+
+**Edge Function**: `server/functions/sync-events/index.ts` 는 인증+DB 연결만 하는 얇은 껍질이고 **Deno가 없어 실행하지 못했어요.** 배포 때 가장 먼저 확인할 곳: (1) `SUPABASE_DB_URL` 연결과 `prepare:false` 동작, (2) `auth.getUser` 토큰 검증, (3) `core.mjs` 번들이 Deno에서 로드되는지.
+
+**알려진 한계**
+- 인증은 시험에서 가짜(토큰=사용자 id)였어요. 진짜 JWT 검증은 Supabase에서 확인 필요.
+- 앱이 1500개 넘게 쌓고 서버에 못 보낸 채 오래 오프라인이면, 접힌 구간은 서버로 가지 못하고 `evBase`로만 남아요.
+- 한 사용자가 기기를 여러 개 쓰면 기기별 `cid`·번호가 따로라서 하루 상한은 사용자 기준으로 합산돼요(의도). 정상 사용자가 두 기기로 하루 5퀘스트를 넘기면 거부될 수 있어요 → 실제 데이터로 상한 조정 필요.
+- 서버가 막는 건 "계산이 틀린 이벤트"이고, 규칙을 지킨 가짜 활동(매일 퀘스트 5개를 꾸며서 완료)은 막지 못해요.
+- 클라이언트 전송 오류(400/409)는 앱이 계속 재시도해요. 영구 오류 구분은 앱 쪽에 아직 없어요.
+- 상태 동기화(습관 진행·메모·진단·증빙 업로드)는 아직 서버로 가지 않아요(이벤트만).

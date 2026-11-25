@@ -202,3 +202,10 @@ select count(*) as users,
   round(avg(achieved)::numeric, 2) as avg_achieved
 from public.v_user_metrics;
 revoke all on public.v_user_metrics, public.v_effect_summary from anon, authenticated;
+
+-- 서버가 인정한 총 경험치 = 기기 연결 때 받은 기준선(검증 불가 구간) + 검증 통과 이벤트 합계
+create function public.user_total_xp(uid uuid) returns bigint language sql stable security invoker as $$
+  select coalesce((select sum(baseline_xp) from public.client_links where user_id = uid), 0)
+       + coalesce((select sum(xp) from public.xp_events where user_id = uid and verified), 0)
+$$;
+revoke execute on function public.user_total_xp(uuid) from public, anon, authenticated;
