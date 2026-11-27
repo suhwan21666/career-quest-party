@@ -1,0 +1,28 @@
+const {chromium,devices}=require('playwright');const path=require('path');let fails=0;const ok=(c,m,x)=>{console.log((c?'PASS ':'FAIL ')+m+(x?'  '+x:''));if(!c)fails++};
+const F='file://'+path.resolve('out/career-quest-party.html');
+(async()=>{const b=await chromium.launch();
+const c=await b.newContext({...devices['iPhone 13'],timezoneId:'Asia/Seoul'});const p=await c.newPage();const errs=[];p.on('pageerror',e=>errs.push(e.message));
+await p.addInitScript(()=>{window.__cqNoPlaza=1;window.__cqOpenAll=1});
+await p.goto(F);await p.waitForTimeout(400);
+await p.fill('#nk','옛유저');await p.click('[data-a=next]');await p.click('[data-a=sel][data-j=developer]');await p.click('[data-a=start]');await p.waitForTimeout(600);
+await p.evaluate(()=>{const r=JSON.parse(localStorage.getItem('cq-party-v1'));r.look={hair:2,hc:4,top:3,skin:1};localStorage.setItem('cq-party-v1',JSON.stringify(r))});
+await p.reload();await p.waitForTimeout(600);
+const lk=await p.evaluate(()=>CQ_DEV.hab.S.look);
+ok(lk&&lk.hair===2&&lk.hc===4&&lk.top===3&&lk.skin===1&&lk.eye===0&&lk.pet===0,'옛 저장 look 보존+새 필드 기본값',JSON.stringify(lk));
+await p.click('[data-a=tab][data-t=me]');await p.waitForTimeout(300);
+ok(await p.locator('[data-a=look][data-f=pet]').count()===5,'친구(반려동물) 5종');
+ok(await p.locator('[data-a=look][data-f=hair]').count()===8,'머리 8종');
+ok(await p.locator('[data-a=look][data-f=hc]').count()===10,'머리색 10종');
+for(let i=0;i<5;i++){await p.click('[data-a=lookrand]');await p.waitForTimeout(80)}
+const l2=await p.evaluate(()=>CQ_DEV.hab.S.look);
+ok(Object.values(l2).every(Number.isInteger),'랜덤 결과가 정수',JSON.stringify(l2));
+await p.click('[data-a=look][data-f=pet][data-v="1"]');
+ok((await p.evaluate(()=>CQ_DEV.hab.S.look.pet))===1,'고양이 선택');
+await p.evaluate(()=>{CQ_DEV.hab.S.look.hair=99});await p.click('[data-a=look][data-f=hair][data-v="7"]');
+ok((await p.evaluate(()=>CQ_DEV.hab.S.look.hair))===7,'범위 보정');
+ok(/aria-label="내 캐릭터"|aria-label="미리보기"/.test(await p.content()),'SVG 접근성 라벨');
+await p.locator('.lookprev').scrollIntoViewIfNeeded();await p.screenshot({path:'shots6/look_me.png'});
+const bk=await p.evaluate(()=>JSON.parse(CQ_DEV.hab.backupText()).state.look);
+ok(bk&&bk.pet===1&&bk.hair===7,'백업에 look 포함',JSON.stringify(bk));
+ok(errs.length===0,'스크립트 오류 없음',errs.join('|'));
+console.log(fails?'FAILS '+fails:'ALL PASS');await b.close()})();

@@ -3,13 +3,13 @@ const F='file://'+path.resolve('out/career-quest-party.html');
 (async()=>{const b=await chromium.launch();
 for(const [dn,dev] of [['iph',devices['iPhone 13']],['desk',{viewport:{width:1000,height:800}}]]){
  const c=await b.newContext({...dev,timezoneId:'Asia/Seoul'});const p=await c.newPage();const errs=[];p.on('pageerror',e=>errs.push(e.message));
- await p.addInitScript(()=>{window.__cqNoPlaza=1});
+ await p.addInitScript(()=>{window.__cqNoPlaza=1;window.__cqOpenAll=1});
  await p.goto(F);await p.waitForTimeout(400);
  await p.fill('#nk','테스터');await p.click('[data-a=next]');await p.click('[data-a=sel][data-j=developer]');await p.click('[data-a=start]');await p.waitForTimeout(700);
  const lens=await p.evaluate(()=>(D=>Object.keys(D.HABITS).map(j=>D.HABITS[j].length))(CQ_DEV.hab));ok(lens.length===16&&lens.every(n=>n>=6),dn+' 16개 직업 모두 Lv6 이상',lens.join(','));
  await p.click('[data-a=habopen]');await p.waitForTimeout(200);
  let t=await p.locator('.sheet').innerText();
- ok(/Lv1 간접/.test(t)&&/Lv7 직접/.test(t)&&/Lv1을 3번 해보면 열려요/.test(t),dn+' 모달: 레벨 표시·잠금',t.replace(/\n/g,' ').slice(0,90));
+ ok(/간접 경험/.test(t)&&/직접 경험/.test(t)&&/Lv7/.test(t)&&/Lv1을 3번 해보면 열려요/.test(t),dn+' 모달: 레벨 표시·잠금',t.replace(/\n/g,' ').slice(0,90));
  ok(await p.locator('.hopt[disabled]').count()===6,dn+' 처음엔 Lv2~7 잠김');
  await p.click('[data-a=habpick][data-h="developer:0"]');await p.waitForTimeout(200);
  // 6회 해낸 상태로 만들고 오늘 한 번 더

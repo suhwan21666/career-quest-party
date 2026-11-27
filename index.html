@@ -204,7 +204,15 @@ html{-webkit-text-size-adjust:100%;overscroll-behavior-y:none}
 .grow{display:grid;gap:12px}.grow .g{display:grid;gap:4px}.grow .gk{display:flex;gap:6px;flex-wrap:wrap}
 .subnav{margin:10px 0 0}.subnav button{flex:1}
 .sent{display:grid;gap:10px}.sent .s{display:grid;grid-template-columns:46px 1fr;gap:8px;align-items:start}.sent .d{font-size:12px;color:var(--muted);padding-top:2px}.sent .tx{font-size:14px;overflow-wrap:anywhere}
-.lad{display:grid;gap:8px}.lad .r{display:grid;grid-template-columns:44px 1fr auto;gap:8px;align-items:center;padding:8px 10px;border:2px solid var(--line);border-radius:12px;background:var(--surface)}.lad .r.ok{border-color:var(--blue)}.lad .r.lock{opacity:.55}.lad .hl{font-family:var(--f-display);color:var(--blue)}.lad .st{font-size:13px;color:var(--muted);white-space:nowrap}.bar{height:6px;background:var(--line);border-radius:9px;overflow:hidden;margin-top:4px}.bar i{display:block;height:100%;background:var(--coral)}
+.lad{display:grid;gap:8px}.lad .r{display:grid;grid-template-columns:44px 1fr auto;gap:8px;align-items:center;padding:8px 10px;border:2px solid var(--line);border-radius:12px;background:var(--surface)}.lad .r.ok{border-color:var(--blue)}.lad .r.lock{opacity:.55}.lad .hl{font-family:var(--f-display);color:var(--blue)}.lad .st{font-size:13px;color:var(--muted);white-space:nowrap}.trail{gap:0;margin-top:10px}.trail .tn{display:grid;grid-template-columns:44px 1fr;gap:10px;width:100%;text-align:left;border:0;background:none;padding:0 0 12px;margin:0;position:relative;align-items:start}
+.trail .tn::before{content:"";position:absolute;left:21px;top:40px;bottom:-2px;width:4px;border-radius:4px;background:var(--line)}.trail .tn:last-child::before{display:none}.trail .tn.ok::before{background:var(--blue)}
+.tdot{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-family:var(--f-display);font-size:14px;background:var(--surface);border:3px solid var(--line);color:var(--muted);position:relative;z-index:1}
+.tdot.ok{background:var(--blue);border-color:var(--blue);color:#fff;font-size:20px}.tdot.cur{background:var(--coral);border-color:var(--coral);color:#fff;box-shadow:0 0 0 5px color-mix(in srgb,var(--coral) 25%,transparent)}.tdot.open{border-color:var(--coral);color:var(--coral)}.tdot.lock{opacity:.55;border-style:dashed}
+.tcard{display:grid;gap:4px;border:2px solid var(--line);border-radius:14px;padding:10px 12px;background:var(--bg)}.tcard b{font-family:var(--f-display);font-weight:400;font-size:16px}.tcard.ok{border-color:var(--blue)}.tcard.cur{border-color:var(--coral);background:color-mix(in srgb,var(--coral) 8%,var(--bg))}.tcard.lock{opacity:.6}
+.tn.open:hover .tcard{border-color:var(--coral)}.tn:disabled{cursor:default}.tmeta{display:flex;flex-wrap:wrap;gap:4px}.tmeta .chip{font-size:11px}.tmeta .now{background:var(--coral);color:#fff}.tmeta .okc{background:var(--blue);color:#fff}.tsub{font-size:13px;color:var(--muted)}
+.tphase{font-size:12px;letter-spacing:.02em;font-weight:700;margin:4px 0 8px;padding:4px 10px;border-radius:9px;width:max-content;max-width:100%}.tphase.i{background:color-mix(in srgb,var(--blue) 12%,var(--bg));color:var(--blue)}.tphase.d{background:color-mix(in srgb,var(--coral) 14%,var(--bg));color:var(--coral)}
+.rib{display:flex;align-items:center;gap:0;margin:8px 0;max-width:100%}.rib u{flex:1;height:3px;background:var(--line);min-width:3px}.rib .rs i{display:grid;place-items:center;width:26px;height:26px;border-radius:50%;font-style:normal;font-size:11px;font-family:var(--f-display);border:2px solid var(--line);background:var(--surface);color:var(--muted)}.rib .rs.ok i{background:var(--blue);border-color:var(--blue);color:#fff}.rib .rs.cur i{background:var(--coral);border-color:var(--coral);color:#fff}.rib .rs.open i{border-color:var(--coral);color:var(--coral)}.rib .rs.lock i{opacity:.55;font-size:10px}
+.bar{height:6px;background:var(--line);border-radius:9px;overflow:hidden;margin-top:4px}.bar i{display:block;height:100%;background:var(--coral)}
 nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:10;background:var(--surface);border-top:2px solid var(--line);
   padding:6px max(10px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(10px,env(safe-area-inset-left,0px))}
 nav.tabs div{max-width:520px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:2px}
@@ -254,6 +262,7 @@ nav.tabs .badge{position:absolute;top:2px;right:calc(50% - 22px);background:var(
 .hrow .ht{flex:1;min-width:0;display:grid}.hrow small{color:var(--muted);font-size:11.5px}.hrow .hx{color:var(--gold-deep);font-weight:700;font-size:13px}
 .alrow2{display:flex;gap:8px;align-items:center;font-size:13px;width:100%}.alrow2 .inp{width:auto;padding:4px 6px;margin-left:auto}
 .alrow{margin-bottom:12px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}.lookprev{display:grid;justify-items:center;gap:8px;margin-bottom:12px;padding:8px;background:var(--soft);border-radius:16px}.lookprev .lp{width:132px}.sw{flex-wrap:wrap}
 .chipbtn{border:2px solid var(--line);background:var(--surface);color:var(--ink);border-radius:99px;padding:6px 12px;font:inherit;font-size:13px}.chipbtn[aria-pressed=true]{background:var(--blue);border-color:var(--blue);color:#fff}
 .plgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px}
 .plbtn{display:grid;gap:2px;text-align:left;background:var(--soft);border:2px solid var(--line);border-radius:14px;padding:10px;color:var(--ink);font:inherit}.plbtn span{font-size:12px;color:var(--muted)}.plbtn i{font-style:normal;font-size:13px;color:var(--mint-deep);font-weight:700}
@@ -373,9 +382,9 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
     ["challenge", "\uC0B4\uC9DD \uBD88\uD3B8\uD55C \uC77C", "\uC870\uAE08 \uBD88\uD3B8\uD558\uC9C0\uB9CC \uD574\uBCFC \uB9CC\uD55C \uC77C \uD558\uB098\uB97C \uD574\uBCF4\uC138\uC694."]
   ];
   const NPCS = [
-    { id: "minjun", name: "\uAC15\uBBFC\uC900", job: "athlete", off: 1, look: { hair: 0, hc: 0, top: 2, skin: 1 }, lines: ["\uC624\uB298\uB3C4 \uD55C \uC138\uD2B8 \uAC00\uBCF4\uC790!", "\uC2DC\uC791\uC774 \uBC18\uC774\uC57C. \uC77C\uB2E8 \uB6F0\uC5B4!", "\uB098 \uBC8C\uC368 \uD558\uB098 \uB05D\uB0C8\uB2E4\uACE0!"] },
-    { id: "seoa", name: "\uC724\uC11C\uC544", job: "researcher", off: 0, look: { hair: 1, hc: 1, top: 1, skin: 0 }, lines: ["\uC624\uB298\uC740 \uBB58 \uC54C\uC544\uB0C8\uC5B4?", "\uC9C4\uC9DC \uD558\uACE0 \uC2F6\uC740 \uAC8C \uBB54\uC9C0, \uCC9C\uCC9C\uD788 \uCC3E\uC544\uAC00\uBA74 \uB3FC.", "\uC791\uC740 \uC2E4\uD5D8\uBD80\uD130 \uD574\uBCFC\uAE4C?"] },
-    { id: "boram", name: "\uAE40\uBCF4\uB78C", job: "teacher", off: 2, look: { hair: 2, hc: 3, top: 3, skin: 0 }, lines: ["\uCC9C\uCC9C\uD788 \uD574\uB3C4 \uAD1C\uCC2E\uC544\uC694.", "\uC624\uB298\uB3C4 \uC218\uACE0 \uB9CE\uC558\uC5B4\uC694.", "\uD560 \uC218 \uC788\uB294 \uB9CC\uD07C\uB9CC \uAC19\uC774 \uD574\uBD10\uC694."] }
+    { id: "minjun", name: "\uAC15\uBBFC\uC900", job: "athlete", off: 1, look: { hair: 6, hc: 5, top: 2, skin: 1, eye: 2, mouth: 1, acc: 4, pet: 2 }, lines: ["\uC624\uB298\uB3C4 \uD55C \uC138\uD2B8 \uAC00\uBCF4\uC790!", "\uC2DC\uC791\uC774 \uBC18\uC774\uC57C. \uC77C\uB2E8 \uB6F0\uC5B4!", "\uB098 \uBC8C\uC368 \uD558\uB098 \uB05D\uB0C8\uB2E4\uACE0!"] },
+    { id: "seoa", name: "\uC724\uC11C\uC544", job: "researcher", off: 0, look: { hair: 3, hc: 7, top: 1, skin: 3, eye: 0, mouth: 0, acc: 1, pet: 0 }, lines: ["\uC624\uB298\uC740 \uBB58 \uC54C\uC544\uB0C8\uC5B4?", "\uC9C4\uC9DC \uD558\uACE0 \uC2F6\uC740 \uAC8C \uBB54\uC9C0, \uCC9C\uCC9C\uD788 \uCC3E\uC544\uAC00\uBA74 \uB3FC.", "\uC791\uC740 \uC2E4\uD5D8\uBD80\uD130 \uD574\uBCFC\uAE4C?"] },
+    { id: "boram", name: "\uAE40\uBCF4\uB78C", job: "teacher", off: 2, look: { hair: 5, hc: 6, top: 3, skin: 0, eye: 1, mouth: 2, acc: 3, pet: 3 }, lines: ["\uCC9C\uCC9C\uD788 \uD574\uB3C4 \uAD1C\uCC2E\uC544\uC694.", "\uC624\uB298\uB3C4 \uC218\uACE0 \uB9CE\uC558\uC5B4\uC694.", "\uD560 \uC218 \uC788\uB294 \uB9CC\uD07C\uB9CC \uAC19\uC774 \uD574\uBD10\uC694."] }
   ];
   const STAGE = {
     developer: "\uBC24\uC0C8 \uBD88\uC774 \uCF1C\uC9C4 \uCF54\uB4DC\uC758 \uC131",
@@ -612,23 +621,35 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
     const n = String(s == null ? "" : s).toLowerCase().replace(/[\s.\-_*~!?,]/g, "");
     return BAD.some((w) => n.includes(w));
   };
-  const APP_BUILD = "v0.11.0";
+  const APP_BUILD = "v0.12.0";
   const PAGE_URL = /^https?:/.test(location.href) ? location.href.split("#")[0].split("?")[0] : "";
   const XP = { act: 15, story: 12, com: 10, habit: 12, habitMini: 8, snack: 3 }, CLEAR = 10, CHEST = 25, CHEER_GET = 2, CHEER_SEND = 1, WEEK_GOAL = 10, WEEK_XP = 30, MASTER = 30, SNACK_MAX = 5;
-  const HAIRC = ["#3A2B22", "#7A4A2E", "#D9B36C", "#8B8B8B", "#6E2A3A"], TOPC = ["#F1EFE8", "#185FA5", "#D85A30", "#3B6D11", "#2C2C2A"], SKIN = ["#FFDCC2", "#EBBA92", "#B98363"];
+  const HAIRC = ["#3A2B22", "#7A4A2E", "#D9B36C", "#8B8B8B", "#6E2A3A", "#1E1E24", "#E87AA0", "#6FA8DC", "#6CC9A0", "#A98BE0"], TOPC = ["#F1EFE8", "#185FA5", "#D85A30", "#3B6D11", "#2C2C2A", "#E6498D", "#F2B84B", "#2FA39A"], SKIN = ["#FFDCC2", "#EBBA92", "#B98363", "#FBE6D6", "#8A5A3C"];
+  const LOOKN = { hair: ["\uC9E7\uC740 \uBA38\uB9AC", "\uAE34 \uBA38\uB9AC", "\uACF1\uC2AC \uBB49\uCE58", "\uB2E8\uBC1C", "\uD3EC\uB2C8\uD14C\uC77C", "\uC62C\uB9BC\uBA38\uB9AC", "\uBFB0\uC871 \uBA38\uB9AC", "\uC591\uAC08\uB798"], eye: ["\uBC18\uC9DD", "\uC6C3\uB294 \uB208", "\uB3D9\uADF8\uB780 \uB208", "\uC878\uB9B0 \uB208"], mouth: ["\uC2F1\uAE0B", "\uD65C\uC9DD", "\uACE0\uC591\uC774", "\uC624"], acc: ["\uC5C6\uC74C", "\uC548\uACBD", "\uC8FC\uADFC\uAE68", "\uB9AC\uBCF8", "\uBCC4 \uC2A4\uD2F0\uCEE4"], pet: ["\uC5C6\uC74C", "\uACE0\uC591\uC774", "\uAC15\uC544\uC9C0", "\uD1A0\uB07C", "\uBCD1\uC544\uB9AC"] };
+  const LOOK0 = { hair: 0, hc: 0, top: 1, skin: 0, eye: 0, mouth: 0, acc: 0, pet: 0 }, LOOKMAX = { hair: 7, hc: 9, top: 7, skin: 4, eye: 3, mouth: 3, acc: 4, pet: 4 };
+  const cleanLook = (lk) => {
+    lk = lk && typeof lk === "object" ? lk : {};
+    const o = {};
+    Object.keys(LOOK0).forEach((k) => {
+      const v = Math.floor(Number(lk[k]));
+      o[k] = Number.isFinite(v) ? Math.min(LOOKMAX[k], Math.max(0, v)) : LOOK0[k];
+    });
+    return o;
+  };
   const KEY = "cq-party-v1";
   let S = load();
   if (S.job && !JB[S.job]) S.job = null;
   if (S.hab && !habInfo(S.hab)) S.hab = null;
   if (!S.look || typeof S.look !== "object") S.look = blank().look;
   function blank() {
-    return { blocked: {}, rest: 1, week: null, hab: null, habs: {}, fb: {}, hver: 2, diag: null, assess: [], born: null, actd: [], prf: [], cid: "", ev: [], evN: 0, evBase: 0, evSent: 0, v: 2, story: [], title: "", line: null, nick: "", job: null, look: { hair: 0, hc: 0, top: 1, skin: 0 }, totalXp: 0, stats: {}, streak: 0, lastDay: null, today: null, cnt: {}, done: 0, party: null, chestDay: null, claimed: {}, cheered: {}, npcSay: {}, stamps: null, stampBook: {}, pl: null, hdone: {}, al: {}, alT: {}, alF: null, startPlaza: true, testOpt: false, testNotes: [], testFirst: 0 };
+    return { blocked: {}, rest: 1, week: null, hab: null, habs: {}, fb: {}, hver: 2, diag: null, assess: [], born: null, actd: [], prf: [], cid: "", ev: [], evN: 0, evBase: 0, evSent: 0, v: 2, story: [], title: "", line: null, nick: "", job: null, look: __spreadValues({}, LOOK0), totalXp: 0, stats: {}, streak: 0, lastDay: null, today: null, cnt: {}, done: 0, party: null, chestDay: null, claimed: {}, cheered: {}, npcSay: {}, stamps: null, stampBook: {}, pl: null, hdone: {}, al: {}, alT: {}, alF: null, startPlaza: true, testOpt: false, testNotes: [], testFirst: 0 };
   }
   function load() {
     try {
       const r = JSON.parse(localStorage.getItem(KEY));
       if (r && (r.v === 1 || r.v === 2)) {
         const s = __spreadValues(__spreadValues({}, blank()), r);
+        s.look = cleanLook(r.look);
         if (!r.hver) migrateHab(s);
         if (r.evN === void 0) {
           s.evBase = s.totalXp | 0;
@@ -801,32 +822,73 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
   }
   let AV = 0;
   function av(jobId, lv, look, o = {}) {
-    const j = JB[jobId], id = "g" + AV++, lk = __spreadValues({ hair: 0, hc: 0, top: 1, skin: 0 }, look);
-    const skin = SKIN[lk.skin] || SKIN[0], hc = HAIRC[lk.hc] || HAIRC[0];
-    const uni = j && lv >= 3, topc = uni ? j.color : TOPC[lk.top] || TOPC[1];
+    const j = JB[jobId], id = "g" + AV++, lk = cleanLook(look);
+    const skin = SKIN[lk.skin], hc = HAIRC[lk.hc];
+    const uni = j && lv >= 3, topc = uni ? j.color : TOPC[lk.top];
     const light = uni && /^#(E|F|C)/i.test(topc);
-    const hair = [
-      `<path d="M36 46a24 24 0 0148 0q-6-13-24-13T36 46z" fill="${hc}"/>`,
+    const G = '<g transform="translate(60 66) scale(1.2) translate(-60 -66)">';
+    const hl = '<path d="M45 33q6-3 12-2" stroke="#fff" stroke-opacity=".38" stroke-width="2.2" fill="none" stroke-linecap="round"/>';
+    const back = [
+      "",
       `<path d="M34 50V44a26 26 0 0152 0v6q0 22-6 30H40q-6-8-6-30z" fill="${hc}"/>`,
-      `<g fill="${hc}"><circle cx="40" cy="38" r="9"/><circle cx="52" cy="30" r="10"/><circle cx="66" cy="30" r="10"/><circle cx="79" cy="38" r="9"/></g>`
-    ][lk.hair] || "";
-    const hairFront = lk.hair === 1 ? "" : "";
+      "",
+      `<path d="M32 46a28 26 0 0156 0v17q0 9-10 9H42q-10 0-10-9z" fill="${hc}"/>`,
+      `<path d="M81 33q19 1 16 25q-1 11-10 15q4-13-5-21z" fill="${hc}"/>`,
+      `<circle cx="38" cy="22" r="9.5" fill="${hc}"/><circle cx="82" cy="22" r="9.5" fill="${hc}"/>`,
+      "",
+      `<path d="M38 38q-18 6-14 32q2 8 10 6q-3-15 7-25z" fill="${hc}"/><path d="M82 38q18 6 14 32q-2 8-10 6q3-15-7-25z" fill="${hc}"/>`
+    ][lk.hair];
+    const front = [
+      `<path d="M36 46a24 24 0 0148 0q-6-13-24-13T36 46z" fill="${hc}"/>${hl}`,
+      `<path d="M37 46a23 23 0 0146 0q-8-10-23-10T37 46z" fill="${hc}"/>${hl}`,
+      `<g fill="${hc}"><circle cx="40" cy="38" r="9"/><circle cx="52" cy="30" r="10"/><circle cx="66" cy="30" r="10"/><circle cx="79" cy="38" r="9"/></g>`,
+      `<path d="M34 48a26 25 0 0152 0q-8-5-14-14q-5 11-19 13q-9 1-19 1z" fill="${hc}"/>${hl}`,
+      `<path d="M36 46a24 24 0 0148 0q-9-11-27-11q-9 2-21 11z" fill="${hc}"/><rect x="79" y="32" width="7" height="6" rx="2.5" fill="#FF6FA5"/>${hl}`,
+      `<path d="M36 46a24 24 0 0148 0q-6-13-24-13T36 46z" fill="${hc}"/><rect x="34" y="21" width="7" height="5" rx="2" fill="#FF6FA5"/><rect x="79" y="21" width="7" height="5" rx="2" fill="#FF6FA5"/>${hl}`,
+      `<path d="M35 47l1-17 8 8 5-15 7 11 7-11 5 15 8-8 1 17q-8-11-25-11t-17 11z" fill="${hc}"/>`,
+      `<path d="M36 46a24 24 0 0148 0q-6-13-24-13T36 46z" fill="${hc}"/><circle cx="35" cy="42" r="3.2" fill="#FF6FA5"/><circle cx="85" cy="42" r="3.2" fill="#FF6FA5"/>${hl}`
+    ][lk.hair];
+    const E = (x) => [
+      `<ellipse cx="${x}" cy="48" rx="3.2" ry="3.9" fill="#1B2340"/><circle cx="${x - 1}" cy="46.5" r="1.3" fill="#fff"/><circle cx="${x + 1.2}" cy="49.6" r=".6" fill="#fff"/>`,
+      `<path d="M${x - 4} 49.5q4-6 8 0" stroke="#1B2340" stroke-width="2.2" fill="none" stroke-linecap="round"/>`,
+      `<circle cx="${x}" cy="48" r="4.4" fill="#1B2340"/><circle cx="${x - 1.4}" cy="46.4" r="1.7" fill="#fff"/><circle cx="${x + 1.4}" cy="49.4" r=".8" fill="#fff"/>`,
+      `<path d="M${x - 4} 47.5q4 5 8 0" stroke="#1B2340" stroke-width="2.2" fill="none" stroke-linecap="round"/><path d="M${x + 3.6} 48.6l2 1.4" stroke="#1B2340" stroke-width="1.3" stroke-linecap="round"/>`
+    ][lk.eye];
+    const mouth = [
+      `<path d="M54 56q6 5 12 0" stroke="#1B2340" stroke-width="2" fill="none" stroke-linecap="round"/>`,
+      `<path d="M53 55h14q-1 8-7 8t-7-8z" fill="#7A2E3A"/><path d="M56.5 61q3.5-2 7 0q-3.5 2-7 0z" fill="#FF8FA3"/>`,
+      `<path d="M53.5 56q3 4 6.5 0q3.5 4 6.5 0" stroke="#1B2340" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`,
+      `<ellipse cx="60" cy="58" rx="2.4" ry="2.8" fill="#7A2E3A"/>`
+    ][lk.mouth];
+    const acc = [
+      "",
+      `<g fill="#fff3" stroke="#3a4256" stroke-width="1.6"><circle cx="51" cy="48" r="6.8"/><circle cx="69" cy="48" r="6.8"/></g><path d="M57.8 48h4.4" stroke="#3a4256" stroke-width="1.6"/>`,
+      `<g fill="#B5705A" opacity=".55"><circle cx="45" cy="53" r=".9"/><circle cx="48" cy="55.4" r=".9"/><circle cx="43" cy="56" r=".9"/><circle cx="75" cy="53" r=".9"/><circle cx="72" cy="55.4" r=".9"/><circle cx="77" cy="56" r=".9"/></g>`,
+      `<g transform="translate(44 27) rotate(-18)"><path d="M0 0l-9-5v10zM0 0l9-5v10z" fill="#FF6FA5" stroke="#C2336B" stroke-width=".8"/><circle r="2.4" fill="#FF8FBE" stroke="#C2336B" stroke-width=".8"/></g>`,
+      `<path d="M78 56l1.4 3 3.2.4-2.4 2.2.7 3.2-2.9-1.7-2.9 1.7.7-3.2-2.4-2.2 3.2-.4z" fill="#FFD43B" stroke="#C98A00" stroke-width=".7"/>`
+    ][lk.acc];
+    const pet = [
+      "",
+      `<ellipse cx="17" cy="142" rx="12" ry="3" fill="#0002"/><path d="M26 139q9-1 7-13" stroke="#F2A65A" stroke-width="4" fill="none" stroke-linecap="round"/><ellipse cx="17" cy="133" rx="10" ry="9" fill="#F2A65A"/><path d="M8.5 118l.5-10 7.5 6zM25.5 118l-.5-10-7.5 6z" fill="#F2A65A"/><circle cx="17" cy="121" r="9.5" fill="#F2A65A"/><path d="M10.6 114l1-4.6 3.6 2.8zM23.4 114l-1-4.6-3.6 2.8z" fill="#FFB4BE"/><circle cx="13.6" cy="120.5" r="1.5" fill="#1B2340"/><circle cx="20.4" cy="120.5" r="1.5" fill="#1B2340"/><path d="M15.4 124q1.6 1.6 3.2 0" stroke="#1B2340" stroke-width="1.1" fill="none"/><path d="M9 126l-5-1.4M9 128l-5 1M25 126l5-1.4M25 128l5 1" stroke="#1B2340" stroke-width=".7" opacity=".6"/>`,
+      `<ellipse cx="17" cy="142" rx="12" ry="3" fill="#0002"/><path d="M26 138q8-1 7-9" stroke="#C98A55" stroke-width="3.6" fill="none" stroke-linecap="round"/><ellipse cx="17" cy="133" rx="10" ry="9" fill="#D9A06B"/><circle cx="17" cy="121" r="9.5" fill="#D9A06B"/><ellipse cx="8" cy="122" rx="4" ry="7" fill="#9A6234" transform="rotate(12 8 122)"/><ellipse cx="26" cy="122" rx="4" ry="7" fill="#9A6234" transform="rotate(-12 26 122)"/><ellipse cx="17" cy="125" rx="5" ry="3.8" fill="#F4DDBF"/><circle cx="13.6" cy="119.5" r="1.5" fill="#1B2340"/><circle cx="20.4" cy="119.5" r="1.5" fill="#1B2340"/><ellipse cx="17" cy="123.4" rx="1.8" ry="1.3" fill="#1B2340"/>`,
+      `<ellipse cx="17" cy="142" rx="12" ry="3" fill="#0002"/><circle cx="28" cy="136" r="3.4" fill="#fff" stroke="#0002" stroke-width=".6"/><ellipse cx="17" cy="133" rx="10" ry="9" fill="#fff" stroke="#0002" stroke-width=".6"/><ellipse cx="12.5" cy="107" rx="3.4" ry="10" fill="#fff" stroke="#0002" stroke-width=".6" transform="rotate(-8 12.5 107)"/><ellipse cx="21.5" cy="107" rx="3.4" ry="10" fill="#fff" stroke="#0002" stroke-width=".6" transform="rotate(8 21.5 107)"/><ellipse cx="12.5" cy="108" rx="1.7" ry="7" fill="#FFB4BE" transform="rotate(-8 12.5 108)"/><ellipse cx="21.5" cy="108" rx="1.7" ry="7" fill="#FFB4BE" transform="rotate(8 21.5 108)"/><circle cx="17" cy="121" r="9.5" fill="#fff" stroke="#0002" stroke-width=".6"/><circle cx="13.6" cy="120.5" r="1.5" fill="#1B2340"/><circle cx="20.4" cy="120.5" r="1.5" fill="#1B2340"/><path d="M15.6 124.2q1.4 1.4 2.8 0" stroke="#E64980" stroke-width="1.1" fill="none"/><circle cx="11" cy="124" r="1.8" fill="#FFB4BE" opacity=".7"/><circle cx="23" cy="124" r="1.8" fill="#FFB4BE" opacity=".7"/>`,
+      `<ellipse cx="17" cy="142" rx="11" ry="3" fill="#0002"/><circle cx="17" cy="130" r="11.5" fill="#FFD43B"/><path d="M6 130q-4 2-3 6q4-1 5-4zM28 130q4 2 3 6q-4-1-5-4z" fill="#F5C518"/><path d="M13 119q-1-4 2-5M17 118q0-5 3-5" stroke="#F5C518" stroke-width="1.6" fill="none" stroke-linecap="round"/><circle cx="12.6" cy="128" r="1.6" fill="#1B2340"/><circle cx="21.4" cy="128" r="1.6" fill="#1B2340"/><path d="M15 131.5l2 2.6 2-2.6z" fill="#F76707"/><circle cx="10" cy="132" r="2" fill="#FF8FA3" opacity=".55"/><circle cx="24" cy="132" r="2" fill="#FF8FA3" opacity=".55"/><path d="M14 141l-1 3M20 141l1 3" stroke="#F76707" stroke-width="1.4" stroke-linecap="round"/>`
+    ][lk.pet];
     let s = `<svg viewBox="0 0 120 150" role="img" aria-label="${esc(o.label || "\uCE90\uB9AD\uD130")}" xmlns="http://www.w3.org/2000/svg">`;
     if (lv >= 6) s += `<defs><radialGradient id="${id}"><stop offset="0" stop-color="#FFE066" stop-opacity=".9"/><stop offset="1" stop-color="#FFE066" stop-opacity="0"/></radialGradient></defs><circle class="aura" cx="60" cy="78" r="64" fill="url(#${id})"/>`;
     if (lv >= 10) s += `<g fill="#FFD43B" stroke="#C98A00" stroke-width=".8"><path d="M14 40l2.2 5.4 5.4 2.2-5.4 2.2-2.2 5.4-2.2-5.4-5.4-2.2 5.4-2.2z"/><path d="M106 74l1.6 4 4 1.6-4 1.6-1.6 4-1.6-4-4-1.6 4-1.6z"/><path d="M18 98l1.4 3.4 3.4 1.4-3.4 1.4-1.4 3.4-1.4-3.4-3.4-1.4 3.4-1.4z"/></g>`;
-    s += `<ellipse cx="60" cy="142" rx="30" ry="5" fill="#0002"/>`;
-    s += hair.startsWith('<path d="M34') ? hair : "";
-    s += `<rect x="44" y="108" width="14" height="28" rx="5" fill="${uni ? "#2b3245" : "#3d4a6b"}"/><rect x="62" y="108" width="14" height="28" rx="5" fill="${uni ? "#2b3245" : "#3d4a6b"}"/><rect x="41" y="132" width="19" height="8" rx="4" fill="#222"/><rect x="60" y="132" width="19" height="8" rx="4" fill="#222"/>`;
-    s += `<rect x="26" y="70" width="14" height="36" rx="7" fill="${topc}" stroke="#0002"/><rect x="80" y="70" width="14" height="36" rx="7" fill="${topc}" stroke="#0002"/><circle cx="33" cy="108" r="6" fill="${skin}"/><circle cx="87" cy="108" r="6" fill="${skin}"/>`;
-    s += `<path d="M38 70q0-6 8-6h28q8 0 8 6v42H38z" fill="${topc}" stroke="#0002"/>`;
+    s += `<ellipse cx="60" cy="142" rx="30" ry="5" fill="#0002"/>` + pet;
+    if (back) s += G + back + "</g>";
+    s += `<rect x="44" y="108" width="14" height="28" rx="6" fill="${uni ? "#2b3245" : "#3d4a6b"}"/><rect x="62" y="108" width="14" height="28" rx="6" fill="${uni ? "#2b3245" : "#3d4a6b"}"/><rect x="41" y="131" width="19" height="9" rx="4.5" fill="#2a2a33"/><rect x="60" y="131" width="19" height="9" rx="4.5" fill="#2a2a33"/><rect x="43" y="132" width="9" height="2.4" rx="1.2" fill="#fff" opacity=".35"/><rect x="62" y="132" width="9" height="2.4" rx="1.2" fill="#fff" opacity=".35"/>`;
+    s += `<rect x="26" y="72" width="14" height="34" rx="7" fill="${topc}" stroke="#0002"/><rect x="80" y="72" width="14" height="34" rx="7" fill="${topc}" stroke="#0002"/><circle cx="33" cy="108" r="6.5" fill="${skin}"/><circle cx="87" cy="108" r="6.5" fill="${skin}"/>`;
+    s += `<path d="M38 72q0-6 8-6h28q8 0 8 6v40q0 4-4 4H42q-4 0-4-4z" fill="${topc}" stroke="#0002"/>`;
     if (uni) {
-      s += `<path d="M52 64l8 12 8-12z" fill="${light ? "#d5d9e2" : "#fff"}"/><rect x="66" y="86" width="9" height="6" rx="1.5" fill="${light ? "#E03131" : "#FFD43B"}"/><rect x="38" y="104" width="44" height="4" fill="#0002"/>`;
-    } else s += `<path d="M50 64q10 8 20 0" fill="${skin}"/>`;
-    s += `<rect x="53" y="58" width="14" height="10" fill="${skin}"/>`;
-    s += `<circle cx="60" cy="44" r="23" fill="${skin}"/><circle cx="38" cy="46" r="4" fill="${skin}"/><circle cx="82" cy="46" r="4" fill="${skin}"/>`;
-    s += hair.startsWith('<path d="M34') ? `<path d="M37 46a23 23 0 0146 0q-8-10-23-10T37 46z" fill="${hc}"/>` : hair;
-    s += `<circle cx="51" cy="48" r="2.6" fill="#1B2340"/><circle cx="69" cy="48" r="2.6" fill="#1B2340"/><path d="M54 56q6 5 12 0" stroke="#1B2340" stroke-width="2" fill="none" stroke-linecap="round"/><circle cx="46" cy="54" r="3" fill="#FF8FA3" opacity=".45"/><circle cx="74" cy="54" r="3" fill="#FF8FA3" opacity=".45"/>`;
+      s += `<path d="M52 66l8 12 8-12z" fill="${light ? "#d5d9e2" : "#fff"}"/><rect x="66" y="88" width="9" height="6" rx="1.5" fill="${light ? "#E03131" : "#FFD43B"}"/><rect x="38" y="104" width="44" height="4" fill="#0002"/>`;
+    } else s += `<path d="M50 66q10 8 20 0" fill="${skin}"/>`;
+    s += `<rect x="53" y="58" width="14" height="12" fill="${skin}"/>`;
+    s += G + `<circle cx="38" cy="46" r="4.2" fill="${skin}"/><circle cx="82" cy="46" r="4.2" fill="${skin}"/><circle cx="60" cy="44" r="23" fill="${skin}"/>` + front + `<circle cx="45.5" cy="54.5" r="3.4" fill="#FF8FA3" opacity=".5"/><circle cx="74.5" cy="54.5" r="3.4" fill="#FF8FA3" opacity=".5"/>` + E(51) + E(69) + mouth + acc;
     if (j && lv >= 2 && HEADS[j.head[0]]) s += HEADS[j.head[0]](j.head[1]);
+    s += "</g>";
     if (j && lv >= 4) s += `<g transform="translate(98 100) scale(.95)">${TOOLS[j.tool] || ""}</g>`;
     return s + "</svg>";
   }
@@ -981,6 +1043,29 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
     if (!id) return null;
     const [jid, i] = id.split(":"), a = (HABITS[jid] || [])[+i];
     return a ? { id, j: jid, jn: JB[jid].name, title: a[0], cue: a[1], mini: a[2], stat: a[3], lv: +i + 1, kind: a[4] || (+i >= 4 ? "\uC9C1\uC811" : "\uAC04\uC811") } : null;
+  }
+  function hSt(id) {
+    return hAch(id) ? "ok" : S.hab === id ? "cur" : hOpen(id) ? "open" : "lock";
+  }
+  function ribbon(jid) {
+    const arr = HABITS[jid] || [];
+    return `<div class="rib" role="img" aria-label="${esc(JB[jid].name)} \uC2B5\uAD00 \uC131\uC7A5 \uB2E8\uACC4">${arr.map((_, i) => {
+      const id = jid + ":" + i, s = hSt(id);
+      return `<span class="rs ${s}"><i>${s === "ok" ? "\u2713" : s === "lock" ? "\u{1F512}" : i + 1}</i></span>`;
+    }).join("<u></u>")}</div>`;
+  }
+  function trail(jid, pick2) {
+    const arr = HABITS[jid] || [];
+    let prevKind = "";
+    return `<div class="lad trail">${arr.map((_, i) => {
+      const id = jid + ":" + i, a = habInfo(id), s = hSt(id), tt = Math.min(hTot(id), HT), pct = Math.round(tt / HT * 100), h = S.habs[id] || {};
+      const ph = a.kind !== prevKind ? `<div class="tphase ${a.kind === "\uC9C1\uC811" ? "d" : "i"}">${a.kind === "\uC9C1\uC811" ? "\u{1F680} \uC9C1\uC811 \uACBD\uD5D8 \xB7 \uC9C4\uC9DC\uB85C \uD574\uBCF4\uAE30" : "\u{1F331} \uAC04\uC811 \uACBD\uD5D8 \xB7 \uB530\uB77C \uD574\uBCF4\uBA70 \uC775\uD788\uAE30"}</div>` : "";
+      prevKind = a.kind;
+      const open = s !== "lock", nx = arr[i + 1] && !hOpen(jid + ":" + (i + 1)) && open && s !== "ok";
+      const body = `<div class="tcard ${s}"><b>${esc(a.title)}</b><div class="tmeta"><span class="chip">${HLAB(a.lv)}</span><span class="chip">${esc(SN[a.stat])} +1</span>${s === "cur" ? '<span class="chip now">\uC9C0\uAE08 \uD558\uB294 \uC911</span>' : ""}${s === "ok" ? '<span class="chip okc">\uB2EC\uC131 \u2713</span>' : ""}</div>${open ? `<span class="tsub">\uCD5C\uC18C \uBC84\uC804: ${esc(a.mini)}</span><div class="bar"><i style="width:${pct}%"></i></div><span class="tsub num">${s === "ok" ? `\uCD1D ${h.total || 0}\uD68C \xB7 \uCD5C\uACE0 ${h.best || 0}\uC77C \uC5F0\uC18D` : `${tt}/${HT}\uD68C${nx ? ` \xB7 \uB2E4\uC74C \uB2E8\uACC4\uAE4C\uC9C0 ${Math.max(0, HU - tt)}\uBC88` : ""}`}</span>` : `<span class="tsub">\u{1F512} Lv${i}\uC744 ${HU}\uBC88 \uD574\uBCF4\uBA74 \uC5F4\uB824\uC694 (\uC9C0\uAE08 ${Math.min(hTot(jid + ":" + (i - 1)), HU)}/${HU})</span>`}</div>`;
+      const dot = `<span class="tdot ${s}">${s === "ok" ? "\u2713" : "Lv" + a.lv}</span>`;
+      return ph + (pick2 ? `<button class="hopt tn ${s}" ${open ? `data-a="habpick" data-h="${id}"` : "disabled"}>${dot}${body}</button>` : `<div class="tn ${s}">${dot}${body}</div>`);
+    }).join("")}</div>`;
   }
   const HT = 7, HU = 3, HM = 30, HLAB = (lv) => lv <= 2 ? "\uC26C\uC6C0" : lv <= 4 ? "\uBCF4\uD1B5" : "\uB3C4\uC804";
   const hStage = (n) => n < 1 ? "\uC2DC\uC791 \uC804" : n < HU ? "\uB9DB\uBCF4\uAE30" : n < HT ? "\uC775\uC219\uD574\uC9C0\uB294 \uC911" : n < HM ? "\uB2EC\uC131" : "\uB0B4 \uC2B5\uAD00";
@@ -1152,7 +1237,7 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
       done: ci(x.done, 0, 4, 0),
       date: String(x.date || "").slice(0, 10),
       streak: ci(x.streak, 0, 9999, 0),
-      look: { hair: ci(lk.hair, 0, 2, 0), hc: ci(lk.hc, 0, 4, 0), top: ci(lk.top, 0, 4, 1), skin: ci(lk.skin, 0, 2, 0) },
+      look: cleanLook(lk),
       line: ln && ln.text && !dirty(ln.text) ? { text: String(ln.text).slice(0, 120), day: String(ln.day || "").slice(0, 10) } : null,
       last: x.last && x.last.t && !dirty(x.last.t) ? { t: String(x.last.t).slice(0, 60) } : null
     };
@@ -1354,7 +1439,7 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
     const hi = habInfo(S.hab), pop = ui.pop === idx ? " pop" : "";
     if (!hi) return `<article class="q habit${pop}"><div class="ic">${ICON.habit}</div><div><div class="tag"><span>${esc(JB[S.job].name)} \uC2B5\uAD00</span><span class="chip">\uB9E4\uC77C \uC774\uC5B4\uAC00\uAE30</span></div><h3>\uB098\uC758 \uC9C1\uC5C5 \uC2B5\uAD00 \uACE0\uB974\uAE30</h3><p>\uC774\uBBF8 \uD558\uB294 \uC77C\uACFC\uC5D0 \uBD99\uC5EC\uC11C \uC544\uC8FC \uC791\uAC8C \uC2DC\uC791\uD558\uBA74 \uC624\uB798\uAC00\uC694. ${esc(JB[S.job].name)}\uC5D0\uAC8C \uC5B4\uC6B8\uB9AC\uB294 \uC2B5\uAD00 3\uAC00\uC9C0 \uC911 \uD558\uB098\uB97C \uACE8\uB77C\uBCF4\uC138\uC694.</p></div><div class="foot"><span class="reward">+${XP.habit} XP</span><button class="btn" data-a="habopen">\uC2B5\uAD00 \uACE0\uB974\uAE30</button></div></article>`;
     const h = hState(hi.id);
-    let s = `<article class="q habit${q.done ? " done" : ""}${pop}"><div class="ic">${ICON.habit}</div><div><div class="tag"><span>${esc(hi.jn)} \uC2B5\uAD00</span><span class="chip">Lv${hi.lv} ${HLAB(hi.lv)}</span><span class="chip kind-${hi.kind === "\uC9C1\uC811" ? "d" : "i"}">${hi.kind} \uACBD\uD5D8</span><span class="chip">${esc(SN[hi.stat])} +1</span><span class="chip num">\uC5F0\uC18D ${h.now}\uC77C \xB7 ${stageOf(h.now)}</span></div><h3>${esc(hi.title)}</h3><p class="cue"><b>\uB2E8\uC11C</b> ${esc(hi.cue)}</p><p class="cue"><b>\uCD5C\uC18C \uBC84\uC804</b> ${esc(hi.mini)}</p></div>`;
+    let s = `<article class="q habit${q.done ? " done" : ""}${pop}"><div class="ic">${ICON.habit}</div><div><div class="tag"><span>${esc(hi.jn)} \uC2B5\uAD00</span><span class="chip">Lv${hi.lv} ${HLAB(hi.lv)}</span><span class="chip kind-${hi.kind === "\uC9C1\uC811" ? "d" : "i"}">${hi.kind} \uACBD\uD5D8</span><span class="chip">${esc(SN[hi.stat])} +1</span><span class="chip num">\uC5F0\uC18D ${h.now}\uC77C \xB7 ${stageOf(h.now)}</span></div><h3>${esc(hi.title)}</h3><p class="cue"><b>\uB2E8\uC11C</b> ${esc(hi.cue)}</p><p class="cue"><b>\uCD5C\uC18C \uBC84\uC804</b> ${esc(hi.mini)}</p>${ribbon(hi.j)}</div>`;
     if (q.done) s += `<div class="foot"><span class="verdict">${q.m ? "\uCD5C\uC18C \uBC84\uC804\uC73C\uB85C \uC774\uC5B4\uAC14\uC5B4\uC694" : "\uC624\uB298\uB3C4 \uD574\uB0C8\uC5B4\uC694"}</span><span class="reward">\uC644\uB8CC \u2713</span></div>`;
     else s += `<div class="foot"><button class="link" data-a="habopen">\uC2B5\uAD00 \uBC14\uAFB8\uAE30</button><span class="row"><button class="btn ghost" data-a="hab" data-m="1">\uCD5C\uC18C \uBC84\uC804\uB9CC</button><button class="btn" data-a="hab" data-m="0">\uD574\uB0C8\uC5B4\uC694!</button></span></div><div class="cue" style="grid-column:1/-1">+${Math.round(XP.habit * mult())} XP (\uCD5C\uC18C \uBC84\uC804 +${Math.round(XP.habitMini * mult())}) \xB7 \uD558\uB8E8 \uAC74\uB108\uB6F0\uC5B4\uB3C4 \uAD1C\uCC2E\uC544\uC694. \uB2E4\uC2DC \uC2DC\uC791\uD558\uBA74 \uB3FC\uC694.</div>`;
     const sg = hSuggest();
@@ -1441,8 +1526,12 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
       return `<text x="${p[0]}" y="${p[1] + 4}" text-anchor="middle">${s[1]} ${S.stats[s[0]] || 0}</text>`;
     }).join("")}</svg>`;
   }
-  function sw(arr, cur, kind) {
-    return `<div class="sw">${arr.map((c, i) => `<button style="background:${c}" aria-label="${kind} ${i + 1}" aria-pressed="${cur === i}" data-a="look" data-f="${kind === "\uBA38\uB9AC\uC0C9" ? "hc" : kind === "\uC0C1\uC758" ? "top" : "skin"}" data-v="${i}"></button>`).join("")}</div>`;
+  function sw(arr, cur, f, label) {
+    return `<div class="sw">${arr.map((c, i) => `<button style="background:${c}" aria-label="${label} ${i + 1}" aria-pressed="${cur === i}" data-a="look" data-f="${f}" data-v="${i}"></button>`).join("")}</div>`;
+  }
+  function lookEd(prev) {
+    const lk = S.look, ch = (f) => `<div class="chips">${LOOKN[f].map((n, i) => `<button class="chipbtn" data-a="look" data-f="${f}" data-v="${i}" aria-pressed="${lk[f] === i}">${n}</button>`).join("")}</div>`;
+    return (prev ? `<div class="lookprev"><div class="lp">${av(S.job || "developer", 1, lk, { label: "\uBBF8\uB9AC\uBCF4\uAE30" })}</div><button class="btn sm ghost" data-a="lookrand">\u{1F3B2} \uB79C\uB364\uC73C\uB85C \uB9CC\uB4E4\uAE30</button></div>` : `<div class="row" style="margin-bottom:10px"><button class="btn sm ghost" data-a="lookrand">\u{1F3B2} \uB79C\uB364\uC73C\uB85C \uB9CC\uB4E4\uAE30</button></div>`) + `<div class="field"><label>\uBA38\uB9AC \uBAA8\uC591</label>${ch("hair")}</div><div class="field"><label>\uBA38\uB9AC\uC0C9</label>${sw(HAIRC, lk.hc, "hc", "\uBA38\uB9AC\uC0C9")}</div><div class="field"><label>\uB208</label>${ch("eye")}</div><div class="field"><label>\uC785</label>${ch("mouth")}</div><div class="field"><label>\uAFB8\uBC08</label>${ch("acc")}</div><div class="field"><label>\uCE5C\uAD6C (\uBC18\uB824\uB3D9\uBB3C)</label>${ch("pet")}</div><div class="field"><label>\uC0C1\uC758 (\uC720\uB2C8\uD3FC \uC804)</label>${sw(TOPC, lk.top, "top", "\uC0C1\uC758")}</div><div class="field" style="margin-bottom:0"><label>\uD53C\uBD80\uC0C9</label>${sw(SKIN, lk.skin, "skin", "\uD53C\uBD80\uC0C9")}</div>`;
   }
   function fbText() {
     let lv = 1;
@@ -1514,7 +1603,7 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
     const slots = [["\uBA38\uB9AC", 2, "\uBAA8\uC790\xB7\uBA38\uB9AC \uC7A5\uBE44"], ["\uBAB8", 3, "\uC9C1\uC5C5 \uC720\uB2C8\uD3FC"], ["\uC190", 4, "\uC9C1\uC5C5 \uB3C4\uAD6C"]];
     return hud() + `<section class="sec"><div class="hero"><div class="stage">${av(S.job, L.l, lk, { label: "\uB0B4 \uCE90\uB9AD\uD130" })}</div><h2 style="margin-top:6px">${esc(S.nick)}</h2><div class="muted" style="font-size:14px">${esc(j.name)} \xB7 ${tierOf(L.l)}${L.l >= 6 ? " \xB7 \uC219\uB828\uC758 \uBE5B" : ""}</div><div class="tier">${slots.map((s) => `<span class="slot ${L.l >= s[1] ? "on" : ""}"><b>${s[0]}</b>${L.l >= s[1] ? s[2] : "Lv." + s[1] + "\uC5D0 \uD68D\uB4DD"}</span>`).join("")}${L.l < 6 ? `<span class="slot"><b>\uBE5B</b>Lv.6 \uC219\uB828</span>` : ""}${L.l < 10 ? `<span class="slot"><b>\uBCC4</b>Lv.10 \uBA85\uC778</span>` : `<span class="slot on"><b>\uBCC4</b>\uBA85\uC778\uC758 \uBCC4</span>`}</div></div></section>
   ${growRecord()}${proofSec()}${changeSec()}${sentenceBook()}${habitRecord()}${fold("stat", "\uB098\uC758 \uC5ED\uB7C9", "\uD018\uC2A4\uD2B8\uB97C \uD560\uC218\uB85D \uC790\uB77C\uC694", `<div class="panel">${radar()}<div class="muted" style="font-size:13px;margin-top:6px">${esc(j.name)}\uC5D0\uAC8C \uD2B9\uD788 \uC911\uC694\uD55C \uC5ED\uB7C9: ${j.dna.map((s) => SN[s]).join(" \xB7 ")}</div></div>`)}
-  ${fold("set", "\uAFB8\uBBF8\uAE30 \xB7 \uC54C\uB9BC \xB7 \uC124\uC815", "", `<div class="panel"><div class="field"><label>\uC774\uB984</label><input class="inp" id="nk" maxlength="10" value="${esc(S.nick)}"></div><div class="field"><label>\uBA38\uB9AC \uBAA8\uC591</label><div class="seg">${["\uC9E7\uC740 \uBA38\uB9AC", "\uAE34 \uBA38\uB9AC", "\uACF1\uC2AC"].map((n, i) => `<button data-a="look" data-f="hair" data-v="${i}" aria-pressed="${lk.hair === i}">${n}</button>`).join("")}</div></div><div class="field"><label>\uBA38\uB9AC\uC0C9</label>${sw(HAIRC, lk.hc, "\uBA38\uB9AC\uC0C9")}</div><div class="field"><label>\uC0C1\uC758 (\uC720\uB2C8\uD3FC \uC804)</label>${sw(TOPC, lk.top, "\uC0C1\uC758")}</div><div class="field" style="margin-bottom:0"><label>\uD53C\uBD80\uC0C9</label>${sw(SKIN, lk.skin, "\uD53C\uBD80\uC0C9")}</div></div>${bkSec()}${FEAT.places ? alarmSec() : ""}${reminderSec()}${testSec()}<section class="sec" style="display:flex;gap:18px;justify-content:center"><button class="link" data-a="privacy">\uAC1C\uC778\uC815\uBCF4 \uC548\uB0B4</button><button class="link" data-a="delAsk">\uB0B4 \uB370\uC774\uD130 \uC0AD\uC81C</button></section>`)}
+  ${fold("set", "\uAFB8\uBBF8\uAE30 \xB7 \uC54C\uB9BC \xB7 \uC124\uC815", "", `<div class="panel"><div class="field"><label>\uC774\uB984</label><input class="inp" id="nk" maxlength="10" value="${esc(S.nick)}"></div></div><div class="panel" style="margin-top:12px">${lookEd(true)}</div>${bkSec()}${FEAT.places ? alarmSec() : ""}${reminderSec()}${testSec()}<section class="sec" style="display:flex;gap:18px;justify-content:center"><button class="link" data-a="privacy">\uAC1C\uC778\uC815\uBCF4 \uC548\uB0B4</button><button class="link" data-a="delAsk">\uB0B4 \uB370\uC774\uD130 \uC0AD\uC81C</button></section>`)}
   <section class="sec"><div class="note">\uCD1D ${S.done || 0}\uAC1C\uC758 \uD018\uC2A4\uD2B8\uB97C \uC644\uB8CC\uD588\uC5B4\uC694. \uB370\uC774\uD130\uB294 \uC774 \uAE30\uAE30\uC758 \uBE0C\uB77C\uC6B0\uC800\uC5D0\uB9CC \uC800\uC7A5\uB3FC\uC694. \uBE0C\uB77C\uC6B0\uC800 \uB370\uC774\uD130\uB97C \uC9C0\uC6B0\uBA74 \uAE30\uB85D\uB3C4 \uC0AC\uB77C\uC838\uC694.</div></section>`;
   }
   function habitPanel() {
@@ -1527,7 +1616,7 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
       days.push(x);
     }
     const next = [3, 7, 14, 30].find((m) => m > h.now);
-    return `<section class="sec"><div class="hd"><h2>\uB098\uC758 \uC2B5\uAD00</h2><button class="link" data-a="habopen">\uBC14\uAFB8\uAE30</button></div><div class="panel"><div class="tag" style="font-size:12px;color:var(--muted)">${esc(hi.jn)} \uC2B5\uAD00 \xB7 Lv${hi.lv} ${HLAB(hi.lv)} \xB7 ${esc(SN[hi.stat])}</div><div class="bar" style="margin-top:6px" aria-label="\uB2EC\uC131 \uC9C4\uD589"><i style="width:${Math.min(100, Math.round(hTot(hi.id) / HT * 100))}%"></i></div><div class="muted num" style="font-size:12px">\uB2EC\uC131\uAE4C\uC9C0 ${Math.min(hTot(hi.id), HT)} / ${HT}\uD68C</div><h3 style="font-size:20px">${esc(hi.title)}</h3><p class="cue"><b>\uB2E8\uC11C</b> ${esc(hi.cue)} \u2192 ${esc(hi.mini)}</p>
+    return `<section class="sec"><div class="hd"><h2>\uB098\uC758 \uC2B5\uAD00</h2><button class="link" data-a="habopen">\uBC14\uAFB8\uAE30</button></div><div class="panel"><div class="tag" style="font-size:12px;color:var(--muted)">${esc(hi.jn)} \uC2B5\uAD00 \xB7 Lv${hi.lv} ${HLAB(hi.lv)} \xB7 ${esc(SN[hi.stat])}</div>${ribbon(hi.j)}<div class="bar" style="margin-top:6px" aria-label="\uB2EC\uC131 \uC9C4\uD589"><i style="width:${Math.min(100, Math.round(hTot(hi.id) / HT * 100))}%"></i></div><div class="muted num" style="font-size:12px">\uB2EC\uC131\uAE4C\uC9C0 ${Math.min(hTot(hi.id), HT)} / ${HT}\uD68C</div><h3 style="font-size:20px">${esc(hi.title)}</h3><p class="cue"><b>\uB2E8\uC11C</b> ${esc(hi.cue)} \u2192 ${esc(hi.mini)}</p>
   <div class="dots" style="margin-top:10px;gap:8px" aria-label="\uCD5C\uADFC 7\uC77C">${days.map((x) => `<b style="width:20px;height:20px" class="${(h.days || []).includes(x) ? "on" : ""}" title="${x}"></b>`).join("")}</div>
   <div class="hstat"><span><b class="num">${h.now}</b>\uC77C \uC5F0\uC18D \xB7 <span class="stage">${stageOf(h.now)}</span></span><span>\uCD5C\uACE0 <b class="num">${h.best || 0}</b>\uC77C</span><span>\uCD1D <b class="num">${h.total || 0}</b>\uD68C</span></div>
   <div class="note" style="margin-top:10px">${next ? `${next}\uC77C \uC5F0\uC18D\uAE4C\uC9C0 ${next - h.now}\uC77C \uB0A8\uC558\uC5B4\uC694. \uB2EC\uC131\uD558\uBA74 \uBCF4\uB108\uC2A4 +${MILE[next]} XP.` : "30\uC77C \uC5F4\uB9E4 \uB2E8\uACC4\uB97C \uBAA8\uB450 \uCC44\uC6E0\uC5B4\uC694!"} \uD558\uB8E8 \uC26C\uC5B4\uB3C4 \uAE30\uB85D\uC740 \uC0AC\uB77C\uC9C0\uC9C0 \uC54A\uACE0, \uCD5C\uACE0 \uAE30\uB85D\uC740 \uADF8\uB300\uB85C \uB0A8\uC544\uC694.</div>${(() => {
@@ -1646,6 +1735,7 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
       if (k in o.state) s[k] = o.state[k];
     });
     if (!s.look || typeof s.look !== "object") s.look = blank().look;
+    s.look = cleanLook(s.look);
     if (!Array.isArray(s.prf)) s.prf = [];
     s.prf = s.prf.filter((x) => x && typeof x.i === "string" && (!x.u || okUrl(x.u))).slice(-PRF_MAX).map((x) => ({ i: String(x.i).slice(0, 24), h: String(x.h || ""), d: String(x.d || "").slice(0, 10), t: String(x.t || "").slice(0, 80), u: x.u || "", p: x.p ? 1 : 0 }));
     ["story", "assess", "actd", "ev"].forEach((k) => {
@@ -1792,7 +1882,7 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
       const a = habInfo(id), h = S.habs[id] || {}, ok = hAch(id), op = hOpen(id), cur = S.hab === id;
       return `<div class="r${ok ? " ok" : !op ? " lock" : ""}"><div class="hl">Lv${a.lv}</div><div><b>${esc(a.title)}</b> <span class="chip kind-${a.kind === "\uC9C1\uC811" ? "d" : "i"}">${a.kind}</span>${cur ? ' <span class="chip">\uD558\uB294 \uC911</span>' : ""}<div class="muted" style="font-size:12px">${ok ? `${esc(hAchDay(id))} \uB2EC\uC131 \xB7 \uCD1D ${h.total || 0}\uD68C \xB7 \uCD5C\uACE0 ${h.best || 0}\uC77C \uC5F0\uC18D` : op ? `${esc(a.mini)}` : `Lv${a.lv - 1}\uC744 ${HU}\uBC88 \uD574\uBCF4\uBA74 \uC5F4\uB824\uC694`}</div>${op && !ok ? `<div class="bar"><i style="width:${Math.min(100, Math.round(hTot(id) / HT * 100))}%"></i></div>` : ""}</div><div class="st num">${ok ? "\uB2EC\uC131 \u2713" : op ? Math.min(hTot(id), HT) + "/" + HT : "\u{1F512}"}</div></div>`;
     };
-    return fold("hrec", "\uB0B4 \uC2B5\uAD00 \uAE30\uB85D", "\uB2EC\uC131 " + nA + " / " + jh.length, `<div class="panel"><div class="lad">${jh.map(row).join("")}${ex.map(row).join("")}</div><div class="note" style="margin-top:10px">\uC2B5\uAD00\uC744 ${HT}\uBC88 \uD574\uB0B4\uBA74 \uB2EC\uC131\uC774\uC5D0\uC694. \uD558\uB8E8 \uAC74\uB108\uB6F0\uC5B4\uB3C4 \uAD1C\uCC2E\uACE0, \uB2EC\uC131\uD558\uBA74 \uB2E4\uC74C \uB808\uBCA8 \uC2B5\uAD00\uC774 \uC5F4\uB824\uC694.</div></div>`);
+    return fold("hrec", "\uB0B4 \uC2B5\uAD00 \uAE30\uB85D", "\uB2EC\uC131 " + nA + " / " + jh.length, `<div class="panel">${ribbon(S.job)}${trail(S.job, false)}${ex.length ? `<div class="lad" style="margin-top:10px">${ex.map(row).join("")}</div>` : ""}<div class="note" style="margin-top:10px">\uC2B5\uAD00\uC744 ${HT}\uBC88 \uD574\uB0B4\uBA74 \uB2EC\uC131\uC774\uC5D0\uC694. \uD558\uB8E8 \uAC74\uB108\uB6F0\uC5B4\uB3C4 \uAD1C\uCC2E\uACE0, \uB2EC\uC131\uD558\uBA74 \uB2E4\uC74C \uB808\uBCA8 \uC2B5\uAD00\uC774 \uC5F4\uB824\uC694.</div></div>`);
   }
   function vStory() {
     const L = S.story.slice().reverse(), n = S.story.length;
@@ -1811,7 +1901,7 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
   function vSetup() {
     if (ui.setup === 1) return `<div class="setup"><h1>\uD604\uC2E4\uC744 \uD50C\uB808\uC774\uD558\uB77C</h1><p class="lead">\uD558\uB8E8 3\uAC1C\uC758 \uAC00\uBCBC\uC6B4 \uD018\uC2A4\uD2B8\uB97C \uAE68\uACE0, \uB3D9\uB8CC\uB4E4\uACFC \uD568\uAED8 \uC131\uC7A5\uD574\uC694. \uCE90\uB9AD\uD130\uBD80\uD130 \uB9CC\uB4E4\uC5B4\uBCFC\uAE4C\uC694?</p>
     <div class="preview">${av(ui.sel || "developer", 1, S.look, { label: "\uBBF8\uB9AC\uBCF4\uAE30" })}</div>
-    <div class="panel" style="margin-top:14px"><div class="field"><label for="nk">\uC774\uB984 (\uD30C\uD2F0 \uB3D9\uB8CC\uC5D0\uAC8C \uBCF4\uC5EC\uC694)</label><input class="inp" id="nk" maxlength="10" placeholder="\uBAA8\uD5D8\uAC00 \uC774\uB984" value="${esc(S.nick)}"><div class="muted" style="font-size:12px">\uC2E4\uBA85\uC774\uB098 \uC5F0\uB77D\uCC98 \uB300\uC2E0 \uBCC4\uBA85\uC744 \uC368\uC8FC\uC138\uC694.</div></div><div class="field"><label>\uBA38\uB9AC \uBAA8\uC591</label><div class="seg">${["\uC9E7\uC740 \uBA38\uB9AC", "\uAE34 \uBA38\uB9AC", "\uACF1\uC2AC"].map((n, i) => `<button data-a="look" data-f="hair" data-v="${i}" aria-pressed="${S.look.hair === i}">${n}</button>`).join("")}</div></div><div class="field"><label>\uBA38\uB9AC\uC0C9</label>${sw(HAIRC, S.look.hc, "\uBA38\uB9AC\uC0C9")}</div><div class="field"><label>\uC0C1\uC758</label>${sw(TOPC, S.look.top, "\uC0C1\uC758")}</div><div class="field" style="margin-bottom:0"><label>\uD53C\uBD80\uC0C9</label>${sw(SKIN, S.look.skin, "\uD53C\uBD80\uC0C9")}</div></div>
+    <div class="panel" style="margin-top:14px"><div class="field"><label for="nk">\uC774\uB984 (\uD30C\uD2F0 \uB3D9\uB8CC\uC5D0\uAC8C \uBCF4\uC5EC\uC694)</label><input class="inp" id="nk" maxlength="10" placeholder="\uBAA8\uD5D8\uAC00 \uC774\uB984" value="${esc(S.nick)}"><div class="muted" style="font-size:12px">\uC2E4\uBA85\uC774\uB098 \uC5F0\uB77D\uCC98 \uB300\uC2E0 \uBCC4\uBA85\uC744 \uC368\uC8FC\uC138\uC694.</div></div></div><div class="panel" style="margin-top:12px">${lookEd(false)}</div>
     <div class="err" role="alert">${esc(ui.err)}</div><div style="margin-top:8px"><button class="btn blue" style="width:100%;padding:14px" data-a="next">\uB2E4\uC74C: \uC9C1\uC5C5 \uACE0\uB974\uAE30</button></div></div>`;
     return `<div class="setup"><h1>\uC5B4\uB5A4 \uC9C1\uC5C5\uC744 \uCCB4\uD5D8\uD560\uAE4C\uC694?</h1><p class="lead">\uC5B8\uC81C\uB4E0 \uBC14\uAFC0 \uC218 \uC788\uC5B4\uC694. \uC9C1\uC5C5\uB9C8\uB2E4 \uD018\uC2A4\uD2B8\uAC00 \uB2EC\uB77C\uC9C0\uACE0, \uB808\uBCA8\uC774 \uC624\uB974\uBA74 \uC9C1\uC5C5\uB2E4\uC6B4 \uC7A5\uBE44\uB97C \uC5BB\uC5B4\uC694.</p>
     <button class="btn blue" style="width:100%;margin-bottom:8px" data-a="diagstart">\uB098\uC5D0\uAC8C \uB9DE\uB294 \uC9C1\uC5C5 \uCD94\uCC9C\uBC1B\uAE30 \xB7 1\uBD84</button>
@@ -1829,10 +1919,7 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
     if (m.type === "leave") b = `<div class="center"><h2>\uD30C\uD2F0\uB97C \uB098\uAC08\uAE4C\uC694?</h2><div class="muted">\uB2E4\uC2DC \uB4E4\uC5B4\uC624\uB824\uBA74 \uCD08\uB300 \uCF54\uB4DC\uAC00 \uD544\uC694\uD574\uC694.</div><div class="row"><button class="btn ghost" data-a="close">\uCDE8\uC18C</button><button class="btn blue" data-a="leave">\uB098\uAC00\uAE30</button></div></div>`;
     if (m.type === "habit") {
       const cur = S.hab;
-      b = `<h2>${esc(JB[S.job].name)}\uC758 \uC88B\uC740 \uC2B5\uAD00</h2><div class="muted" style="font-size:14px">\uC26C\uC6B4 \uD589\uB3D9\uBD80\uD130 \uC2DC\uC791\uD574\uC694. ${HU}\uBC88 \uD574\uBCF4\uBA74 \uB2E4\uC74C \uB2E8\uACC4\uAC00 \uC5F4\uB9AC\uACE0, ${HT}\uBC88\uC774\uBA74 \uB2EC\uC131, ${HM}\uBC88\uC774\uBA74 \uB0B4 \uC2B5\uAD00\uC774\uC5D0\uC694. Lv5\uBD80\uD130\uB294 \uC9C1\uC811 \uACBD\uD5D8\uC774\uC5D0\uC694.</div>${HABITS[S.job].map((a, i) => {
-        const id = S.job + ":" + i, st = hState(id), op = hOpen(id), ok = hAch(id);
-        return `<button class="hopt" ${op ? `data-a="habpick" data-h="${id}"` : "disabled"} style="${cur === id ? "border-color:var(--coral);" : ""}${op ? "" : "opacity:.55"}"><b>Lv${i + 1} ${habInfo(id).kind} \xB7 ${esc(a[0])}${cur === id ? " \xB7 \uC9C0\uAE08 \uD558\uB294 \uC911" : ""}${ok ? " \xB7 \uB2EC\uC131 \u2713" : ""}</b>${op ? `<span>\uB2E8\uC11C: ${esc(a[1])}</span><span>\uCD5C\uC18C \uBC84\uC804: ${esc(a[2])}</span><span>${esc(SN[a[3]])} \uC131\uC7A5 \xB7 ${Math.min(hTot(id), HT)}/${HT}\uD68C${st.best ? ` \xB7 \uCD5C\uACE0 ${st.best}\uC77C` : ""}</span>` : `<span>\u{1F512} Lv${i}\uC744 ${HU}\uBC88 \uD574\uBCF4\uBA74 \uC5F4\uB824\uC694</span>`}</button>`;
-      }).join("")}<div class="row" style="margin-top:12px;justify-content:flex-end"><button class="btn ghost" data-a="close">\uB2EB\uAE30</button></div>`;
+      b = `<h2>${esc(JB[S.job].name)}\uC758 \uC88B\uC740 \uC2B5\uAD00</h2><div class="muted" style="font-size:14px">\uC26C\uC6B4 \uD589\uB3D9\uBD80\uD130 \uC2DC\uC791\uD574\uC694. <b>${HU}\uBC88</b> \uD574\uBCF4\uBA74 \uB2E4\uC74C \uB2E8\uACC4\uAC00 \uC5F4\uB9AC\uACE0, <b>${HT}\uBC88</b>\uC774\uBA74 \uB2EC\uC131\uC774\uC5D0\uC694. Lv5\uBD80\uD130\uB294 \uC9C1\uC811 \uD574\uBCF4\uB294 \uACBD\uD5D8\uC774\uC5D0\uC694.</div>${ribbon(S.job)}${trail(S.job, true)}<div class="row" style="margin-top:12px;justify-content:flex-end"><button class="btn ghost" data-a="close">\uB2EB\uAE30</button></div>`;
     }
     if (m.type === "report") b = `<h2>\uC2E0\uACE0\uD558\uAE30</h2><div class="muted" style="font-size:14px">${esc(m.nick)} \uB2D8\uC758 \uC5B4\uB5A4 \uC810\uC774 \uBB38\uC81C\uC778\uAC00\uC694? \uC2E0\uACE0 \uB0B4\uC6A9\uC740 \uC6B4\uC601\uC790\uB9CC \uBCFC \uC218 \uC788\uC5B4\uC694.</div><div class="field" style="margin-top:12px"><label for="rr">\uC0AC\uC720</label><select class="inp" id="rr"><option>\uBD80\uC801\uC808\uD55C \uC774\uB984\uC774\uB098 \uAE00</option><option>\uAD34\uB86D\uD798\xB7\uC695\uC124</option><option>\uAC1C\uC778\uC815\uBCF4 \uB178\uCD9C</option><option>\uAE30\uD0C0</option></select></div><label class="chk" style="margin-bottom:12px"><input type="checkbox" id="rb" checked> \uC774 \uC0AC\uC6A9\uC790\uB97C \uCC28\uB2E8\uD574\uC11C \uB0B4 \uD654\uBA74\uC5D0\uC11C \uC228\uAE30\uAE30</label><div class="row" style="justify-content:flex-end"><button class="btn ghost" data-a="close">\uCDE8\uC18C</button><button class="btn blue" data-a="repSend">\uC2E0\uACE0\uD558\uAE30</button></div>`;
     if (m.type === "privacy") b = `<h2>\uAC1C\uC778\uC815\uBCF4 \uC548\uB0B4</h2><div style="font-size:14px;display:grid;gap:8px"><div><b>\uC800\uC7A5\uD558\uB294 \uC815\uBCF4</b><br>\uBCC4\uBA85, \uCE90\uB9AD\uD130 \uBAA8\uC591, \uB808\uBCA8\xB7\uD018\uC2A4\uD2B8\xB7\uC2B5\uAD00 \uAE30\uB85D, \uBAA8\uD5D8 \uC77C\uC9C0 \uAE00.</div><div><b>\uB2E4\uB978 \uC0AC\uB78C\uC5D0\uAC8C \uBCF4\uC774\uB294 \uC815\uBCF4</b><br>\uC5C6\uC5B4\uC694. \uC774 \uBC84\uC804\uC740 \uAE30\uB85D\uC744 \uC774 \uAE30\uAE30 \uBC16\uC73C\uB85C \uBCF4\uB0B4\uC9C0 \uC54A\uC544\uC694.</div><div><b>\uC0AD\uC81C</b><br>'\uB0B4 \uB370\uC774\uD130 \uC0AD\uC81C'\uB97C \uB204\uB974\uBA74 \uC774 \uAE30\uAE30\uC5D0 \uC800\uC7A5\uB41C \uB0B4 \uAE30\uB85D\uC774 \uBAA8\uB450 \uC9C0\uC6CC\uC838\uC694. \uC11C\uBC84\uB85C\uB294 \uC544\uBB34\uAC83\uB3C4 \uBCF4\uB0B4\uC9C0 \uC54A\uC544\uC694.</div><div class="muted">\uC2E4\uBA85\xB7\uC5F0\uB77D\uCC98 \uAC19\uC740 \uAC1C\uC778\uC815\uBCF4\uB294 \uBCC4\uBA85\uC774\uB098 \uAE00\uC5D0 \uC4F0\uC9C0 \uB9C8\uC138\uC694.</div></div><div class="row" style="justify-content:flex-end;margin-top:12px"><button class="btn" data-a="close">\uD655\uC778</button></div>`;
@@ -2011,7 +2098,17 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
         reroll(+d.i);
       },
       look() {
-        S.look[d.f] = +d.v;
+        if (d.f in LOOK0) {
+          S.look[d.f] = cleanLook(__spreadProps(__spreadValues({}, S.look), { [d.f]: +d.v }))[d.f];
+          if (S.job) persist();
+          render();
+        }
+      },
+      lookrand() {
+        const r = (k) => Math.floor(Math.random() * (LOOKMAX[k] + 1));
+        Object.keys(LOOK0).forEach((k) => {
+          S.look[k] = r(k);
+        });
         if (S.job) persist();
         render();
       },
@@ -2484,7 +2581,7 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
       n: !nm || dirty(nm) ? "\uBAA8\uD5D8\uAC00" : nm,
       j: hasJob(x.j) ? x.j : "developer",
       l: ci(x.l, 1, 99, 1),
-      k: { hair: ci(lk[0], 0, 2, 0), hc: ci(lk[1], 0, 4, 0), top: ci(lk[2], 0, 4, 1), skin: ci(lk[3], 0, 2, 0) },
+      k: cleanLook({ hair: lk[0], hc: lk[1], top: lk[2], skin: lk[3], eye: lk[4], mouth: lk[5], acc: lk[6], pet: lk[7] }),
       s: ci(x.s, 0, 1e9, 0),
       i: ci(x.i, 0, 3, 0)
     };
@@ -2773,7 +2870,8 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
       return [400, 700];
     };
     function avImg(job, lv, look) {
-      const key = [job, lv, look.hair, look.hc, look.top, look.skin].join("|");
+      look = cleanLook(look);
+      const key = [job, lv, look.hair, look.hc, look.top, look.skin, look.eye, look.mouth, look.acc, look.pet].join("|");
       let im = imgs.get(key);
       if (!im) {
         im = new Image();
@@ -2837,7 +2935,7 @@ var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
     resize();
     function profile() {
       const lv = lvInfo(S.totalXp).l, lk = S.look || {};
-      return { n: S.nick, j: S.job, l: lv, k: [lk.hair | 0, lk.hc | 0, lk.top | 0, lk.skin | 0] };
+      return { n: S.nick, j: S.job, l: lv, k: [lk.hair | 0, lk.hc | 0, lk.top | 0, lk.skin | 0, lk.eye | 0, lk.mouth | 0, lk.acc | 0, lk.pet | 0] };
     }
     function send(force) {
       if (!room) return;
